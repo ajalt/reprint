@@ -2,7 +2,12 @@
 <manifest package="com.github.ajalt.reprint"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Marshmallow fingerprint permission-->
     <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+
+    <!-- Samsung fingerprint permission -->
+    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

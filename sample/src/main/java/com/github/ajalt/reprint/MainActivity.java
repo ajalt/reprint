@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements AuthenticationLis
         if (errorMessage != null) {
             result.setText(errorMessage);
         } else {
-            result.setText("failed");
+            result.setText("failed: " + errorCode);
         }
     }
 }

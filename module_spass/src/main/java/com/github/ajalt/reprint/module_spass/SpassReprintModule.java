@@ -52,8 +52,13 @@ public class SpassReprintModule implements ReprintModule {
         Spass s;
         try {
             s = new Spass();
-            s.initialize(context);
+            s.initialize(this.context);
+        } catch (SecurityException e) {
+            // Throw security exceptions, which happen when the manifest permission is missing
+            throw e;
         } catch (Exception e) {
+            // Swallow all other exceptions.
+            if (BuildConfig.DEBUG) Log.e("SpassReprintModule", "cannot initialize spass", e);
             s = null;
         }
         spass = s;
@@ -109,7 +114,7 @@ public class SpassReprintModule implements ReprintModule {
             spassFingerprint.startIdentify(new SpassFingerprint.IdentifyListener() {
                 @Override
                 public void onFinished(int status) {
-                    if (BuildConfig.DEBUG) Log.d("SpassReprintModule",
+                   if (BuildConfig.DEBUG) Log.d("SpassReprintModule",
                             "Fingerprint event status: " + eventStatusName(status));
                     switch (status) {
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS:
@@ -142,7 +147,7 @@ public class SpassReprintModule implements ReprintModule {
                 }
             });
         } catch (Throwable t) {
-            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
+           if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
                     "fingerprint identification would not start", t);
             listener.onFailure(TAG, STATUS_HW_UNAVAILABLE, null);
             return;
