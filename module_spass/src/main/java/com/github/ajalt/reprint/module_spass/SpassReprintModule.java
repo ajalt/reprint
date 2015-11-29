@@ -13,6 +13,31 @@ import com.samsung.android.sdk.pass.SpassFingerprint;
 public class SpassReprintModule implements ReprintModule {
     public static final int TAG = 2;
 
+    /**
+     * The sensor was unable to read the finger.
+     */
+    public static final int STATUS_SENSOR_FAILED = SpassFingerprint.STATUS_SENSOR_FAILED;
+
+    /**
+     * The reader was unable to determine the finger.
+     */
+    public static final int STATUS_QUALITY_FAILED = SpassFingerprint.STATUS_QUALITY_FAILED;
+
+    /**
+     * A fingerprint was read that is not registered.
+     */
+    public static final int STATUS_AUTHENTICATION_FAILED = SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED;
+
+    /**
+     * An authentication attempt was started without any fingerprints being registered.
+     */
+    public static final int STATUS_NO_REGISTERED_FINGERPRINTS = 1001;
+
+    /**
+     * There was an error in the fingerprint reader hardware.
+     */
+    public static final int STATUS_HW_UNAVAILABLE = 1002;
+
     private final Context context;
 
     @Nullable
@@ -70,13 +95,11 @@ public class SpassReprintModule implements ReprintModule {
         }
         try {
             if (!spassFingerprint.hasRegisteredFinger()) {
-//                showNoRegisteredFingerprintError();
-                listener.onFailure();
+                listener.onFailure(TAG, STATUS_NO_REGISTERED_FINGERPRINTS, null);
                 return;
             }
         } catch (Throwable ignored) {
-//            showNoRegisteredFingerprintError();
-            listener.onFailure();
+            listener.onFailure(TAG, STATUS_HW_UNAVAILABLE, null);
             return;
         }
 
@@ -95,10 +118,8 @@ public class SpassReprintModule implements ReprintModule {
                             return;
                         case SpassFingerprint.STATUS_QUALITY_FAILED:
                         case SpassFingerprint.STATUS_SENSOR_FAILED:
-                            listener.onFailure();
-                            break;
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED:
-                            listener.onFailure();
+                            listener.onFailure(TAG, status, null);
                             break;
                         case SpassFingerprint.STATUS_TIMEOUT_FAILED:
                             // Spass will time out the fingerprint request after some unspecified amount of
@@ -123,7 +144,7 @@ public class SpassReprintModule implements ReprintModule {
         } catch (Throwable t) {
             if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
                     "fingerprint identification would not start", t);
-            listener.onFailure();
+            listener.onFailure(TAG, STATUS_HW_UNAVAILABLE, null);
             return;
         }
 

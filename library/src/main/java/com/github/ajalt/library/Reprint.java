@@ -49,7 +49,7 @@ public enum Reprint {
             }
         }
 
-        listener.onFailure();
+        listener.onFailure(0, 0, null);
     }
 
     public void cancelAuthentication() {
