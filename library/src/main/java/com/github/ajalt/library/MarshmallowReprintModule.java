@@ -4,12 +4,12 @@ import android.content.Context;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v4.os.CancellationSignal;
 
-public class MarshamllowReprintModule implements ReprintModule {
-    public static final int TAG = 0;
+public class MarshmallowReprintModule implements ReprintModule {
+    public static final int TAG = 1;
     private final FingerprintManagerCompat fingerprintManager;
 
-    public MarshamllowReprintModule(Context context) {
-        fingerprintManager = FingerprintManagerCompat.from(context);
+    public MarshmallowReprintModule(Context context) {
+        fingerprintManager = FingerprintManagerCompat.from(context.getApplicationContext());
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.github.ajalt.reprint.module_spass;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.os.CancellationSignal;
+import android.util.Log;
 
 import com.github.ajalt.library.AuthenticationListener;
 import com.github.ajalt.library.ReprintModule;
@@ -10,10 +11,19 @@ import com.samsung.android.sdk.pass.Spass;
 import com.samsung.android.sdk.pass.SpassFingerprint;
 
 public class SpassReprintModule implements ReprintModule {
+    public static final int TAG = 2;
+
+    private final Context context;
+
     @Nullable
     private final Spass spass;
 
+    @Nullable
+    private SpassFingerprint spassFingerprint;
+
     public SpassReprintModule(Context context) {
+        this.context = context.getApplicationContext();
+
         Spass s;
         try {
             s = new Spass();
@@ -22,6 +32,11 @@ public class SpassReprintModule implements ReprintModule {
             s = null;
         }
         spass = s;
+    }
+
+    @Override
+    public int tag() {
+        return TAG;
     }
 
     @Override
@@ -37,19 +52,119 @@ public class SpassReprintModule implements ReprintModule {
     @Override
     public boolean hasFingerprintRegistered() {
         try {
-            return isHardwarePresent() && new SpassFingerprint(context).hasRegisteredFinger();
+            if (isHardwarePresent()) {
+                if (spassFingerprint == null) {
+                    spassFingerprint = new SpassFingerprint(context);
+                }
+                return spassFingerprint.hasRegisteredFinger();
+            }
         } catch (Exception ignored) {
-            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public void authenticate(final AuthenticationListener listener, final CancellationSignal cancellationSignal) {
+        if (spassFingerprint == null) {
+            spassFingerprint = new SpassFingerprint(context);
+        }
+        try {
+            if (!spassFingerprint.hasRegisteredFinger()) {
+//                showNoRegisteredFingerprintError();
+                listener.onFailure();
+                return;
+            }
+        } catch (Throwable ignored) {
+//            showNoRegisteredFingerprintError();
+            listener.onFailure();
+            return;
+        }
+
+        cancelFingerprintRequest(spassFingerprint);
+
+        try {
+            spassFingerprint.startIdentify(new SpassFingerprint.IdentifyListener() {
+                @Override
+                public void onFinished(int status) {
+                    if (BuildConfig.DEBUG) Log.d("SpassReprintModule",
+                            "Fingerprint event status: " + eventStatusName(status));
+                    switch (status) {
+                        case SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS:
+                        case SpassFingerprint.STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS:
+                            listener.onSuccess();
+                            return;
+                        case SpassFingerprint.STATUS_QUALITY_FAILED:
+                        case SpassFingerprint.STATUS_SENSOR_FAILED:
+                            listener.onFailure();
+                            break;
+                        case SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED:
+                            listener.onFailure();
+                            break;
+                        case SpassFingerprint.STATUS_TIMEOUT_FAILED:
+                            // Spass will time out the fingerprint request after some unspecified amount of
+                            // time (a few tens of seconds), so just restart it right away if that happens.
+                            authenticate(listener, cancellationSignal);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                @Override
+                public void onReady() {
+
+                }
+
+                @Override
+                public void onStarted() {
+
+                }
+            });
+        } catch (Throwable t) {
+            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
+                    "fingerprint identification would not start", t);
+            listener.onFailure();
+            return;
+        }
+
+        cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
+            @Override
+            public void onCancel() {
+
+            }
+        });
+    }
+
+    private static String eventStatusName(int status) {
+        switch (status) {
+            case SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS:
+                return "STATUS_AUTHENTIFICATION_SUCCESS";
+            case SpassFingerprint.STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS:
+                return "STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS";
+            case SpassFingerprint.STATUS_TIMEOUT_FAILED:
+                return "STATUS_TIMEOUT";
+            case SpassFingerprint.STATUS_SENSOR_FAILED:
+                return "STATUS_SENSOR_ERROR";
+            case SpassFingerprint.STATUS_USER_CANCELLED:
+                return "STATUS_USER_CANCELLED";
+            case SpassFingerprint.STATUS_QUALITY_FAILED:
+                return "STATUS_QUALITY_FAILED";
+            case SpassFingerprint.STATUS_USER_CANCELLED_BY_TOUCH_OUTSIDE:
+                return "STATUS_USER_CANCELLED_BY_TOUCH_OUTSIDE";
+            case SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED:
+                return "STATUS_AUTHENTIFICATION_FAILED";
+            default:
+                return "invalid_status_value";
         }
     }
 
-    @Override
-    public void authenticate(AuthenticationListener listener, CancellationSignal cancellationSignal) {
 
-    }
-
-    @Override
-    public int tag() {
-        return 0;
+    private static void cancelFingerprintRequest(SpassFingerprint spassFingerprint) {
+        try {
+            spassFingerprint.cancelIdentify();
+        } catch (Throwable t) {
+            // There's no way to query if there's an active identify request,
+            // so just try to cancel and ignore any exceptions.
+        }
     }
 }

@@ -12,13 +12,14 @@ public enum Reprint {
         return INSTANCE;
     }
 
-    public void registerModule(ReprintModule module) {
+    public Reprint registerModule(ReprintModule module) {
         for (ReprintModule existing : modules) {
             if (module.tag() == existing.tag()) {
                 throw new IllegalArgumentException("Cannot register the same module type twice");
             }
         }
         modules.add(module);
+        return this;
     }
 
     public boolean isHardwarePresent() {
