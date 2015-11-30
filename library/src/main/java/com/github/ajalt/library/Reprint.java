@@ -1,55 +1,49 @@
 package com.github.ajalt.library;
 
+import android.support.annotation.Nullable;
 import android.support.v4.os.CancellationSignal;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public enum Reprint {
     INSTANCE;
+
+    @Nullable
+    private CancellationSignal cancellationSignal;
+
+    @Nullable
+    private ReprintModule module;
 
     public static Reprint instance() {
         return INSTANCE;
     }
 
     public Reprint registerModule(ReprintModule module) {
-        for (ReprintModule existing : modules) {
-            if (module.tag() == existing.tag()) {
-                throw new IllegalArgumentException("Cannot register the same module type twice");
-            }
+        if (this.module != null && module.tag() == this.module.tag()) {
+            return this;
         }
-        modules.add(module);
+
+        if (module.isHardwarePresent()) {
+            this.module = module;
+        }
+
         return this;
     }
 
     public boolean isHardwarePresent() {
-        for (ReprintModule module : modules) {
-            if (module.isHardwarePresent()) return true;
-        }
-        return false;
+        return module != null && module.isHardwarePresent();
     }
 
     public boolean hasFingerprintRegistered() {
-        for (ReprintModule module : modules) {
-            if (module.hasFingerprintRegistered()) return true;
-        }
-        return false;
+        return module != null && module.hasFingerprintRegistered();
     }
 
     public void authenticate(AuthenticationListener listener) {
-        if (modules.isEmpty()) {
-            throw new RuntimeException("Must register a reprint module before calling authenticate");
+        if (module == null || !module.isHardwarePresent() || !module.hasFingerprintRegistered()) {
+            listener.onFailure(0, AuthenticationFailureReason.NO_SENSOR, 0, null);
+            return;
         }
 
-        for (ReprintModule module : modules) {
-            if (module.isHardwarePresent() && module.hasFingerprintRegistered()) {
-                cancellationSignal = new CancellationSignal();
-                module.authenticate(listener, cancellationSignal);
-                return;
-            }
-        }
-
-        listener.onFailure(0, AuthenticationFailureReason.NO_SENSOR, 0, null);
+        cancellationSignal = new CancellationSignal();
+        module.authenticate(listener, cancellationSignal);
     }
 
     public void cancelAuthentication() {
@@ -58,7 +52,4 @@ public enum Reprint {
             cancellationSignal = null;
         }
     }
-
-    private CancellationSignal cancellationSignal;
-    private final List<ReprintModule> modules = new ArrayList<>(2);
 }
