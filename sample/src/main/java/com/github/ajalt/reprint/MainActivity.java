@@ -11,13 +11,11 @@ import android.widget.TextView;
 
 import com.github.ajalt.library.AuthenticationFailureReason;
 import com.github.ajalt.library.AuthenticationListener;
-import com.github.ajalt.library.MarshmallowReprintModule;
 import com.github.ajalt.library.Reprint;
-import com.github.ajalt.reprint.module_spass.SpassReprintModule;
 
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity implements AuthenticationListener {
-    TextView result;
+    private TextView result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +28,6 @@ public class MainActivity extends AppCompatActivity implements AuthenticationLis
         final TextView hardwarePresent = (TextView) findViewById(R.id.hardware_present);
         final TextView fingerprintsRegistered = (TextView) findViewById(R.id.fingerprints_registered);
         result = (TextView) findViewById(R.id.result);
-
-        Reprint.instance()
-                .registerModule(new MarshmallowReprintModule(this))
-                .registerModule(new SpassReprintModule(this));
 
         hardwarePresent.setText(String.valueOf(Reprint.instance().isHardwarePresent()));
         fingerprintsRegistered.setText(String.valueOf(Reprint.instance().hasFingerprintRegistered()));
