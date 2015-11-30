@@ -49,7 +49,7 @@ public enum Reprint {
             }
         }
 
-        throw new RuntimeException("No registered modules have fingerprints available.");
+        listener.onFailure();
     }
 
     public void cancelAuthentication() {

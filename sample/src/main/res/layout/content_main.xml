@@ -1,21 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.github.ajalt.reprint.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:ignore="HardcodedText">
 
     <TextView
-        android:id="@+id/text"
+        style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
-</RelativeLayout>
+        android:layout_marginBottom="8dp"
+        android:text="Reprint" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:stretchColumns="1">
+
+        <TableRow android:layout_margin="4dp">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:padding="4dp"
+                android:text="Hardware present:" />
+
+            <TextView
+                android:id="@+id/hardware_present"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:padding="4dp"
+                android:text="unknown" />
+        </TableRow>
+
+        <TableRow android:layout_margin="4dp">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:padding="4dp"
+                android:text="Fingerprints registered:" />
+
+            <TextView
+                android:id="@+id/fingerprints_registered"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:padding="4dp"
+                android:text="unknown" />
+        </TableRow>
+
+        <TableRow android:layout_margin="4dp">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:padding="4dp"
+                android:text="Authentication result:" />
+
+            <TextView
+                android:id="@+id/result"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:padding="4dp"
+                android:text="not started" />
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>
