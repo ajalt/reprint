@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.github.ajalt.library.AuthenticationFailureReason;
 import com.github.ajalt.library.AuthenticationListener;
 import com.github.ajalt.library.MarshmallowReprintModule;
 import com.github.ajalt.library.Reprint;
@@ -59,11 +60,11 @@ public class MainActivity extends AppCompatActivity implements AuthenticationLis
     }
 
     @Override
-    public void onFailure(int fromModule, int errorCode, @Nullable CharSequence errorMessage) {
+    public void onFailure(int fromModule, AuthenticationFailureReason failureReason, int errorCode, @Nullable CharSequence errorMessage) {
         if (errorMessage != null) {
             result.setText(errorMessage);
         } else {
-            result.setText("failed: " + errorCode);
+            result.setText("failed: " + failureReason + " (" + errorCode + ')');
         }
     }
 }

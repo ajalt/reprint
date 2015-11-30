@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.os.CancellationSignal;
 import android.util.Log;
 
+import com.github.ajalt.library.AuthenticationFailureReason;
 import com.github.ajalt.library.AuthenticationListener;
 import com.github.ajalt.library.ReprintModule;
 import com.samsung.android.sdk.pass.Spass;
@@ -100,11 +101,11 @@ public class SpassReprintModule implements ReprintModule {
         }
         try {
             if (!spassFingerprint.hasRegisteredFinger()) {
-                listener.onFailure(TAG, STATUS_NO_REGISTERED_FINGERPRINTS, null);
+                listener.onFailure(TAG, AuthenticationFailureReason.NO_FINGERPRINTS_REGISTERED, STATUS_NO_REGISTERED_FINGERPRINTS, null);
                 return;
             }
         } catch (Throwable ignored) {
-            listener.onFailure(TAG, STATUS_HW_UNAVAILABLE, null);
+            listener.onFailure(TAG, AuthenticationFailureReason.HARDWARE_UNAVAILABLE, STATUS_HW_UNAVAILABLE, null);
             return;
         }
 
@@ -123,13 +124,13 @@ public class SpassReprintModule implements ReprintModule {
                             return;
                         case SpassFingerprint.STATUS_QUALITY_FAILED:
                         case SpassFingerprint.STATUS_SENSOR_FAILED:
+                            listener.onFailure(TAG, AuthenticationFailureReason.SENSOR_FAILED, status, null);
+                            break;
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED:
-                            listener.onFailure(TAG, status, null);
+                            listener.onFailure(TAG, AuthenticationFailureReason.AUTHENTICATION_FAILED, status, null);
                             break;
                         case SpassFingerprint.STATUS_TIMEOUT_FAILED:
-                            // Spass will time out the fingerprint request after some unspecified amount of
-                            // time (a few tens of seconds), so just restart it right away if that happens.
-                            authenticate(listener, cancellationSignal);
+                            listener.onFailure(TAG, AuthenticationFailureReason.TIMEOUT, status, null);
                             break;
                         default:
                             break;
@@ -149,7 +150,7 @@ public class SpassReprintModule implements ReprintModule {
         } catch (Throwable t) {
            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
                     "fingerprint identification would not start", t);
-            listener.onFailure(TAG, STATUS_HW_UNAVAILABLE, null);
+            listener.onFailure(TAG, AuthenticationFailureReason.HARDWARE_UNAVAILABLE, STATUS_HW_UNAVAILABLE, null);
             return;
         }
 

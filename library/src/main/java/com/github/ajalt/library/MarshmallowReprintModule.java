@@ -118,12 +118,30 @@ public class MarshmallowReprintModule implements ReprintModule {
         fingerprintManager.authenticate(null, 0, cancellationSignal, new FingerprintManagerCompat.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errMsgId, CharSequence errString) {
-                listener.onFailure(TAG, errMsgId, errString);
+                AuthenticationFailureReason failureReason = AuthenticationFailureReason.UNKNOWN;
+                switch (errMsgId) {
+                    case FINGERPRINT_ERROR_HW_UNAVAILABLE:
+                        failureReason = AuthenticationFailureReason.HARDWARE_UNAVAILABLE;
+                        break;
+                    case FINGERPRINT_ERROR_UNABLE_TO_PROCESS:
+                    case FINGERPRINT_ERROR_NO_SPACE:
+                    case FINGERPRINT_ERROR_CANCELED:
+                        failureReason = AuthenticationFailureReason.SENSOR_FAILED;
+                        break;
+                    case FINGERPRINT_ERROR_TIMEOUT:
+                        failureReason = AuthenticationFailureReason.TIMEOUT;
+                        break;
+                    case FINGERPRINT_ERROR_LOCKOUT:
+                        failureReason = AuthenticationFailureReason.LOCKOUT;
+                        break;
+                }
+
+                listener.onFailure(TAG, failureReason, errMsgId, errString);
             }
 
             @Override
             public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
-                listener.onFailure(TAG, helpMsgId, helpString);
+                listener.onFailure(TAG, AuthenticationFailureReason.SENSOR_FAILED, helpMsgId, helpString);
             }
 
             @Override
@@ -133,7 +151,7 @@ public class MarshmallowReprintModule implements ReprintModule {
 
             @Override
             public void onAuthenticationFailed() {
-                listener.onFailure(TAG, FINGERPRINT_AUTHENTICATION_FAILED, null);
+                listener.onFailure(TAG, AuthenticationFailureReason.AUTHENTICATION_FAILED, FINGERPRINT_AUTHENTICATION_FAILED, null);
             }
         }, null);
     }

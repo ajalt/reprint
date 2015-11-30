@@ -1,7 +1,6 @@
 package com.github.ajalt.library;
 
 import android.support.v4.os.CancellationSignal;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,6 @@ public enum Reprint {
 
     public boolean isHardwarePresent() {
         for (ReprintModule module : modules) {
-            Log.d("Reprint", "module: " + module + " " + module.isHardwarePresent());
             if (module.isHardwarePresent()) return true;
         }
         return false;
@@ -51,7 +49,7 @@ public enum Reprint {
             }
         }
 
-        listener.onFailure(0, 0, null);
+        listener.onFailure(0, AuthenticationFailureReason.NO_SENSOR, 0, null);
     }
 
     public void cancelAuthentication() {
