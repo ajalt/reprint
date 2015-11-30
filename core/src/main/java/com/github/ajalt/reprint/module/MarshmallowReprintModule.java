@@ -1,8 +1,12 @@
-package com.github.ajalt.library;
+package com.github.ajalt.reprint.module;
 
 import android.content.Context;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v4.os.CancellationSignal;
+
+import com.github.ajalt.reprint.core.AuthenticationFailureReason;
+import com.github.ajalt.reprint.core.AuthenticationListener;
+import com.github.ajalt.reprint.core.ReprintModule;
 
 public class MarshmallowReprintModule implements ReprintModule {
     public static final int TAG = 1;

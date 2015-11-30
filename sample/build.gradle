@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile project(':library')
+    compile project(':core')
     compile project(':module_spass')
 
     compile 'com.android.support:appcompat-v7:23.1.1'

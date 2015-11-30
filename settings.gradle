@@ -1,1 +1,1 @@
-include ':sample', ':library', ':module_spass'
+include ':sample', ':core', ':module_spass'

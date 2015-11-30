@@ -9,9 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.github.ajalt.library.AuthenticationFailureReason;
-import com.github.ajalt.library.AuthenticationListener;
-import com.github.ajalt.library.Reprint;
+import com.github.ajalt.reprint.core.AuthenticationFailureReason;
+import com.github.ajalt.reprint.core.AuthenticationListener;
+import com.github.ajalt.reprint.core.Reprint;
 
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity implements AuthenticationListener {

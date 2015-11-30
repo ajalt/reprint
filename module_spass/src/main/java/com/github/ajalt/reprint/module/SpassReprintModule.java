@@ -1,13 +1,12 @@
-package com.github.ajalt.reprint.module_spass;
+package com.github.ajalt.reprint.module;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.os.CancellationSignal;
-import android.util.Log;
 
-import com.github.ajalt.library.AuthenticationFailureReason;
-import com.github.ajalt.library.AuthenticationListener;
-import com.github.ajalt.library.ReprintModule;
+import com.github.ajalt.reprint.core.AuthenticationFailureReason;
+import com.github.ajalt.reprint.core.AuthenticationListener;
+import com.github.ajalt.reprint.core.ReprintModule;
 import com.samsung.android.sdk.pass.Spass;
 import com.samsung.android.sdk.pass.SpassFingerprint;
 
@@ -59,7 +58,7 @@ public class SpassReprintModule implements ReprintModule {
             throw e;
         } catch (Exception e) {
             // Swallow all other exceptions.
-            if (BuildConfig.DEBUG) Log.e("SpassReprintModule", "cannot initialize spass", e);
+//            if (BuildConfig.DEBUG) Log.e("SpassReprintModule", "cannot initialize spass", e);
             s = null;
         }
         spass = s;
@@ -115,8 +114,8 @@ public class SpassReprintModule implements ReprintModule {
             spassFingerprint.startIdentify(new SpassFingerprint.IdentifyListener() {
                 @Override
                 public void onFinished(int status) {
-                   if (BuildConfig.DEBUG) Log.d("SpassReprintModule",
-                            "Fingerprint event status: " + eventStatusName(status));
+//                    if (BuildConfig.DEBUG) Log.d("SpassReprintModule",
+//                            "Fingerprint event status: " + eventStatusName(status));
                     switch (status) {
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS:
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS:
@@ -148,8 +147,8 @@ public class SpassReprintModule implements ReprintModule {
                 }
             });
         } catch (Throwable t) {
-           if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
-                    "fingerprint identification would not start", t);
+//            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
+//                    "fingerprint identification would not start", t);
             listener.onFailure(TAG, AuthenticationFailureReason.HARDWARE_UNAVAILABLE, STATUS_HW_UNAVAILABLE, null);
             return;
         }

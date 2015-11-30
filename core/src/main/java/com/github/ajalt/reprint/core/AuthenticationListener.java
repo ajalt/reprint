@@ -1,4 +1,4 @@
-package com.github.ajalt.library;
+package com.github.ajalt.reprint.core;
 
 import android.support.annotation.Nullable;
 

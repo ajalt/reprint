@@ -2,9 +2,9 @@ package com.github.ajalt.reprint;
 
 import android.app.Application;
 
-import com.github.ajalt.library.MarshmallowReprintModule;
-import com.github.ajalt.library.Reprint;
-import com.github.ajalt.reprint.module_spass.SpassReprintModule;
+import com.github.ajalt.reprint.core.Reprint;
+import com.github.ajalt.reprint.module.MarshmallowReprintModule;
+import com.github.ajalt.reprint.module.SpassReprintModule;
 
 public class App extends Application {
     @Override
