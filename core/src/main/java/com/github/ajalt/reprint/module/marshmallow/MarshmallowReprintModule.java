@@ -1,4 +1,4 @@
-package com.github.ajalt.reprint.module;
+package com.github.ajalt.reprint.module.marshmallow;
 
 import android.content.Context;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;

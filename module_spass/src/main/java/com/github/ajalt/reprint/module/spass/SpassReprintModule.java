@@ -1,8 +1,9 @@
-package com.github.ajalt.reprint.module;
+package com.github.ajalt.reprint.module.spass;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.os.CancellationSignal;
+import android.util.Log;
 
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
@@ -58,7 +59,7 @@ public class SpassReprintModule implements ReprintModule {
             throw e;
         } catch (Exception e) {
             // Swallow all other exceptions.
-//            if (BuildConfig.DEBUG) Log.e("SpassReprintModule", "cannot initialize spass", e);
+            if (BuildConfig.DEBUG) Log.e("SpassReprintModule", "cannot initialize spass", e);
             s = null;
         }
         spass = s;
@@ -114,8 +115,8 @@ public class SpassReprintModule implements ReprintModule {
             spassFingerprint.startIdentify(new SpassFingerprint.IdentifyListener() {
                 @Override
                 public void onFinished(int status) {
-//                    if (BuildConfig.DEBUG) Log.d("SpassReprintModule",
-//                            "Fingerprint event status: " + eventStatusName(status));
+                    if (BuildConfig.DEBUG) Log.d("SpassReprintModule",
+                            "Fingerprint event status: " + status);
                     switch (status) {
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS:
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS:
@@ -147,8 +148,8 @@ public class SpassReprintModule implements ReprintModule {
                 }
             });
         } catch (Throwable t) {
-//            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
-//                    "fingerprint identification would not start", t);
+            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
+                    "fingerprint identification would not start", t);
             listener.onFailure(TAG, AuthenticationFailureReason.HARDWARE_UNAVAILABLE, STATUS_HW_UNAVAILABLE, null);
             return;
         }
@@ -156,34 +157,10 @@ public class SpassReprintModule implements ReprintModule {
         cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
             @Override
             public void onCancel() {
-
+                cancelFingerprintRequest(spassFingerprint);
             }
         });
     }
-
-    private static String eventStatusName(int status) {
-        switch (status) {
-            case SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS:
-                return "STATUS_AUTHENTIFICATION_SUCCESS";
-            case SpassFingerprint.STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS:
-                return "STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS";
-            case SpassFingerprint.STATUS_TIMEOUT_FAILED:
-                return "STATUS_TIMEOUT";
-            case SpassFingerprint.STATUS_SENSOR_FAILED:
-                return "STATUS_SENSOR_ERROR";
-            case SpassFingerprint.STATUS_USER_CANCELLED:
-                return "STATUS_USER_CANCELLED";
-            case SpassFingerprint.STATUS_QUALITY_FAILED:
-                return "STATUS_QUALITY_FAILED";
-            case SpassFingerprint.STATUS_USER_CANCELLED_BY_TOUCH_OUTSIDE:
-                return "STATUS_USER_CANCELLED_BY_TOUCH_OUTSIDE";
-            case SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED:
-                return "STATUS_AUTHENTIFICATION_FAILED";
-            default:
-                return "invalid_status_value";
-        }
-    }
-
 
     private static void cancelFingerprintRequest(SpassFingerprint spassFingerprint) {
         try {
