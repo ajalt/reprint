@@ -74,7 +74,9 @@ public class SpassReprintModule implements ReprintModule {
     public boolean isHardwarePresent() {
         try {
             return spass != null && spass.isFeatureEnabled(Spass.DEVICE_FINGERPRINT);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
+                    "hasFingerprintRegistered failed", e);
             return false;
         }
     }
@@ -89,7 +91,9 @@ public class SpassReprintModule implements ReprintModule {
                 }
                 return spassFingerprint.hasRegisteredFinger();
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
+                    "hasFingerprintRegistered failed", e);
         }
         return false;
     }
@@ -138,14 +142,10 @@ public class SpassReprintModule implements ReprintModule {
                 }
 
                 @Override
-                public void onReady() {
-
-                }
+                public void onReady() {}
 
                 @Override
-                public void onStarted() {
-
-                }
+                public void onStarted() {}
             });
         } catch (Throwable t) {
             if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
