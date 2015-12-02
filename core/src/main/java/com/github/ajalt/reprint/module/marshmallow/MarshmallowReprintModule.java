@@ -8,6 +8,9 @@ import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.ReprintModule;
 
+/**
+ * A reprint module that authenticates fingerprint using the marshmallow Imprint API.
+ */
 public class MarshmallowReprintModule implements ReprintModule {
     public static final int TAG = 1;
 

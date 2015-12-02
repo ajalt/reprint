@@ -11,6 +11,9 @@ import com.github.ajalt.reprint.core.ReprintModule;
 import com.samsung.android.sdk.pass.Spass;
 import com.samsung.android.sdk.pass.SpassFingerprint;
 
+/**
+ * A Reprint module that authenticates fingerprints using the Samsung Pass api.
+ */
 public class SpassReprintModule implements ReprintModule {
     public static final int TAG = 2;
 
