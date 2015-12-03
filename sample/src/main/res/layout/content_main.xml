@@ -65,10 +65,24 @@
             <TextView
                 android:id="@+id/result"
                 style="@style/TextAppearance.AppCompat.Body1"
-                android:scrollHorizontally="false"
                 android:padding="4dp"
+                android:scrollHorizontally="false"
                 android:text="not started"
-                tools:text="not started started started started started started started"/>
+                tools:text="not started"/>
+        </TableRow>
+
+        <TableRow android:layout_margin="4dp">
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:padding="4dp"
+                android:text="Use ReactiveX:"/>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/rx_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"/>
         </TableRow>
 
     </TableLayout>

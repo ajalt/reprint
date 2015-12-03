@@ -6,46 +6,54 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
+import com.github.ajalt.reprint.reactive.AuthenticationFailedException;
+import com.github.ajalt.reprint.reactive.AuthenticationResult;
+import com.github.ajalt.reprint.reactive.RxReprint;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import rx.Observer;
 
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity {
-    private TextView result;
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
+
+    @Bind(R.id.result)
+    TextView result;
+
+    @Bind(R.id.hardware_present)
+    TextView hardwarePresent;
+
+    @Bind(R.id.fingerprints_registered)
+    TextView fingerprintsRegistered;
+
+    @Bind(R.id.rx_switch)
+    CompoundButton rxSwitch;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     private boolean running;
-    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        final TextView hardwarePresent = (TextView) findViewById(R.id.hardware_present);
-        final TextView fingerprintsRegistered = (TextView) findViewById(R.id.fingerprints_registered);
-        result = (TextView) findViewById(R.id.result);
 
         hardwarePresent.setText(String.valueOf(Reprint.isHardwarePresent()));
         fingerprintsRegistered.setText(String.valueOf(Reprint.hasFingerprintRegistered()));
 
         running = false;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (running) {
-                    cancel();
-                } else {
-                    start();
-                }
-            }
-        });
     }
 
     @Override
@@ -54,62 +62,117 @@ public class MainActivity extends AppCompatActivity {
         cancel();
     }
 
+    @OnClick(R.id.fab)
+    public void onFabClick() {
+        if (running) {
+            cancel();
+        } else {
+            start();
+        }
+    }
+
     private void start() {
         running = true;
         result.setText("Listening");
-        fab.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_close_clear_cancel));
-        Reprint.authenticate(listener);
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_24dp));
+
+        if (rxSwitch.isChecked()) {
+            startReactive();
+        } else {
+            startTraditional();
+        }
+    }
+
+    private void startTraditional() {
+        Reprint.authenticate(new AuthenticationListener() {
+            @Override
+            public void onSuccess() {
+                showSuccess();
+            }
+
+            @Override
+            public void onFailure(AuthenticationFailureReason failureReason, boolean fatal,
+                                  @Nullable CharSequence errorMessage, int fromModule, int errorCode) {
+                showError(failureReason, fatal, errorMessage, errorCode);
+            }
+        });
+    }
+
+    private void startReactive() {
+        RxReprint.authenticate()
+                .subscribe(new Observer<AuthenticationResult>() {
+                    @Override
+                    public void onNext(AuthenticationResult r) {
+                        if (r.failureReason == null) {
+                            showSuccess();
+                        } else {
+                            showError(r.failureReason, false, r.errorMessage, r.errorCode);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        AuthenticationFailedException e = (AuthenticationFailedException) throwable;
+                        showError(e.result.failureReason, true, e.result.errorMessage, e.result.errorCode);
+                    }
+
+                    @Override
+                    public void onCompleted() {}
+                });
     }
 
     private void cancel() {
         running = false;
-        fab.setImageDrawable(getResources().getDrawable(android.R.drawable.stat_notify_sync));
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_fingerprint_white_24dp));
         Reprint.cancelAuthentication();
     }
 
-    private AuthenticationListener listener = new AuthenticationListener() {
-        @Override
-        public void onSuccess() {
-            result.setText("Success");
-        }
+    private void showSuccess() {
+        result.setText("Success");
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_fingerprint_white_24dp));
+        running = false;
+    }
 
-        @Override
-        public void onFailure(AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int fromModule, int errorCode) {
-            CharSequence message = "";
-            if (errorMessage != null) {
-                message = errorMessage;
-            } else {
-                switch (failureReason) {
-                    case NO_HARDWARE:
-                        message = "Device does not have a sensor or does not have registered fingerprints";
-                        break;
-                    case HARDWARE_UNAVAILABLE:
-                        message = "Fingerprint reader temporarily unavailable";
-                        break;
-                    case NO_FINGERPRINTS_REGISTERED:
-                        message = "No registered fingerprints.";
-                        break;
-                    case SENSOR_FAILED:
-                        message = "Could not read fingerprint";
-                        break;
-                    case LOCKED_OUT:
-                        message = "Too many incorrect attempts";
-                        break;
-                    case TIMEOUT:
-                        message = "Cancelled due to inactivity";
-                        break;
-                    case AUTHENTICATION_FAILED:
-                        message = "Fingerprint not recognized";
-                        break;
-                    case CANCELLED:
-                        message = "Cancelled";
-                        break;
-                    case UNKNOWN:
-                        message = "Could not read fingerprint";
-                        break;
-                }
+    private void showError(AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int errorCode) {
+        CharSequence message = "";
+        if (errorMessage != null) {
+            message = errorMessage;
+        } else {
+            switch (failureReason) {
+                case NO_HARDWARE:
+                    message = "Device does not have a sensor or does not have registered fingerprints";
+                    break;
+                case HARDWARE_UNAVAILABLE:
+                    message = "Fingerprint reader temporarily unavailable";
+                    break;
+                case NO_FINGERPRINTS_REGISTERED:
+                    message = "No registered fingerprints.";
+                    break;
+                case SENSOR_FAILED:
+                    message = "Could not read fingerprint";
+                    break;
+                case LOCKED_OUT:
+                    message = "Too many incorrect attempts";
+                    break;
+                case TIMEOUT:
+                    message = "Cancelled due to inactivity";
+                    break;
+                case AUTHENTICATION_FAILED:
+                    message = "Fingerprint not recognized";
+                    break;
+                case CANCELLED:
+                    message = "Cancelled";
+                    break;
+                case UNKNOWN:
+                    message = "Could not read fingerprint";
+                    break;
             }
-            result.setText(message + (fatal ? "." : ". Try again.") + " (error code: " + errorCode + ')');
         }
-    };
+        result.setText(message + (fatal ? "." : ". Try again.") + " (error code: " + errorCode + ')');
+
+        if (fatal) {
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_fingerprint_white_24dp));
+            running = false;
+        }
+    }
 }
