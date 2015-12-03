@@ -55,39 +55,39 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(int fromModule, AuthenticationFailureReason failureReason, int errorCode, @Nullable CharSequence errorMessage) {
+        public void onFailure(int fromModule, AuthenticationFailureReason failureReason, boolean fatal, int errorCode, @Nullable CharSequence errorMessage) {
             CharSequence message = "";
             if (errorMessage != null) {
                 message = errorMessage;
             } else {
                 switch (failureReason) {
                     case NO_HARDWARE:
-                        message = "Device does not have a sensor or does not have registered fingerprints.";
+                        message = "Device does not have a sensor or does not have registered fingerprints";
                         break;
                     case HARDWARE_UNAVAILABLE:
-                        message = "Fingerprint reader temporarily unavailable.";
+                        message = "Fingerprint reader temporarily unavailable";
                         break;
                     case NO_FINGERPRINTS_REGISTERED:
                         message = "No registered fingerprints.";
                         break;
                     case SENSOR_FAILED:
-                        message = "Could not read fingerprint, try again.";
+                        message = "Could not read fingerprint";
                         break;
                     case LOCKED_OUT:
-                        message = "Too many incorrect attempts. Try again later.";
+                        message = "Too many incorrect attempts";
                         break;
                     case TIMEOUT:
-                        message = "Cancelled due to inactivity.";
+                        message = "Cancelled due to inactivity";
                         break;
                     case AUTHENTICATION_FAILED:
-                        message = "Fingerprint not recognized. Try again.";
+                        message = "Fingerprint not recognized";
                         break;
                     case UNKNOWN:
-                        message = "Could not read fingerprint.";
+                        message = "Could not read fingerprint";
                         break;
                 }
             }
-            result.setText(message + "  (error code: " + errorCode + ')');
+            result.setText(message + (fatal ? "." : ". Try again.") + " (error code: " + errorCode + ')');
         }
     };
 }

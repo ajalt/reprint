@@ -61,7 +61,7 @@ enum ReprintInternal {
 
     public void authenticate(final AuthenticationListener listener, int restartCount) {
         if (module == null || !module.isHardwarePresent() || !module.hasFingerprintRegistered()) {
-            listener.onFailure(0, AuthenticationFailureReason.NO_HARDWARE, 0, null);
+            listener.onFailure(0, AuthenticationFailureReason.NO_HARDWARE, true, 0, null);
             return;
         }
 
@@ -84,12 +84,12 @@ enum ReprintInternal {
             }
 
             @Override
-            public void onFailure(int fromModule, AuthenticationFailureReason failureReason, int errorCode, @Nullable CharSequence errorMessage) {
+            public void onFailure(int fromModule, AuthenticationFailureReason failureReason, boolean fatal, int errorCode, @Nullable CharSequence errorMessage) {
                 if (module != null && cancellationSignal != null &&
                         failureReason == AuthenticationFailureReason.TIMEOUT && restartCount > 0) {
                     module.authenticate(cancellationSignal, restartingListener(originalListener, restartCount - 1));
                 } else {
-                    originalListener.onFailure(fromModule, failureReason, errorCode, errorMessage);
+                    originalListener.onFailure(fromModule, failureReason, fatal, errorCode, errorMessage);
                 }
             }
         };
