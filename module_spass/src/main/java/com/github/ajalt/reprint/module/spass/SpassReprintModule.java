@@ -33,6 +33,11 @@ public class SpassReprintModule implements ReprintModule {
     public static final int STATUS_AUTHENTICATION_FAILED = SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED;
 
     /**
+     * A request was manually cancelled.
+     */
+    public static final int STATUS_USER_CANCELLED = SpassFingerprint.STATUS_USER_CANCELLED;
+
+    /**
      * An authentication attempt was started without any fingerprints being registered.
      */
     public static final int STATUS_NO_REGISTERED_FINGERPRINTS = 1001;
@@ -143,6 +148,8 @@ public class SpassReprintModule implements ReprintModule {
                             listener.onFailure(TAG, AuthenticationFailureReason.AUTHENTICATION_FAILED, false, status, null);
                             authenticate(cancellationSignal, listener);
                             break;
+                        case SpassFingerprint.STATUS_USER_CANCELLED:
+                            listener.onFailure(TAG, AuthenticationFailureReason.CANCELLED, true, status, null);
                         case SpassFingerprint.STATUS_TIMEOUT_FAILED:
                             listener.onFailure(TAG, AuthenticationFailureReason.TIMEOUT, true, status, null);
                             break;

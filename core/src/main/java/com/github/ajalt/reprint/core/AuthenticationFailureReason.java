@@ -39,6 +39,10 @@ public enum AuthenticationFailureReason {
      */
     AUTHENTICATION_FAILED,
     /**
+     * A request was manually cancelled.
+     */
+    CANCELLED,
+    /**
      * The authentication failed for an unknown reason.
      */
     UNKNOWN
