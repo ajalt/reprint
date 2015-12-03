@@ -136,10 +136,12 @@ public class SpassReprintModule implements ReprintModule {
                             return;
                         case SpassFingerprint.STATUS_QUALITY_FAILED:
                         case SpassFingerprint.STATUS_SENSOR_FAILED:
-                            listener.onFailure(TAG, AuthenticationFailureReason.SENSOR_FAILED, true, status, null);
+                            listener.onFailure(TAG, AuthenticationFailureReason.SENSOR_FAILED, false, status, null);
+                            authenticate(cancellationSignal, listener);
                             break;
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED:
-                            listener.onFailure(TAG, AuthenticationFailureReason.AUTHENTICATION_FAILED, true, status, null);
+                            listener.onFailure(TAG, AuthenticationFailureReason.AUTHENTICATION_FAILED, false, status, null);
+                            authenticate(cancellationSignal, listener);
                             break;
                         case SpassFingerprint.STATUS_TIMEOUT_FAILED:
                             listener.onFailure(TAG, AuthenticationFailureReason.TIMEOUT, true, status, null);
