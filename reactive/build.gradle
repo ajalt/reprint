@@ -6,7 +6,7 @@ android {
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
@@ -23,5 +23,5 @@ dependencies {
     compile project(':core')
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:support-annotations:23.1.1'
-    compile 'io.reactivex:rxjava:1.0.16'
+    compile 'io.reactivex:rxjava:1.0.17'
 }
