@@ -21,7 +21,7 @@ android {
 
 dependencies {
     compile project(':core')
-    compile project(':module_spass')
+    compile project(':reprint_spass')
     compile project(':reactive')
 
     compile 'com.android.support:appcompat-v7:23.1.1'
