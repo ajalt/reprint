@@ -12,14 +12,13 @@ import android.widget.TextView;
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
-import com.github.ajalt.reprint.reactive.AuthenticationFailedException;
 import com.github.ajalt.reprint.reactive.AuthenticationResult;
 import com.github.ajalt.reprint.reactive.RxReprint;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observer;
+import rx.functions.Action1;
 
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity {
@@ -100,28 +99,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void startReactive() {
         RxReprint.authenticate()
-                .subscribe(new Observer<AuthenticationResult>() {
+                .subscribe(new Action1<AuthenticationResult>() {
                     @Override
-                    public void onNext(AuthenticationResult r) {
+                    public void call(AuthenticationResult r) {
                         if (r.failureReason == null) {
                             showSuccess();
                         } else {
-                            showError(r.failureReason, false, r.errorMessage, r.errorCode);
+                            showError(r.failureReason, r.fatal, r.errorMessage, r.errorCode);
                         }
                     }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        AuthenticationFailedException e = (AuthenticationFailedException) throwable;
-                        showError(e.result.failureReason, true, e.result.errorMessage, e.result.errorCode);
-                    }
-
-                    @Override
-                    public void onCompleted() {}
                 });
     }
 
     private void cancel() {
+        result.setText("Cancelled");
         running = false;
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_fingerprint_white_24dp));
         Reprint.cancelAuthentication();
@@ -159,9 +150,6 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case AUTHENTICATION_FAILED:
                     message = "Fingerprint not recognized";
-                    break;
-                case CANCELLED:
-                    message = "Cancelled";
                     break;
                 case UNKNOWN:
                     message = "Could not read fingerprint";

@@ -134,15 +134,15 @@ public class MarshmallowReprintModule implements ReprintModule {
                     case FINGERPRINT_ERROR_NO_SPACE:
                         failureReason = AuthenticationFailureReason.SENSOR_FAILED;
                         break;
-                    case FINGERPRINT_ERROR_CANCELED:
-                        failureReason = AuthenticationFailureReason.CANCELLED;
-                        break;
                     case FINGERPRINT_ERROR_TIMEOUT:
                         failureReason = AuthenticationFailureReason.TIMEOUT;
                         break;
                     case FINGERPRINT_ERROR_LOCKOUT:
                         failureReason = AuthenticationFailureReason.LOCKED_OUT;
                         break;
+                    case FINGERPRINT_ERROR_CANCELED:
+                        // Don't send a cancelled message.
+                        return;
                 }
 
                 listener.onFailure(failureReason, true, errString, TAG, errMsgId);

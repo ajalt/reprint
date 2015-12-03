@@ -27,19 +27,18 @@ public class RxReprint {
                     public void onSuccess() {
                         if (!listening) return;
                         listening = false;
-                        subscriber.onNext(new AuthenticationResult(null, null, 0, 0));
+                        subscriber.onNext(new AuthenticationResult(null, true, null, 0, 0));
                         subscriber.onCompleted();
                     }
 
                     @Override
                     public void onFailure(AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int fromModule, int errorCode) {
                         if (!listening) return;
-                        final AuthenticationResult result = new AuthenticationResult(failureReason, errorMessage, fromModule, errorCode);
+                        final AuthenticationResult result = new AuthenticationResult(failureReason, fatal, errorMessage, fromModule, errorCode);
+                        subscriber.onNext(result);
                         if (fatal) {
                             listening = false;
-                            subscriber.onError(new AuthenticationFailedException(result));
-                        } else {
-                            subscriber.onNext(result);
+                            subscriber.onCompleted();
                         }
                     }
                 }, restartCount);

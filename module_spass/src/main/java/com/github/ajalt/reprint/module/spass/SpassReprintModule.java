@@ -148,13 +148,14 @@ public class SpassReprintModule implements ReprintModule {
                             listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, null, TAG, status);
                             authenticate(cancellationSignal, listener);
                             break;
-                        case SpassFingerprint.STATUS_USER_CANCELLED:
-                            listener.onFailure(AuthenticationFailureReason.CANCELLED, true, null, TAG, status);
                         case SpassFingerprint.STATUS_TIMEOUT_FAILED:
                             listener.onFailure(AuthenticationFailureReason.TIMEOUT, true, null, TAG, status);
                             break;
                         default:
                             listener.onFailure(AuthenticationFailureReason.UNKNOWN, true, null, TAG, status);
+                            break;
+                        case SpassFingerprint.STATUS_USER_CANCELLED:
+                            // Don't send a cancelled message.
                             break;
                     }
                 }
