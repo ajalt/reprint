@@ -25,9 +25,9 @@ ReactiveX interface.
 
 ```groovy
 dependencies {
-   compile 'com.github.ajalt.reprint:core:1.0@aar' // required, supports marshmallow devices
-   compile 'com.github.ajalt.reprint:reprint_spass:1.0@aar' // optional: support for pre-marshmallow Samsung devices
-   compile 'com.github.ajalt.reprint:reactive:1.0@aar' // optional: the ReactiveX interface
+   compile 'com.github.ajalt.reprint:core:1.1@aar' // required, supports marshmallow devices
+   compile 'com.github.ajalt.reprint:reprint_spass:1.1@aar' // optional: support for pre-marshmallow Samsung devices
+   compile 'com.github.ajalt.reprint:reactive:1.1@aar' // optional: the ReactiveX interface
 }
 ``` 
 
