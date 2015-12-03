@@ -9,12 +9,11 @@ import com.github.ajalt.reprint.module.marshmallow.MarshmallowReprintModule;
 import java.lang.reflect.Constructor;
 
 /**
- * Static methods for performing fingerprint authentication.
- * <p/>
- * Call {@link #initialize(Context)} in your application's {@code onCreate}, then call {@link
- * #authenticate(AuthenticationListener)} to perform authentication.
+ * Methods for performing fingerprint authentication.
+ *
+ * @hide
  */
-public enum ReprintInternal {
+enum ReprintInternal {
     INSTANCE;
 
     @Nullable
@@ -23,21 +22,8 @@ public enum ReprintInternal {
     @Nullable
     private ReprintModule module;
 
-    /**
-     * Return the global Reprint instance.
-     */
-    public static ReprintInternal instance() {
-        return INSTANCE;
-    }
-
-    /**
-     * Load all available reprint modules.
-     * <p/>
-     * This is equivalent to calling {@link #registerModule(ReprintModule)} with the spass module,
-     * if included, followed by the marshmallow module.
-     */
-    public static ReprintInternal initialize(Context context) {
-        if (INSTANCE.module != null) return INSTANCE;
+    public ReprintInternal initialize(Context context) {
+        if (module != null) return this;
 
         // Load the spass module if it was included.
         try {
@@ -48,23 +34,11 @@ public enum ReprintInternal {
         } catch (Exception ignored) {
         }
 
-        INSTANCE.registerModule(new MarshmallowReprintModule(context));
+        registerModule(new MarshmallowReprintModule(context));
 
-        return INSTANCE;
+        return this;
     }
 
-    /**
-     * Register an individual spass module.
-     * <p/>
-     * This is only necessary if you want to customize which modules are loaded, or the order in
-     * which they're registered. Most use cases should just call {@link #initialize(Context)}
-     * instead.
-     * <p/>
-     * Registering the same module twice will have no effect. The original module instance will
-     * remain registered.
-     *
-     * @param module The module to register.
-     */
     public ReprintInternal registerModule(ReprintModule module) {
         if (this.module != null && module.tag() == this.module.tag()) {
             return this;
@@ -77,44 +51,47 @@ public enum ReprintInternal {
         return this;
     }
 
-    /**
-     * Return true if a reprint module is registered that has a fingerprint reader.
-     */
     public boolean isHardwarePresent() {
         return module != null && module.isHardwarePresent();
     }
 
-    /**
-     * Return true if a reprint module is registered that has registered fingerprints.
-     */
     public boolean hasFingerprintRegistered() {
         return module != null && module.hasFingerprintRegistered();
     }
 
-    /**
-     * Start a fingerprint authentication request.
-     *
-     * @param listener The listener that will be notified of authentication events.
-     */
-    public void authenticate(AuthenticationListener listener) {
+    public void authenticate(final AuthenticationListener listener, int restartCount) {
         if (module == null || !module.isHardwarePresent() || !module.hasFingerprintRegistered()) {
             listener.onFailure(0, AuthenticationFailureReason.NO_HARDWARE, 0, null);
             return;
         }
 
         cancellationSignal = new CancellationSignal();
-        module.authenticate(listener, cancellationSignal);
+        module.authenticate(cancellationSignal, restartingListener(listener, restartCount));
     }
 
-    /**
-     * Cancel any active authentication requests.
-     * <p/>
-     * If no authentication is active, this call has no effect.
-     */
     public void cancelAuthentication() {
         if (cancellationSignal != null) {
             cancellationSignal.cancel();
             cancellationSignal = null;
         }
+    }
+
+    private AuthenticationListener restartingListener(final AuthenticationListener originalListener, final int restartCount) {
+        return new AuthenticationListener() {
+            @Override
+            public void onSuccess() {
+                originalListener.onSuccess();
+            }
+
+            @Override
+            public void onFailure(int fromModule, AuthenticationFailureReason failureReason, int errorCode, @Nullable CharSequence errorMessage) {
+                if (module != null && cancellationSignal != null &&
+                        failureReason == AuthenticationFailureReason.TIMEOUT && restartCount > 0) {
+                    module.authenticate(cancellationSignal, restartingListener(originalListener, restartCount - 1));
+                } else {
+                    originalListener.onFailure(fromModule, failureReason, errorCode, errorMessage);
+                }
+            }
+        };
     }
 }

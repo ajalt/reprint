@@ -20,7 +20,7 @@ public interface ReprintModule {
     /**
      * Return true if there are registered fingerprints on the current device.
      * <p/>
-     * If this returns true, {@link #authenticate(AuthenticationListener, CancellationSignal)}, it
+     * If this returns true, {@link #authenticate(CancellationSignal, AuthenticationListener)}, it
      * should be possible to perform authentication with this module.
      * <p/>
      * Don't call this method directly. Register an instance of this module with Reprint, then call
@@ -34,10 +34,10 @@ public interface ReprintModule {
      * Don't call this method directly. Register an instance of this module with Reprint, then call
      * {@link Reprint#authenticate(AuthenticationListener)}
      *
-     * @param listener           A listener that will be notified of the authentication status.
      * @param cancellationSignal A signal that can cancel the authentication request.
+     * @param listener           A listener that will be notified of the authentication status.
      */
-    void authenticate(AuthenticationListener listener, CancellationSignal cancellationSignal);
+    void authenticate(CancellationSignal cancellationSignal, AuthenticationListener listener);
 
     /**
      * A tag uniquely identifying this class. It must be the same for all instances of each class,

@@ -42,6 +42,11 @@ public class SpassReprintModule implements ReprintModule {
      */
     public static final int STATUS_HW_UNAVAILABLE = 1002;
 
+    /**
+     * The hardware is temporarily locked out due to too many failed attempts.
+     */
+    public static final int STATUS_LOCKED_OUT = 1003;
+
     private final Context context;
 
     @Nullable
@@ -102,7 +107,7 @@ public class SpassReprintModule implements ReprintModule {
     }
 
     @Override
-    public void authenticate(final AuthenticationListener listener, final CancellationSignal cancellationSignal) {
+    public void authenticate(final CancellationSignal cancellationSignal, final AuthenticationListener listener) {
         if (spassFingerprint == null) {
             spassFingerprint = new SpassFingerprint(context);
         }
@@ -140,6 +145,7 @@ public class SpassReprintModule implements ReprintModule {
                             listener.onFailure(TAG, AuthenticationFailureReason.TIMEOUT, status, null);
                             break;
                         default:
+                            listener.onFailure(TAG, AuthenticationFailureReason.UNKNOWN, status, null);
                             break;
                     }
                 }
@@ -153,7 +159,7 @@ public class SpassReprintModule implements ReprintModule {
         } catch (Throwable t) {
             if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
                     "fingerprint identification would not start", t);
-            listener.onFailure(TAG, AuthenticationFailureReason.HARDWARE_UNAVAILABLE, STATUS_HW_UNAVAILABLE, null);
+            listener.onFailure(TAG, AuthenticationFailureReason.LOCKED_OUT, STATUS_LOCKED_OUT, null);
             return;
         }
 

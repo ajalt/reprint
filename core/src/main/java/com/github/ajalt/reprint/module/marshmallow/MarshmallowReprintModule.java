@@ -121,7 +121,7 @@ public class MarshmallowReprintModule implements ReprintModule {
     }
 
     @Override
-    public void authenticate(final AuthenticationListener listener, CancellationSignal cancellationSignal) {
+    public void authenticate(CancellationSignal cancellationSignal, final AuthenticationListener listener) {
         fingerprintManager.authenticate(null, 0, cancellationSignal, new FingerprintManagerCompat.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errMsgId, CharSequence errString) {
@@ -139,7 +139,7 @@ public class MarshmallowReprintModule implements ReprintModule {
                         failureReason = AuthenticationFailureReason.TIMEOUT;
                         break;
                     case FINGERPRINT_ERROR_LOCKOUT:
-                        failureReason = AuthenticationFailureReason.LOCKOUT;
+                        failureReason = AuthenticationFailureReason.LOCKED_OUT;
                         break;
                 }
 

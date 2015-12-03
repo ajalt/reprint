@@ -14,7 +14,7 @@ import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
 
 @SuppressLint("SetTextI18n")
-public class MainActivity extends AppCompatActivity implements AuthenticationListener {
+public class MainActivity extends AppCompatActivity {
     private TextView result;
 
     @Override
@@ -29,14 +29,14 @@ public class MainActivity extends AppCompatActivity implements AuthenticationLis
         final TextView fingerprintsRegistered = (TextView) findViewById(R.id.fingerprints_registered);
         result = (TextView) findViewById(R.id.result);
 
-        hardwarePresent.setText(String.valueOf(Reprint.instance().isHardwarePresent()));
-        fingerprintsRegistered.setText(String.valueOf(Reprint.instance().hasFingerprintRegistered()));
+        hardwarePresent.setText(String.valueOf(Reprint.isHardwarePresent()));
+        fingerprintsRegistered.setText(String.valueOf(Reprint.hasFingerprintRegistered()));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 result.setText("listening");
-                Reprint.instance().authenticate(MainActivity.this);
+                Reprint.authenticate(listener);
             }
         });
     }
@@ -44,21 +44,50 @@ public class MainActivity extends AppCompatActivity implements AuthenticationLis
     @Override
     protected void onPause() {
         super.onPause();
-        Reprint.instance().cancelAuthentication();
+        Reprint.cancelAuthentication();
         result.setText("cancelled");
     }
 
-    @Override
-    public void onSuccess() {
-        result.setText("success");
-    }
-
-    @Override
-    public void onFailure(int fromModule, AuthenticationFailureReason failureReason, int errorCode, @Nullable CharSequence errorMessage) {
-        if (errorMessage != null) {
-            result.setText(errorMessage);
-        } else {
-            result.setText("failed: " + failureReason + " (" + errorCode + ')');
+    private AuthenticationListener listener = new AuthenticationListener() {
+        @Override
+        public void onSuccess() {
+            result.setText("success");
         }
-    }
+
+        @Override
+        public void onFailure(int fromModule, AuthenticationFailureReason failureReason, int errorCode, @Nullable CharSequence errorMessage) {
+            CharSequence message = "";
+            if (errorMessage != null) {
+                message = errorMessage;
+            } else {
+                switch (failureReason) {
+                    case NO_HARDWARE:
+                        message = "Device does not have a sensor or does not have registered fingerprints.";
+                        break;
+                    case HARDWARE_UNAVAILABLE:
+                        message = "Fingerprint reader temporarily unavailable.";
+                        break;
+                    case NO_FINGERPRINTS_REGISTERED:
+                        message = "No registered fingerprints.";
+                        break;
+                    case SENSOR_FAILED:
+                        message = "Could not read fingerprint, try again.";
+                        break;
+                    case LOCKED_OUT:
+                        message = "Too many incorrect attempts. Try again later.";
+                        break;
+                    case TIMEOUT:
+                        message = "Cancelled due to inactivity.";
+                        break;
+                    case AUTHENTICATION_FAILED:
+                        message = "Fingerprint not recognized. Try again.";
+                        break;
+                    case UNKNOWN:
+                        message = "Could not read fingerprint.";
+                        break;
+                }
+            }
+            result.setText(message + "  (error code: " + errorCode + ')');
+        }
+    };
 }
