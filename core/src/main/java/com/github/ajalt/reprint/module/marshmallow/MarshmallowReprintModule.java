@@ -10,12 +10,18 @@ import com.github.ajalt.reprint.core.ReprintModule;
 
 /**
  * A reprint module that authenticates fingerprint using the marshmallow Imprint API.
+ * <p/>
+ * This module supports most phones running Android Marshmallow.
+ * <p/>
+ * The values of error codes provided by the api overlap for fatal and non-fatal authentication
+ * failures. Fatal error code constants start with FINGERPRINT_ERROR, and non-fatal error codes
+ * start with FINGERPRINT_ACQUIRED.
  */
 public class MarshmallowReprintModule implements ReprintModule {
     public static final int TAG = 1;
 
-    // The following FINGERPRINT constants from FingerprintManager, since that class isn't
-    // available pre-marshmallow, and they aren't defined in FingerprintManagerCompat for some
+    // The following FINGERPRINT constants are copied from FingerprintManager, since that class
+    // isn't available pre-marshmallow, and they aren't defined in FingerprintManagerCompat for some
     // reason.
 
     /**

@@ -1,6 +1,7 @@
 package com.github.ajalt.reprint.reactive;
 
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
@@ -32,9 +33,9 @@ public class RxReprint {
                     }
 
                     @Override
-                    public void onFailure(AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int fromModule, int errorCode) {
+                    public void onFailure(@NonNull AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int moduleTag, int errorCode) {
                         if (!listening) return;
-                        final AuthenticationResult result = new AuthenticationResult(failureReason, fatal, errorMessage, fromModule, errorCode);
+                        final AuthenticationResult result = new AuthenticationResult(failureReason, fatal, errorMessage, moduleTag, errorCode);
                         subscriber.onNext(result);
                         if (fatal) {
                             listening = false;

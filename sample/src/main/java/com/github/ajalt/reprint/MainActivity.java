@@ -2,6 +2,7 @@ package com.github.ajalt.reprint;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -90,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(AuthenticationFailureReason failureReason, boolean fatal,
-                                  @Nullable CharSequence errorMessage, int fromModule, int errorCode) {
+            public void onFailure(@NonNull AuthenticationFailureReason failureReason, boolean fatal,
+                                  @Nullable CharSequence errorMessage, int moduleTag, int errorCode) {
                 showError(failureReason, fatal, errorMessage, errorCode);
             }
         });

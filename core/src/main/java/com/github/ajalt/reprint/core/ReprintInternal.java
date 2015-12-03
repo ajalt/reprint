@@ -1,6 +1,7 @@
 package com.github.ajalt.reprint.core;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.os.CancellationSignal;
 
@@ -60,8 +61,13 @@ enum ReprintInternal {
     }
 
     public void authenticate(final AuthenticationListener listener, int restartCount) {
-        if (module == null || !module.isHardwarePresent() || !module.hasFingerprintRegistered()) {
+        if (module == null || !module.isHardwarePresent()) {
             listener.onFailure(AuthenticationFailureReason.NO_HARDWARE, true, null, 0, 0);
+            return;
+        }
+
+        if (!module.hasFingerprintRegistered()) {
+            listener.onFailure(AuthenticationFailureReason.NO_FINGERPRINTS_REGISTERED, true, null, 0, 0);
             return;
         }
 
@@ -84,12 +90,12 @@ enum ReprintInternal {
             }
 
             @Override
-            public void onFailure(AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int fromModule, int errorCode) {
+            public void onFailure(@NonNull AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int moduleTag, int errorCode) {
                 if (module != null && cancellationSignal != null &&
                         failureReason == AuthenticationFailureReason.TIMEOUT && restartCount > 0) {
                     module.authenticate(cancellationSignal, restartingListener(originalListener, restartCount - 1));
                 } else {
-                    originalListener.onFailure(failureReason, fatal, errorMessage, fromModule, errorCode);
+                    originalListener.onFailure(failureReason, fatal, errorMessage, moduleTag, errorCode);
                 }
             }
         };

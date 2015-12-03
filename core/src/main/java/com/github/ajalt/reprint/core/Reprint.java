@@ -65,6 +65,12 @@ public class Reprint {
 
     /**
      * Start a fingerprint authentication request.
+     * <p/>
+     * If {@link #isHardwarePresent()} or {@link #hasFingerprintRegistered()} return false, no
+     * authentication will take place, and the listener's {@link AuthenticationListener#onFailure(AuthenticationFailureReason,
+     * boolean, CharSequence, int, int)} will immediately be called with the corresponding failure
+     * reason. In this case, the error message will be null, fatal will be true, and the other
+     * values are unspecified.
      *
      * @param listener     The listener that will be notified of authentication events.
      * @param restartCount If the authentication times out due to inactivity, the request will be

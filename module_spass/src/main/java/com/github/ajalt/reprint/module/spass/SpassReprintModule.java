@@ -12,10 +12,22 @@ import com.samsung.android.sdk.pass.Spass;
 import com.samsung.android.sdk.pass.SpassFingerprint;
 
 /**
- * A Reprint module that authenticates fingerprints using the Samsung Pass api.
+ * A Reprint module that authenticates fingerprints using the Samsung Pass SDK.
+ * <p/>
+ * This module supports all Samsung phones with fingerprint sensors.
  */
 public class SpassReprintModule implements ReprintModule {
     public static final int TAG = 2;
+
+    /**
+     * A fingerprint was read successfully.
+     */
+    public static final int STATUS_AUTHENTICATION_SUCCESS = SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS;
+
+    /**
+     * The sensor has been running too long.
+     */
+    public static final int STATUS_TIMEOUT_FAILED = SpassFingerprint.STATUS_TIMEOUT_FAILED;
 
     /**
      * The sensor was unable to read the finger.
@@ -26,6 +38,7 @@ public class SpassReprintModule implements ReprintModule {
      * The reader was unable to determine the finger.
      */
     public static final int STATUS_QUALITY_FAILED = SpassFingerprint.STATUS_QUALITY_FAILED;
+
 
     /**
      * A fingerprint was read that is not registered.
@@ -68,10 +81,10 @@ public class SpassReprintModule implements ReprintModule {
             s = new Spass();
             s.initialize(this.context);
         } catch (SecurityException e) {
-            // Throw security exceptions, which happen when the manifest permission is missing
+            // Rethrow security exceptions, which happen when the manifest permission is missing.
             throw e;
         } catch (Exception e) {
-            // Swallow all other exceptions.
+            // The awful spass sdk throws an exception on non-samsung devices, so swallow it here.
             if (BuildConfig.DEBUG) Log.e("SpassReprintModule", "cannot initialize spass", e);
             s = null;
         }
