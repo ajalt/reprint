@@ -31,6 +31,18 @@ dependencies {
 }
 ``` 
 
+### Permissions
+
+Reprint requires the following permissions be declared in your `AndroidManifest.xml`
+
+```xml
+<!-- Marshmallow fingerprint permission-->
+<uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+
+<!-- Samsung fingerprint permission, only reqiured if you include the spass module -->
+<uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>
+```
+
 # Usage
 
 See the [sample app](sample/src/main/java/com/github/ajalt/reprint/MainActivity.java) for a complete example.
