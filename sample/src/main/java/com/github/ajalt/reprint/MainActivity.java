@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(int fromModule, AuthenticationFailureReason failureReason, boolean fatal, int errorCode, @Nullable CharSequence errorMessage) {
+        public void onFailure(AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int fromModule, int errorCode) {
             CharSequence message = "";
             if (errorMessage != null) {
                 message = errorMessage;

@@ -145,12 +145,12 @@ public class MarshmallowReprintModule implements ReprintModule {
                         break;
                 }
 
-                listener.onFailure(TAG, failureReason, true, errMsgId, errString);
+                listener.onFailure(failureReason, true, errString, TAG, errMsgId);
             }
 
             @Override
             public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
-                listener.onFailure(TAG, AuthenticationFailureReason.SENSOR_FAILED, false, helpMsgId, helpString);
+                listener.onFailure(AuthenticationFailureReason.SENSOR_FAILED, false, helpString, TAG, helpMsgId);
             }
 
             @Override
@@ -160,7 +160,7 @@ public class MarshmallowReprintModule implements ReprintModule {
 
             @Override
             public void onAuthenticationFailed() {
-                listener.onFailure(TAG, AuthenticationFailureReason.AUTHENTICATION_FAILED, false, FINGERPRINT_AUTHENTICATION_FAILED, null);
+                listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, null, TAG, FINGERPRINT_AUTHENTICATION_FAILED);
             }
         }, null);
     }

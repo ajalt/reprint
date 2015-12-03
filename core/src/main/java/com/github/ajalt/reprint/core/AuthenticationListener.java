@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 public interface AuthenticationListener {
     void onSuccess();
 
-    void onFailure(int fromModule, AuthenticationFailureReason failureReason,
-                   boolean fatal, int errorCode, @Nullable CharSequence errorMessage);
+    void onFailure(AuthenticationFailureReason failureReason, boolean fatal,
+                   @Nullable CharSequence errorMessage, int fromModule,
+                   int errorCode);
 }

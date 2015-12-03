@@ -118,11 +118,11 @@ public class SpassReprintModule implements ReprintModule {
         }
         try {
             if (!spassFingerprint.hasRegisteredFinger()) {
-                listener.onFailure(TAG, AuthenticationFailureReason.NO_FINGERPRINTS_REGISTERED, true, STATUS_NO_REGISTERED_FINGERPRINTS, null);
+                listener.onFailure(AuthenticationFailureReason.NO_FINGERPRINTS_REGISTERED, true, null, TAG, STATUS_NO_REGISTERED_FINGERPRINTS);
                 return;
             }
         } catch (Throwable ignored) {
-            listener.onFailure(TAG, AuthenticationFailureReason.HARDWARE_UNAVAILABLE, true, STATUS_HW_UNAVAILABLE, null);
+            listener.onFailure(AuthenticationFailureReason.HARDWARE_UNAVAILABLE, true, null, TAG, STATUS_HW_UNAVAILABLE);
             return;
         }
 
@@ -141,20 +141,20 @@ public class SpassReprintModule implements ReprintModule {
                             return;
                         case SpassFingerprint.STATUS_QUALITY_FAILED:
                         case SpassFingerprint.STATUS_SENSOR_FAILED:
-                            listener.onFailure(TAG, AuthenticationFailureReason.SENSOR_FAILED, false, status, null);
+                            listener.onFailure(AuthenticationFailureReason.SENSOR_FAILED, false, null, TAG, status);
                             authenticate(cancellationSignal, listener);
                             break;
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED:
-                            listener.onFailure(TAG, AuthenticationFailureReason.AUTHENTICATION_FAILED, false, status, null);
+                            listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, null, TAG, status);
                             authenticate(cancellationSignal, listener);
                             break;
                         case SpassFingerprint.STATUS_USER_CANCELLED:
-                            listener.onFailure(TAG, AuthenticationFailureReason.CANCELLED, true, status, null);
+                            listener.onFailure(AuthenticationFailureReason.CANCELLED, true, null, TAG, status);
                         case SpassFingerprint.STATUS_TIMEOUT_FAILED:
-                            listener.onFailure(TAG, AuthenticationFailureReason.TIMEOUT, true, status, null);
+                            listener.onFailure(AuthenticationFailureReason.TIMEOUT, true, null, TAG, status);
                             break;
                         default:
-                            listener.onFailure(TAG, AuthenticationFailureReason.UNKNOWN, true, status, null);
+                            listener.onFailure(AuthenticationFailureReason.UNKNOWN, true, null, TAG, status);
                             break;
                     }
                 }
@@ -168,7 +168,7 @@ public class SpassReprintModule implements ReprintModule {
         } catch (Throwable t) {
             if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
                     "fingerprint identification would not start", t);
-            listener.onFailure(TAG, AuthenticationFailureReason.LOCKED_OUT, true, STATUS_LOCKED_OUT, null);
+            listener.onFailure(AuthenticationFailureReason.LOCKED_OUT, true, null, TAG, STATUS_LOCKED_OUT);
             return;
         }
 
