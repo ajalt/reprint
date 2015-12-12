@@ -127,7 +127,7 @@ public class MarshmallowReprintModule implements ReprintModule {
     }
 
     @Override
-    public void authenticate(CancellationSignal cancellationSignal, final AuthenticationListener listener) {
+    public void authenticate(final CancellationSignal cancellationSignal, final AuthenticationListener listener, final boolean restartOnNonFatal) {
         fingerprintManager.authenticate(null, 0, cancellationSignal, new FingerprintManagerCompat.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errMsgId, CharSequence errString) {
@@ -156,6 +156,9 @@ public class MarshmallowReprintModule implements ReprintModule {
 
             @Override
             public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
+                if (!restartOnNonFatal) {
+                    cancellationSignal.cancel();
+                }
                 listener.onFailure(AuthenticationFailureReason.SENSOR_FAILED, false, helpString, TAG, helpMsgId);
             }
 

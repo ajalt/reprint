@@ -13,13 +13,14 @@ import android.widget.TextView;
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
-import com.github.ajalt.reprint.reactive.AuthenticationResult;
+import com.github.ajalt.reprint.reactive.AuthenticationFailure;
 import com.github.ajalt.reprint.reactive.RxReprint;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.functions.Action1;
+import rx.functions.Func2;
 
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity {
@@ -100,14 +101,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void startReactive() {
         RxReprint.authenticate()
-                .subscribe(new Action1<AuthenticationResult>() {
+                .doOnError(
+                        new Action1<Throwable>() {
+                            @Override
+                            public void call(Throwable throwable) {
+                                AuthenticationFailure e = (AuthenticationFailure) throwable;
+                                showError(e.failureReason, e.fatal, e.errorMessage, e.errorCode);
+                            }
+                        }).retry(
+                new Func2<Integer, Throwable, Boolean>() {
                     @Override
-                    public void call(AuthenticationResult r) {
-                        if (r.failureReason == null) {
-                            showSuccess();
-                        } else {
-                            showError(r.failureReason, r.fatal, r.errorMessage, r.errorCode);
-                        }
+                    public Boolean call(Integer count, Throwable throwable) {
+                        AuthenticationFailure e = (AuthenticationFailure) throwable;
+                        return !e.fatal || e.failureReason == AuthenticationFailureReason.TIMEOUT && count < 5;
+                    }
+                }).subscribe(
+                new Action1<Void>() {
+                    @Override
+                    public void call(Void aVoid) {
+                        showSuccess();
                     }
                 });
     }

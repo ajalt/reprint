@@ -13,15 +13,11 @@ import rx.Subscriber;
 import rx.functions.Action0;
 
 public class RxReprint {
-    public static Observable<AuthenticationResult> authenticate() {
-        return authenticate(Reprint.DEFAULT_RESTART_COUNT);
-    }
-
-    public static Observable<AuthenticationResult> authenticate(final int restartCount) {
-        return Observable.create(new Observable.OnSubscribe<AuthenticationResult>() {
+    public static Observable<Void> authenticate() {
+        return Observable.create(new Observable.OnSubscribe<Void>() {
             @Override
-            public void call(final Subscriber<? super AuthenticationResult> subscriber) {
-                Reprint.authenticate(new AuthenticationListener() {
+            public void call(final Subscriber<? super Void> subscriber) {
+                Reprint.authenticateWithoutRestart(new AuthenticationListener() {
                     private boolean listening = true;
 
                     @Override
@@ -29,7 +25,7 @@ public class RxReprint {
                         if (!listening) return;
                         listening = false;
                         if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(new AuthenticationResult(null, true, null, 0, 0));
+                            subscriber.onNext(null);
                             subscriber.onCompleted();
                         }
                     }
@@ -37,18 +33,15 @@ public class RxReprint {
                     @Override
                     public void onFailure(@NonNull AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int moduleTag, int errorCode) {
                         if (!listening) return;
-                        final AuthenticationResult result = new AuthenticationResult(failureReason, fatal, errorMessage, moduleTag, errorCode);
+                        final AuthenticationFailure result = new AuthenticationFailure(failureReason, fatal, errorMessage, moduleTag, errorCode);
                         if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(result);
+                            subscriber.onError(result);
                         }
                         if (fatal) {
                             listening = false;
-                            if (!subscriber.isUnsubscribed()) {
-                                subscriber.onCompleted();
-                            }
                         }
                     }
-                }, restartCount);
+                });
             }
         }).doOnUnsubscribe(new Action0() {
             @Override
@@ -58,3 +51,4 @@ public class RxReprint {
         });
     }
 }
+

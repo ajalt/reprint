@@ -125,7 +125,7 @@ public class SpassReprintModule implements ReprintModule {
     }
 
     @Override
-    public void authenticate(final CancellationSignal cancellationSignal, final AuthenticationListener listener) {
+    public void authenticate(final CancellationSignal cancellationSignal, final AuthenticationListener listener, final boolean restartOnNonFatal) {
         if (spassFingerprint == null) {
             spassFingerprint = new SpassFingerprint(context);
         }
@@ -155,11 +155,11 @@ public class SpassReprintModule implements ReprintModule {
                         case SpassFingerprint.STATUS_QUALITY_FAILED:
                         case SpassFingerprint.STATUS_SENSOR_FAILED:
                             listener.onFailure(AuthenticationFailureReason.SENSOR_FAILED, false, null, TAG, status);
-                            authenticate(cancellationSignal, listener);
+                            if (restartOnNonFatal) authenticate(cancellationSignal, listener, true);
                             break;
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED:
                             listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, null, TAG, status);
-                            authenticate(cancellationSignal, listener);
+                            if (restartOnNonFatal) authenticate(cancellationSignal, listener, true);
                             break;
                         case SpassFingerprint.STATUS_TIMEOUT_FAILED:
                             listener.onFailure(AuthenticationFailureReason.TIMEOUT, true, null, TAG, status);

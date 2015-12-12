@@ -60,7 +60,17 @@ enum ReprintInternal {
         return module != null && module.hasFingerprintRegistered();
     }
 
-    public void authenticate(final AuthenticationListener listener, int restartCount) {
+    /**
+     * Start an authentication request.
+     *
+     * @param listener          The listener to be notified.
+     * @param restartOnNonFatal If true, restartCount is ignored and only one listener callback will
+     *                          ever be called.
+     * @param restartCount      If restartOnNonFatal is false, this is the number of times to
+     *                          restart on a timeout. Other nonfatal errors will be restarted
+     *                          indefinitely.
+     */
+    public void authenticate(final AuthenticationListener listener, boolean restartOnNonFatal, int restartCount) {
         if (module == null || !module.isHardwarePresent()) {
             listener.onFailure(AuthenticationFailureReason.NO_HARDWARE, true, null, 0, 0);
             return;
@@ -72,7 +82,11 @@ enum ReprintInternal {
         }
 
         cancellationSignal = new CancellationSignal();
-        module.authenticate(cancellationSignal, restartingListener(listener, restartCount));
+        if (restartOnNonFatal) {
+            module.authenticate(cancellationSignal, restartingListener(listener, restartCount), true);
+        } else {
+            module.authenticate(cancellationSignal, listener, false);
+        }
     }
 
     public void cancelAuthentication() {
@@ -93,7 +107,7 @@ enum ReprintInternal {
             public void onFailure(@NonNull AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int moduleTag, int errorCode) {
                 if (module != null && cancellationSignal != null &&
                         failureReason == AuthenticationFailureReason.TIMEOUT && restartCount > 0) {
-                    module.authenticate(cancellationSignal, restartingListener(originalListener, restartCount - 1));
+                    module.authenticate(cancellationSignal, restartingListener(originalListener, restartCount - 1), true);
                 } else {
                     originalListener.onFailure(failureReason, fatal, errorMessage, moduleTag, errorCode);
                 }

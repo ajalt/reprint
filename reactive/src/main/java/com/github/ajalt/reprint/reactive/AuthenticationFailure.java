@@ -5,16 +5,12 @@ import android.support.annotation.Nullable;
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 
 /**
- * A data class that holds the results of an authentication request.
+ * A data class exception that holds the results of an authentication request failure.
  * <p/>
- * When a fingerprint is authenticated successfully, the failureReason will be null, and the other
- * values will be unspecified.
- * <p/>
- * On a failure, the values are the same as the arguments to {@link com.github.ajalt.reprint.core.AuthenticationListener#onFailure(AuthenticationFailureReason,
+ * The values are the same as the arguments to {@link com.github.ajalt.reprint.core.AuthenticationListener#onFailure(AuthenticationFailureReason,
  * boolean, CharSequence, int, int)}
  */
-public class AuthenticationResult {
-    @Nullable
+public class AuthenticationFailure extends Exception {
     public final AuthenticationFailureReason failureReason;
 
     @Nullable
@@ -24,8 +20,8 @@ public class AuthenticationResult {
     public final int fromModule;
     public final int errorCode;
 
-    public AuthenticationResult(@Nullable AuthenticationFailureReason failureReason, boolean fatal,
-                                @Nullable CharSequence errorMessage, int fromModule, int errorCode) {
+    public AuthenticationFailure(AuthenticationFailureReason failureReason, boolean fatal,
+                                 @Nullable CharSequence errorMessage, int fromModule, int errorCode) {
         this.failureReason = failureReason;
         this.fatal = fatal;
         this.errorMessage = errorMessage;

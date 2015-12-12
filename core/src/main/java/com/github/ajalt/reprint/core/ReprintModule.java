@@ -20,8 +20,8 @@ public interface ReprintModule {
     /**
      * Return true if there are registered fingerprints on the current device.
      * <p/>
-     * If this returns true, {@link #authenticate(CancellationSignal, AuthenticationListener)}, it
-     * should be possible to perform authentication with this module.
+     * If this returns true, {@link #authenticate(CancellationSignal, AuthenticationListener,
+     * boolean)}, it should be possible to perform authentication with this module.
      * <p/>
      * Don't call this method directly. Register an instance of this module with Reprint, then call
      * {@link Reprint#hasFingerprintRegistered()}
@@ -36,8 +36,14 @@ public interface ReprintModule {
      *
      * @param cancellationSignal A signal that can cancel the authentication request.
      * @param listener           A listener that will be notified of the authentication status.
+     * @param restartOnNonFatal  If true, and a non-fatal error occurs, the module should ensure
+     *                           that the sensor is running before calling {@link
+     *                           AuthenticationListener#onFailure(AuthenticationFailureReason,
+     *                           boolean, CharSequence, int, int)}. If false, the module should
+     *                           ensure that the sensor is not running before calling any listener
+     *                           callbacks.
      */
-    void authenticate(CancellationSignal cancellationSignal, AuthenticationListener listener);
+    void authenticate(CancellationSignal cancellationSignal, AuthenticationListener listener, boolean restartOnNonFatal);
 
     /**
      * A tag uniquely identifying this class. It must be the same for all instances of each class,

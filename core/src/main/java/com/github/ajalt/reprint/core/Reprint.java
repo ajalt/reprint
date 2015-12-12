@@ -79,7 +79,19 @@ public class Reprint {
      *                     the number of retries has been exceeded.
      */
     public static void authenticate(AuthenticationListener listener, int restartCount) {
-        ReprintInternal.INSTANCE.authenticate(listener, restartCount);
+        ReprintInternal.INSTANCE.authenticate(listener, true, restartCount);
+    }
+
+    /**
+     * Start a fingerprint authentication request.
+     * <p/>
+     * This variant will not restart the fingerprint reader after any failure, including non-fatal
+     * failures.
+     *
+     * @param listener The listener that will be notified of authentication events.
+     */
+    public static void authenticateWithoutRestart(AuthenticationListener listener) {
+        ReprintInternal.INSTANCE.authenticate(listener, false, 0);
     }
 
     /**
