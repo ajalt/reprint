@@ -1,4 +1,6 @@
-# Reprint [![Release](https://img.shields.io/github/tag/ajalt/reprint.svg?label=maven)](https://jitpack.io/#ajalt/reprint)
+![Reprint](resources/banner.png)
+
+[![Release](https://img.shields.io/github/tag/ajalt/reprint.svg?label=maven)](https://jitpack.io/#ajalt/reprint) ![License](http://img.shields.io/:license-mit-blue.svg) ![API](https://img.shields.io/badge/API-14%2B-blue.svg)
 
 A simple, unified fingerprint authentication library for Android with
 ReactiveX extensions.
@@ -16,7 +18,7 @@ First, add jitpack to your gradle repositories.
 
 ```groovy
 repositories {
-       maven { url "https://jitpack.io" }
+    maven { url "https://jitpack.io" }
 }
 ```
 
@@ -56,12 +58,15 @@ the fingerprint reader and listen for a fingerprint. You can call
 `Reprint.cancelAuthentication` to turn the reader off before it finishes
 normally. 
 
-There are two ways to be notified of authentication results.
+There are two ways to be notified of authentication results: traditional
+callback, and a ReactiveX Observable..
 
 ### Callbacks
 
 Pass an `AuthenticationListener` to `authenticate`, and it's callbacks will be
-called with results.
+called with results. The `onFailure` callback will be called repeatedly until
+the sensor is disabled or a fingerprint is authenticated correcty, at which
+point `onSuccess` will be called.
 
 ```java
 Reprint.authenticate(new AuthenticationListener() {
@@ -71,7 +76,7 @@ Reprint.authenticate(new AuthenticationListener() {
     }
 
     @Override
-    public void onFailure(@NonNull AuthenticationFailureReason failureReason, boolean fatal,
+    public void onFailure(AuthenticationFailureReason failureReason, boolean fatal,
                           @Nullable CharSequence errorMessage, int moduleTag, int errorCode) {
         showError(failureReason, fatal, errorMessage, errorCode);
     }
@@ -97,26 +102,27 @@ reason for the failure.
 ### ReactiveX interface
 
 If you include the `reactive` reprint library, you can be notified of
-authentication results through an Observable by calling `RxReprint.authenticate`.
+authentication results through an Observable by calling
+`RxReprint.authenticate`. In this case, the subscriber's `onNext` will be
+called at most once, after a successful authentication. When the `onError`
+method is called, the sensor will already be stopped.
+
+```java
+RxReprint.authenticate().subscribe(::showSuccess);
+```
+
+You probably want to use the `retry` operator to restart the sensor when a
+non-fatal error occurs.
 
 ```java
 RxReprint.authenticate()
-    .subscribe(r -> {
-        if (r.failureReason == null) {
-            showSuccess();
-        } else {
-            showError(r.failureReason, r.fatal, r.errorMessage, r.errorCode);
-        }
-    });
+         .doOnError(::showError)
+         .retry((count, t) -> {
+            AuthenticationFailure e = (AuthenticationFailure) t;
+            return !e.fatal || e.failureReason == AuthenticationFailureReason.TIMEOUT && count < 5;
+         })
+         .subscribe(::showSuccess);
 ```
-
-The Subscriber's `onNext` will be called for both success and failure, since
-failure doesn't necessarily end the event stream. The subscriber is given a
-data class, `AuthenticationResult`, which contains the fields that match the
-parameters to the `onFailure` method listed above. 
-
-If the `failureReason` is null, then the authentication was a success.
-Otherwise, the fields have the same values as above.
 
 One advantage that this interface has is that when the subscriber
 unsubscribes, the authentication request is automatically canceled. So you
