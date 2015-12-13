@@ -71,7 +71,7 @@ point `onSuccess` will be called.
 ```java
 Reprint.authenticate(new AuthenticationListener() {
     @Override
-    public void onSuccess() {
+    public void onSuccess(int moduleTag) {
         showSuccess();
     }
 
@@ -108,7 +108,7 @@ called at most once, after a successful authentication. When the `onError`
 method is called, the sensor will already be stopped.
 
 ```java
-RxReprint.authenticate().subscribe(::showSuccess);
+RxReprint.authenticate().subscribe(::showSuccess, ::showError);
 ```
 
 You probably want to use the `retry` operator to restart the sensor when a
@@ -116,12 +116,12 @@ non-fatal error occurs.
 
 ```java
 RxReprint.authenticate()
-         .doOnError(::showError)
+         .doOnError(::showHelp)
          .retry((count, t) -> {
             AuthenticationFailure e = (AuthenticationFailure) t;
             return !e.fatal || e.failureReason == AuthenticationFailureReason.TIMEOUT && count < 5;
          })
-         .subscribe(::showSuccess);
+         .subscribe(::showSuccess, ::showError);
 ```
 
 One advantage that this interface has is that when the subscriber
