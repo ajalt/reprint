@@ -99,8 +99,8 @@ enum ReprintInternal {
     private AuthenticationListener restartingListener(final AuthenticationListener originalListener, final int restartCount) {
         return new AuthenticationListener() {
             @Override
-            public void onSuccess() {
-                originalListener.onSuccess();
+            public void onSuccess(int moduleTag) {
+                originalListener.onSuccess(moduleTag);
             }
 
             @Override

@@ -7,25 +7,40 @@ import android.support.annotation.Nullable;
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
+import com.github.ajalt.reprint.core.ReprintModule;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action0;
 
+/**
+ * ReactiveX interface to reprint authentication.
+ */
 public class RxReprint {
-    public static Observable<Void> authenticate() {
-        return Observable.create(new Observable.OnSubscribe<Void>() {
+    /**
+     * Return an {@link Observable} whose {@link Subscriber#onNext(Object)} will be called at most
+     * once.
+     * <p/>
+     * The argument is the {@link ReprintModule#tag()} of the module that was used for
+     * authentication. Any failures will cause {@link Subscriber#onNext(Object)} to be called with
+     * an {@link AuthenticationFailure} containing the reason for the failure.
+     * <p/>
+     * When either onNext or onFailure is called, the sensor will be off, so you will usually want
+     * to resubscribe if the failure is non-fatal.
+     */
+    public static Observable<Integer> authenticate() {
+        return Observable.create(new Observable.OnSubscribe<Integer>() {
             @Override
-            public void call(final Subscriber<? super Void> subscriber) {
+            public void call(final Subscriber<? super Integer> subscriber) {
                 Reprint.authenticateWithoutRestart(new AuthenticationListener() {
                     private boolean listening = true;
 
                     @Override
-                    public void onSuccess() {
+                    public void onSuccess(int moduleTag) {
                         if (!listening) return;
                         listening = false;
                         if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(null);
+                            subscriber.onNext(moduleTag);
                             subscriber.onCompleted();
                         }
                     }

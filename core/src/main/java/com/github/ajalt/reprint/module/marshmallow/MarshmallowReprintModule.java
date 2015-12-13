@@ -164,7 +164,7 @@ public class MarshmallowReprintModule implements ReprintModule {
 
             @Override
             public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
-                listener.onSuccess();
+                listener.onSuccess(TAG);
             }
 
             @Override

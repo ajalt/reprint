@@ -19,6 +19,7 @@ import com.github.ajalt.reprint.reactive.RxReprint;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func2;
 
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     private void startTraditional() {
         Reprint.authenticate(new AuthenticationListener() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(int moduleTag) {
                 showSuccess();
             }
 
@@ -115,13 +116,15 @@ public class MainActivity extends AppCompatActivity {
                         AuthenticationFailure e = (AuthenticationFailure) throwable;
                         return !e.fatal || e.failureReason == AuthenticationFailureReason.TIMEOUT && count < 5;
                     }
-                }).subscribe(
-                new Action1<Void>() {
-                    @Override
-                    public void call(Void aVoid) {
-                        showSuccess();
-                    }
-                });
+                })
+                .onErrorResumeNext(Observable.<Integer>empty())
+                .subscribe(
+                    new Action1<Integer>() {
+                        @Override
+                        public void call(Integer tag) {
+                            showSuccess();
+                        }
+                    });
     }
 
     private void cancel() {

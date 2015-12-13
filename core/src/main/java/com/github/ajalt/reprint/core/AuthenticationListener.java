@@ -9,8 +9,11 @@ import android.support.annotation.Nullable;
 public interface AuthenticationListener {
     /**
      * Called after a fingerprint is successfully authenticated.
+     *
+     * @param moduleTag The {@link ReprintModule#tag()} of the module that was used for
+     *                  authentication.
      */
-    void onSuccess();
+    void onSuccess(int moduleTag);
 
     /**
      * Called after an error or authentication failure.
@@ -21,7 +24,7 @@ public interface AuthenticationListener {
      *                      callbacks will be called in the future.
      * @param errorMessage  If not null, an informative string given by the underlying fingerprint
      *                      sdk that can be displayed in the ui.
-     * @param moduleTag    The {@link ReprintModule#tag()} of the module that is currently active.
+     * @param moduleTag     The {@link ReprintModule#tag()} of the module that is currently active.
      *                      This is useful to know the meaning of the error code.
      * @param errorCode     The specific error code returned by the module's underlying sdk. Check
      *                      the constants defined in the module for possible values and their

@@ -150,7 +150,7 @@ public class SpassReprintModule implements ReprintModule {
                     switch (status) {
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS:
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS:
-                            listener.onSuccess();
+                            listener.onSuccess(TAG);
                             return;
                         case SpassFingerprint.STATUS_QUALITY_FAILED:
                         case SpassFingerprint.STATUS_SENSOR_FAILED:
