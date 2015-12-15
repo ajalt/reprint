@@ -59,7 +59,7 @@ the fingerprint reader and listen for a fingerprint. You can call
 normally. 
 
 There are two ways to be notified of authentication results: traditional
-callback, and a ReactiveX Observable..
+callback, and a ReactiveX Observable.
 
 ### Callbacks
 
@@ -91,10 +91,11 @@ The `fatal` parameter is true if the sensor has stopped and cannot be
 restarted, such as when it's locked out. It's false if the sensor is still
 running, such as when a finger was moved over the sensor too quickly.
 
-The `errorMessage` is a string that, if it's not null, will contain some help
-text provided by the underlying SDK about the failure. You should show this
-text to the user. The underlying SDK might not provide help text, in which
-case you should show your own message.
+The `errorMessage` is a string that will contain some help text provided by
+the underlying SDK about the failure. You should show this text to the user,
+or some other message of your own based on the failureReason. This string will
+never be null, and will be localized into the current locale. **There are
+currently help messages in 80 different locales.**
 
 The `moduleTag` and `errorCode` can be used to find out the SDK-specific
 reason for the failure.
