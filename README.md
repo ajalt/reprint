@@ -77,7 +77,7 @@ Reprint.authenticate(new AuthenticationListener() {
 
     @Override
     public void onFailure(AuthenticationFailureReason failureReason, boolean fatal,
-                          @Nullable CharSequence errorMessage, int moduleTag, int errorCode) {
+                          CharSequence errorMessage, int moduleTag, int errorCode) {
         showError(failureReason, fatal, errorMessage, errorCode);
     }
 });
