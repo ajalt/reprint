@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/* //device/apps/common/assets/res/any/strings.xml
+**
+** Copyright 2006, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+ -->
+<resources>
+    <string msgid="735082772341716043" name="fingerprint_acquired_partial">"Deler av fingeravtrykket er registrert. Prøv på nytt."</string>
+    <string msgid="4596546021310923214" name="fingerprint_acquired_insufficient">"Kunne ikke registrere fingeravtrykket. Prøv på nytt."</string>
+    <string msgid="1087209702421076105" name="fingerprint_acquired_imager_dirty">"Fingeravtrykksensoren er skitten. Rengjør den og prøv på nytt."</string>
+    <string msgid="6470642383109155969" name="fingerprint_acquired_too_fast">"Du flyttet fingeren for kjapt. Prøv på nytt."</string>
+    <string msgid="59250885689661653" name="fingerprint_acquired_too_slow">"Du flyttet fingeren for sakte. Prøv på nytt."</string>
+  <string msgid="7955921658939936596" name="fingerprint_error_hw_not_available">"Maskinvare for fingeravtrykk er ikke tilgjengelig."</string>
+    <string msgid="1055819001126053318" name="fingerprint_error_no_space">"Fingeravtrykket kan ikke lagres. Fjern et eksisterende fingeravtrykk."</string>
+    <string msgid="3927186043737732875" name="fingerprint_error_timeout">"Tidsavbrudd for fingeravtrykk er nådd. Prøv på nytt."</string>
+    <string msgid="4402024612660774395" name="fingerprint_error_canceled">"Fingeravtrykk-operasjonen ble avbrutt."</string>
+    <string msgid="5536934748136933450" name="fingerprint_error_lockout">"For mange forsøk. Prøve på nytt senere."</string>
+    <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"Prøv igjen."</string>
+  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"Ikon for fingeravtrykk"</string>
+    <string msgid="4516019619850763049" name="fingerprints">"Fingeravtrykk"</string>
+    <string name="fingerprint_not_recognized" msgid="2690661881608146617">"Ikke gjenkjent"</string>
+
+</resources>

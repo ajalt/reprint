@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/* //device/apps/common/assets/res/any/strings.xml
+**
+** Copyright 2006, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+ -->
+<resources>
+    <string msgid="735082772341716043" name="fingerprint_acquired_partial">"זוהתה טביעת אצבע חלקית. נסה שוב."</string>
+    <string msgid="4596546021310923214" name="fingerprint_acquired_insufficient">"לא ניתן היה לעבד את טביעת האצבע. נסה שוב."</string>
+    <string msgid="1087209702421076105" name="fingerprint_acquired_imager_dirty">"החיישן של טביעות האצבעות מלוכלך. נקה אותו ונסה שוב."</string>
+    <string msgid="6470642383109155969" name="fingerprint_acquired_too_fast">"הזזת את האצבע מהר מדי. נסה שוב."</string>
+    <string msgid="59250885689661653" name="fingerprint_acquired_too_slow">"הזזת את האצבע לאט מדי. נסה שוב."</string>
+  <string msgid="7955921658939936596" name="fingerprint_error_hw_not_available">"החומרה בשביל טביעת אצבע אינה זמינה."</string>
+    <string msgid="1055819001126053318" name="fingerprint_error_no_space">"לא ניתן לאחסן טביעת אצבע. הסר טביעת אצבע קיימת."</string>
+    <string msgid="3927186043737732875" name="fingerprint_error_timeout">"חלף הזמן הקצוב לטביעת אצבע. נסה שוב."</string>
+    <string msgid="4402024612660774395" name="fingerprint_error_canceled">"פעולת טביעת האצבע בוטלה."</string>
+    <string msgid="5536934748136933450" name="fingerprint_error_lockout">"יותר מדי ניסיונות. נסה שוב מאוחר יותר."</string>
+    <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"נסה שוב."</string>
+  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"סמל טביעת אצבע"</string>
+    <string msgid="4516019619850763049" name="fingerprints">"טביעות אצבע:"</string>
+    <string name="fingerprint_not_recognized" msgid="2690661881608146617">"לא זוהתה"</string>
+
+</resources>

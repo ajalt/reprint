@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/* //device/apps/common/assets/res/any/strings.xml
+**
+** Copyright 2006, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+ -->
+<resources>
+    <string msgid="735082772341716043" name="fingerprint_acquired_partial">"تم اكتشاف بصمة الإصبع بشكل جزئي؛ يرجى إعادة المحاولة."</string>
+    <string msgid="4596546021310923214" name="fingerprint_acquired_insufficient">"تعذرت معالجة بصمة الإصبع. يُرجى إعادة المحاولة."</string>
+    <string msgid="1087209702421076105" name="fingerprint_acquired_imager_dirty">"جهاز استشعار بصمات الأصابع متسخ، يرجى تنظيفه وإعادة المحاولة."</string>
+    <string msgid="6470642383109155969" name="fingerprint_acquired_too_fast">"تحرك الإصبع بسرعة كبيرة جدًا؛ الرجاء إعادة المحاولة."</string>
+    <string msgid="59250885689661653" name="fingerprint_acquired_too_slow">"تم تحريك الإصبع ببطء شديد. الرجاء إعادة المحاولة."</string>
+  <string msgid="7955921658939936596" name="fingerprint_error_hw_not_available">"جهاز بصمة الإصبع غير متاح."</string>
+    <string msgid="1055819001126053318" name="fingerprint_error_no_space">"يتعذر تخزين بصمة الإصبع؛ يرجى إزالة إحدى البصمات المخزنة."</string>
+    <string msgid="3927186043737732875" name="fingerprint_error_timeout">"تم بلوغ مهلة إدخال بصمة الإصبع. أعد المحاولة."</string>
+    <string msgid="4402024612660774395" name="fingerprint_error_canceled">"تم إلغاء تشغيل بصمة الإصبع."</string>
+    <string msgid="5536934748136933450" name="fingerprint_error_lockout">"تم إجراء عدد كبير من المحاولات. أعد المحاولة لاحقًا."</string>
+    <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"أعد المحاولة."</string>
+  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"رمز بصمة الإصبع"</string>
+    <string msgid="4516019619850763049" name="fingerprints">"بصمات الأصابع:"</string>
+    <string name="fingerprint_not_recognized" msgid="2690661881608146617">"لم يتم التعرف عليها"</string>
+
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/* //device/apps/common/assets/res/any/strings.xml
+**
+** Copyright 2006, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+ -->
+<resources>
+    <string msgid="735082772341716043" name="fingerprint_acquired_partial">"આંશિક ફિંગરપ્રિન્ટ મળી. કૃપા કરીને ફરી પ્રયાસ કરો."</string>
+    <string msgid="4596546021310923214" name="fingerprint_acquired_insufficient">"ફિંગરપ્રિન્ટ પ્રક્રિયા કરી શકાઈ નથી. કૃપા કરીને ફરી પ્રયાસ કરો."</string>
+    <string msgid="1087209702421076105" name="fingerprint_acquired_imager_dirty">"ફિંગરપ્રિન્ટ સેન્સર ગંદું છે. કૃપા કરીને સાફ કરો અને ફરી પ્રયાસ કરો."</string>
+    <string msgid="6470642383109155969" name="fingerprint_acquired_too_fast">"આંગળી બહુ ઝડપથી ખસેડી. કૃપા કરીને ફરી પ્રયાસ કરો."</string>
+    <string msgid="7381891107120721078" name="fingerprint_acquired_too_slow">"આંગળી બહુ ધીમેથી ખસેડી. કૃપા કરીને ફરી પ્રયાસ કરો."</string>
+  <string msgid="7955921658939936596" name="fingerprint_error_hw_not_available">"ફિંગરપ્રિન્ટ હાર્ડવેર ઉપલબ્ધ નથી."</string>
+    <string msgid="1055819001126053318" name="fingerprint_error_no_space">"ફિંગરપ્રિન્ટ સંગ્રહિત કરી શકાતી નથી. કૃપા કરીને અસ્તિત્વમાંની ફિંગરપ્રિન્ટ દૂર કરો."</string>
+    <string msgid="3927186043737732875" name="fingerprint_error_timeout">"ફિંગરપ્રિન્ટનો સમય બાહ્ય થયો. ફરી પ્રયાસ કરો."</string>
+    <string msgid="4402024612660774395" name="fingerprint_error_canceled">"ફિંગરપ્રિન્ટ ઓપરેશન રદ કર્યું."</string>
+    <string msgid="5536934748136933450" name="fingerprint_error_lockout">"ઘણા બધા પ્રયત્નો. પછીથી ફરી પ્રયાસ કરો."</string>
+    <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"ફરી પ્રયાસ કરો."</string>
+  <string msgid="4516019619850763049" name="fingerprints">"ફિંગરપ્રિંટ્સ:"</string>
+    <string name="fingerprint_not_recognized" msgid="2690661881608146617">"ઓળખાયેલ નથી"</string>
+
+</resources>

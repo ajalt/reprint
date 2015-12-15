@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/* //device/apps/common/assets/res/any/strings.xml
+**
+** Copyright 2006, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+ -->
+<resources>
+    <string msgid="735082772341716043" name="fingerprint_acquired_partial">"U zbulua një gjurmë gishti e pjesshme. Provo përsëri."</string>
+    <string msgid="4596546021310923214" name="fingerprint_acquired_insufficient">"Gjurma e gishtit nuk mund të përpunohej. Provo përsëri."</string>
+    <string msgid="1087209702421076105" name="fingerprint_acquired_imager_dirty">"Sensori i gjurmës së gishtit nuk është i pastër. Pastroje dhe provo përsëri."</string>
+    <string msgid="6470642383109155969" name="fingerprint_acquired_too_fast">"Gishti lëvizi shumë shpejt. Provo përsëri."</string>
+    <string msgid="7381891107120721078" name="fingerprint_acquired_too_slow">"Gishti lëvizi shumë ngadalë. Provo përsëri."</string>
+  <string msgid="7955921658939936596" name="fingerprint_error_hw_not_available">"Hardueri i gjurmës së gishtit nuk mundësohet."</string>
+    <string msgid="1055819001126053318" name="fingerprint_error_no_space">"Gjurma e gishtit nuk mund të ruhet. Hiq një gjurmë gishti ekzistuese."</string>
+    <string msgid="3927186043737732875" name="fingerprint_error_timeout">"Koha e veprimit për gjurmën e gishtit skadoi. Provo përsëri."</string>
+    <string msgid="4402024612660774395" name="fingerprint_error_canceled">"Operacioni i gjurmës së gishtit u anulua."</string>
+    <string msgid="5536934748136933450" name="fingerprint_error_lockout">"Keni bërë shumë tentativa. Provo përsëri më vonë."</string>
+    <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"Provo përsëri."</string>
+  <string msgid="4516019619850763049" name="fingerprints">"Shenjat e gishtave:"</string>
+    <string name="fingerprint_not_recognized" msgid="2690661881608146617">"Nuk njihet"</string>
+
+</resources>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.CompoundButton;
@@ -119,63 +120,32 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .onErrorResumeNext(Observable.<Integer>empty())
                 .subscribe(
-                    new Action1<Integer>() {
-                        @Override
-                        public void call(Integer tag) {
-                            showSuccess();
-                        }
-                    });
+                        new Action1<Integer>() {
+                            @Override
+                            public void call(Integer tag) {
+                                showSuccess();
+                            }
+                        });
     }
 
     private void cancel() {
         result.setText("Cancelled");
         running = false;
-        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_fingerprint_white_24dp));
+        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_fingerprint_white_24dp));
         Reprint.cancelAuthentication();
     }
 
     private void showSuccess() {
         result.setText("Success");
-        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_fingerprint_white_24dp));
+        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_fingerprint_white_24dp));
         running = false;
     }
 
-    private void showError(AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int errorCode) {
-        CharSequence message = "";
-        if (errorMessage != null) {
-            message = errorMessage;
-        } else {
-            switch (failureReason) {
-                case NO_HARDWARE:
-                    message = "Device does not have a sensor or does not have registered fingerprints";
-                    break;
-                case HARDWARE_UNAVAILABLE:
-                    message = "Fingerprint reader temporarily unavailable";
-                    break;
-                case NO_FINGERPRINTS_REGISTERED:
-                    message = "No registered fingerprints.";
-                    break;
-                case SENSOR_FAILED:
-                    message = "Could not read fingerprint";
-                    break;
-                case LOCKED_OUT:
-                    message = "Too many incorrect attempts";
-                    break;
-                case TIMEOUT:
-                    message = "Cancelled due to inactivity";
-                    break;
-                case AUTHENTICATION_FAILED:
-                    message = "Fingerprint not recognized";
-                    break;
-                case UNKNOWN:
-                    message = "Could not read fingerprint";
-                    break;
-            }
-        }
-        result.setText(message + (fatal ? "." : ". Try again.") + " (error code: " + errorCode + ')');
+    private void showError(AuthenticationFailureReason failureReason, boolean fatal, CharSequence errorMessage, int errorCode) {
+        result.setText(errorMessage);
 
         if (fatal) {
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_fingerprint_white_24dp));
+            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_fingerprint_white_24dp));
             running = false;
         }
     }

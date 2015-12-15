@@ -1,7 +1,6 @@
 package com.github.ajalt.reprint.core;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 /**
  * A listener that is notified of the results of fingerprint authentication.
@@ -31,6 +30,6 @@ public interface AuthenticationListener {
      *                      meanings.
      */
     void onFailure(@NonNull AuthenticationFailureReason failureReason,
-                   boolean fatal, @Nullable CharSequence errorMessage,
+                   boolean fatal, @NonNull CharSequence errorMessage,
                    int moduleTag, int errorCode);
 }

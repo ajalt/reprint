@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/* //device/apps/common/assets/res/any/strings.xml
+**
+** Copyright 2006, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+ -->
+<resources>
+    <string msgid="735082772341716043" name="fingerprint_acquired_partial">"ກວດ​ພົບ​ລາຍ​ນີ້ວ​ມື​ບາງ​ສ່ວນ​ແລ້ວ. ກະ​ລຸ​ນາ​ລອງ​ໃໝ່​ອີກ."</string>
+    <string msgid="4596546021310923214" name="fingerprint_acquired_insufficient">"ບໍ່​ສາ​ມາດ​ດຳ​ເນີນ​ການ​ລາຍ​ນີ້ວ​ມື​ໄດ້. ກະ​ລຸ​ນາ​ລອງ​ໃໝ່​ອີກ."</string>
+    <string msgid="1087209702421076105" name="fingerprint_acquired_imager_dirty">"ເຊັນ​ເຊີ​ລາຍ​ນີ້ວ​ມື​ເປື້ອນ. ກະ​ລຸ​ນາ​ທຳ​ຄວາມ​ສະ​ອາດ ແລະ​ລອງ​ໃໝ່​ອີກ."</string>
+    <string msgid="6470642383109155969" name="fingerprint_acquired_too_fast">"ຍ້າຍ​ນີ້ວ​ມື​ໄປ​ໄວ​ເກີນ​ໄປ. ກະ​ລຸ​ນາ​ລອງ​ໃໝ່​ອີກ."</string>
+    <string msgid="59250885689661653" name="fingerprint_acquired_too_slow">"ຍ້າຍ​ນີ້ວ​ມື​ໄປຊ້າ​ເກີນ​ໄປ. ກະ​ລຸ​ນາ​ລອງ​ໃໝ່​ອີກ."</string>
+  <string msgid="7955921658939936596" name="fingerprint_error_hw_not_available">"ບໍ່​ມີ​ຮາດ​ແວລາຍ​ນີ້ວ​ມື​ໃຫ້​ຢູ່."</string>
+    <string msgid="1055819001126053318" name="fingerprint_error_no_space">"ບໍ່​ສາ​ມາດ​ເກັບ​ຮັກ​ສາ​ລາຍ​ນີ້ວ​ມື​ໄວ້​ໄດ້. ກະ​ລຸ​ນາ​ເອົາ​ລາຍ​ນີ້ວ​ມື​ທີ່​ມີ​ຢູ່​ອອກ​ໄປ."</string>
+    <string msgid="3927186043737732875" name="fingerprint_error_timeout">"ເວ​ລາ​ລາຍ​ນີ້ວ​ມື​ບໍ່​ເຂົ້າ​ເຖິງ​ໄດ້. ລອງ​ໃໝ່​ອີກ."</string>
+    <string msgid="4402024612660774395" name="fingerprint_error_canceled">"ຍົກ​ເລີກ​ການ​ດຳ​ເນີນ​ການ​ລາຍ​ນີ້ວ​ມື​ແລ້ວ."</string>
+    <string msgid="5536934748136933450" name="fingerprint_error_lockout">"ມີ​ຄວາມ​ພະ​ຍາ​ຍາມ​ຫຼາຍ​ຄັ້ງ​ເກີນ​ໄປ. ລອງ​ໃໝ່​ພາຍ​ຫຼັງ."</string>
+    <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"ລອງໃໝ່ອີກຄັ້ງ."</string>
+  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"ໄອຄອນລາຍນິ້ວມື"</string>
+    <string msgid="4516019619850763049" name="fingerprints">"ລາຍນິ້ວມື:"</string>
+    <string name="fingerprint_not_recognized" msgid="2690661881608146617">"ບໍ່​ຈົດ​ຈຳ​ໄດ້"</string>
+
+</resources>

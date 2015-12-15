@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v4.os.CancellationSignal;
 
+import com.github.ajalt.library.R;
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.ReprintModule;
@@ -106,9 +107,11 @@ public class MarshmallowReprintModule implements ReprintModule {
     public static final int FINGERPRINT_AUTHENTICATION_FAILED = 1001;
 
     private final FingerprintManagerCompat fingerprintManager;
+    private final Context context;
 
     public MarshmallowReprintModule(Context context) {
-        fingerprintManager = FingerprintManagerCompat.from(context.getApplicationContext());
+        this.context = context.getApplicationContext();
+        fingerprintManager = FingerprintManagerCompat.from(this.context);
     }
 
     @Override
@@ -169,7 +172,8 @@ public class MarshmallowReprintModule implements ReprintModule {
 
             @Override
             public void onAuthenticationFailed() {
-                listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, null, TAG, FINGERPRINT_AUTHENTICATION_FAILED);
+                listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false,
+                        context.getString(R.string.fingerprint_not_recognized), TAG, FINGERPRINT_AUTHENTICATION_FAILED);
             }
         }, null);
     }

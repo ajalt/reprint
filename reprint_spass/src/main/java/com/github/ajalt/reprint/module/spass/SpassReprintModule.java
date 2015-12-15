@@ -2,6 +2,7 @@ package com.github.ajalt.reprint.module.spass;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.os.CancellationSignal;
 import android.util.Log;
 
@@ -131,11 +132,13 @@ public class SpassReprintModule implements ReprintModule {
         }
         try {
             if (!spassFingerprint.hasRegisteredFinger()) {
-                listener.onFailure(AuthenticationFailureReason.NO_FINGERPRINTS_REGISTERED, true, null, TAG, STATUS_NO_REGISTERED_FINGERPRINTS);
+                listener.onFailure(AuthenticationFailureReason.NO_FINGERPRINTS_REGISTERED, true,
+                        context.getString(R.string.fingerprint_error_hw_not_available), TAG, STATUS_NO_REGISTERED_FINGERPRINTS);
                 return;
             }
         } catch (Throwable ignored) {
-            listener.onFailure(AuthenticationFailureReason.HARDWARE_UNAVAILABLE, true, null, TAG, STATUS_HW_UNAVAILABLE);
+            listener.onFailure(AuthenticationFailureReason.HARDWARE_UNAVAILABLE, true,
+                    context.getString(R.string.fingerprint_error_hw_not_available), TAG, STATUS_HW_UNAVAILABLE);
             return;
         }
 
@@ -153,24 +156,29 @@ public class SpassReprintModule implements ReprintModule {
                             listener.onSuccess(TAG);
                             return;
                         case SpassFingerprint.STATUS_QUALITY_FAILED:
+                            fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_partial, status);
+                            break;
                         case SpassFingerprint.STATUS_SENSOR_FAILED:
-                            listener.onFailure(AuthenticationFailureReason.SENSOR_FAILED, false, null, TAG, status);
-                            if (restartOnNonFatal) authenticate(cancellationSignal, listener, true);
+                            fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_insufficient, status);
                             break;
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED:
-                            listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, null, TAG, status);
-                            if (restartOnNonFatal) authenticate(cancellationSignal, listener, true);
+                            fail(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, R.string.fingerprint_not_recognized, status);
                             break;
                         case SpassFingerprint.STATUS_TIMEOUT_FAILED:
-                            listener.onFailure(AuthenticationFailureReason.TIMEOUT, true, null, TAG, status);
+                            fail(AuthenticationFailureReason.TIMEOUT, true, R.string.fingerprint_error_timeout, status);
                             break;
                         default:
-                            listener.onFailure(AuthenticationFailureReason.UNKNOWN, true, null, TAG, status);
+                            fail(AuthenticationFailureReason.UNKNOWN, true, R.string.fingerprint_error_unable_to_process, status);
                             break;
                         case SpassFingerprint.STATUS_USER_CANCELLED:
                             // Don't send a cancelled message.
                             break;
                     }
+                }
+
+                private void fail(AuthenticationFailureReason reason, boolean fatal, @StringRes int message, int status) {
+                    listener.onFailure(reason, fatal, context.getString(message), TAG, status);
+                    if (!fatal && restartOnNonFatal) authenticate(cancellationSignal, listener, true);
                 }
 
                 @Override

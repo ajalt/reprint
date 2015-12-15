@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/* //device/apps/common/assets/res/any/strings.xml
+**
+** Copyright 2006, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+ -->
+<resources>
+    <string msgid="735082772341716043" name="fingerprint_acquired_partial">"Impressão digital parcial detectada. Tente novamente."</string>
+    <string msgid="4596546021310923214" name="fingerprint_acquired_insufficient">"Não foi possível processar a impressão digital. Tente novamente."</string>
+    <string msgid="1087209702421076105" name="fingerprint_acquired_imager_dirty">"O sensor de impressão digital está sujo. Limpe-o e tente novamente."</string>
+    <string msgid="6470642383109155969" name="fingerprint_acquired_too_fast">"O dedo foi retirado rápido demais. Tente novamente."</string>
+    <string msgid="59250885689661653" name="fingerprint_acquired_too_slow">"O movimento do dedo está muito lento. Tente novamente."</string>
+  <string msgid="7955921658939936596" name="fingerprint_error_hw_not_available">"Hardware de impressão digital não disponível."</string>
+    <string msgid="1055819001126053318" name="fingerprint_error_no_space">"Não foi possível armazenar a impressão digital. Remova uma impressão digital já existente."</string>
+    <string msgid="3927186043737732875" name="fingerprint_error_timeout">"Tempo máximo para captura da impressão digital atingido. Tente novamente."</string>
+    <string msgid="4402024612660774395" name="fingerprint_error_canceled">"Operação de impressão digital cancelada."</string>
+    <string msgid="5536934748136933450" name="fingerprint_error_lockout">"Excesso de tentativas. Tente novamente mais tarde."</string>
+    <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"Tente novamente."</string>
+  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"Ícone de impressão digital"</string>
+    <string msgid="4516019619850763049" name="fingerprints">"Impressões digitais"</string>
+    <string name="fingerprint_not_recognized" msgid="2690661881608146617">"Não reconhecido"</string>
+
+</resources>
