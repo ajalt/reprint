@@ -1,8 +1,6 @@
 package com.github.ajalt.reprint.core;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.os.CancellationSignal;
 
 import com.github.ajalt.reprint.module.marshmallow.MarshmallowReprintModule;
@@ -17,10 +15,8 @@ import java.lang.reflect.Constructor;
 enum ReprintInternal {
     INSTANCE;
 
-    @Nullable
+    private static final String REPRINT_SPASS_MODULE = "com.github.ajalt.reprint.module.spass.SpassReprintModule";
     private CancellationSignal cancellationSignal;
-
-    @Nullable
     private ReprintModule module;
 
     public ReprintInternal initialize(Context context) {
@@ -28,7 +24,7 @@ enum ReprintInternal {
 
         // Load the spass module if it was included.
         try {
-            final Class<?> spassModuleClass = Class.forName("com.github.ajalt.reprint.module.spass.SpassReprintModule");
+            final Class<?> spassModuleClass = Class.forName(REPRINT_SPASS_MODULE);
             final Constructor<?> constructor = spassModuleClass.getConstructor(Context.class);
             ReprintModule module = (ReprintModule) constructor.newInstance(context);
             INSTANCE.registerModule(module);
@@ -104,7 +100,7 @@ enum ReprintInternal {
             }
 
             @Override
-            public void onFailure(@NonNull AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int moduleTag, int errorCode) {
+            public void onFailure(AuthenticationFailureReason failureReason, boolean fatal, CharSequence errorMessage, int moduleTag, int errorCode) {
                 if (module != null && cancellationSignal != null &&
                         failureReason == AuthenticationFailureReason.TIMEOUT && restartCount > 0) {
                     module.authenticate(cancellationSignal, restartingListener(originalListener, restartCount - 1), true);

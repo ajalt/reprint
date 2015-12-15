@@ -21,7 +21,6 @@ android {
 
 dependencies {
     compile rootProject.ext.supportV7
-    compile rootProject.ext.supportAnnotations
 }
 
 // build a jar with source files

@@ -22,7 +22,6 @@ android {
 dependencies {
     compile project(':core')
     compile rootProject.ext.supportV7
-    compile rootProject.ext.supportAnnotations
     compile rootProject.ext.rxJava
 }
 

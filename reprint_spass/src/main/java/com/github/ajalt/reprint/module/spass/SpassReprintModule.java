@@ -1,7 +1,6 @@
 package com.github.ajalt.reprint.module.spass;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.os.CancellationSignal;
 import android.util.Log;
@@ -67,13 +66,10 @@ public class SpassReprintModule implements ReprintModule {
     public static final int STATUS_LOCKED_OUT = 1003;
 
     private final Context context;
-
-    @Nullable
     private final Spass spass;
-
-    @Nullable
     private SpassFingerprint spassFingerprint;
 
+    @SuppressWarnings("unused") // Call via reflection
     public SpassReprintModule(Context context) {
         this.context = context.getApplicationContext();
 
