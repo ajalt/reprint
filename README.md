@@ -1,6 +1,6 @@
 ![Reprint](resources/banner.png)
 
-[![Release](https://img.shields.io/github/tag/ajalt/reprint.svg?label=maven)](https://jitpack.io/#ajalt/reprint) ![License](http://img.shields.io/:license-mit-blue.svg) ![API](https://img.shields.io/badge/API-14%2B-blue.svg) [![Javadoc core](https://img.shields.io/badge/Javadoc-core-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/core/2.5.0/javadoc/) [![Javadoc reactive](https://img.shields.io/badge/Javadoc-reactive-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/reactive/2.5.0/javadoc/)
+[![Release](https://img.shields.io/github/tag/ajalt/reprint.svg?label=maven)](https://jitpack.io/#ajalt/reprint) ![License](http://img.shields.io/:license-mit-blue.svg) ![API](https://img.shields.io/badge/API-14%2B-blue.svg) [![Javadoc core](https://img.shields.io/badge/Javadoc-core-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/core/2.5.1/javadoc/) [![Javadoc reactive](https://img.shields.io/badge/Javadoc-reactive-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/reactive/2.5.1/javadoc/)
 
 A simple, unified fingerprint authentication library for Android with
 ReactiveX extensions.
@@ -27,9 +27,9 @@ ReactiveX interface.
 
 ```groovy
 dependencies {
-   compile 'com.github.ajalt.reprint:core:2.5.0@aar' // required, supports marshmallow devices
-   compile 'com.github.ajalt.reprint:reprint_spass:2.5.0@aar' // optional: support for pre-marshmallow Samsung devices
-   compile 'com.github.ajalt.reprint:reactive:2.5.0@aar' // optional: the ReactiveX interface
+   compile 'com.github.ajalt.reprint:core:2.5.1@aar' // required, supports marshmallow devices
+   compile 'com.github.ajalt.reprint:reprint_spass:2.5.1@aar' // optional: support for pre-marshmallow Samsung devices
+   compile 'com.github.ajalt.reprint:reactive:2.5.1@aar' // optional: the ReactiveX interface
 }
 ``` 
 
