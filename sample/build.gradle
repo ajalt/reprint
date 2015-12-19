@@ -25,7 +25,6 @@ dependencies {
     compile project(':reactive')
 
     compile rootProject.ext.supportV7
-    compile rootProject.ext.supportAnnotations
     compile rootProject.ext.supportDesign
     compile rootProject.ext.butterknife
 }
