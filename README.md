@@ -1,49 +1,14 @@
 ![Reprint](resources/banner.png)
 
-[![Release](https://img.shields.io/github/tag/ajalt/reprint.svg?label=maven)](https://jitpack.io/#ajalt/reprint) ![License](http://img.shields.io/:license-mit-blue.svg) ![API](https://img.shields.io/badge/API-14%2B-blue.svg) [![Javadoc core](https://img.shields.io/badge/Javadoc-core-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/core/2.5.1/javadoc/) [![Javadoc reactive](https://img.shields.io/badge/Javadoc-reactive-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/reactive/2.5.1/javadoc/)
+[![Release](https://img.shields.io/github/tag/ajalt/reprint.svg?label=maven)](https://jitpack.io/#ajalt/reprint) ![License](http://img.shields.io/:license-mit-blue.svg) ![API](https://img.shields.io/badge/API-14%2B-blue.svg) [![Javadoc core](https://img.shields.io/badge/Javadoc-core-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/core/2.5.2/javadoc/) [![Javadoc reactive](https://img.shields.io/badge/Javadoc-reactive-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/reactive/2.5.2/javadoc/)
 
 A simple, unified fingerprint authentication library for Android with
 ReactiveX extensions.
 
-Fingerprint authentication on Android is a mess. This library unifies the
-different available APIs, deals with the idiosyncrasies of each, and adds an
-optional reactive interface.
-
-# Installation
-
-Reprint is distributed with [jitpack](https://jitpack.io/) and split up into
-several libraries, so you can include only the parts that you use.
-
-First, add jitpack to your gradle repositories.
-
-```groovy
-repositories {
-    maven { url "https://jitpack.io" }
-}
-```
-
-Then add the core library and optionally the Samsung Pass interface and the
-ReactiveX interface.
-
-```groovy
-dependencies {
-   compile 'com.github.ajalt.reprint:core:2.5.1@aar' // required, supports marshmallow devices
-   compile 'com.github.ajalt.reprint:reprint_spass:2.5.1@aar' // optional: support for pre-marshmallow Samsung devices
-   compile 'com.github.ajalt.reprint:reactive:2.5.1@aar' // optional: the ReactiveX interface
-}
-``` 
-
-### Permissions
-
-Reprint requires the following permissions be declared in your `AndroidManifest.xml`
-
-```xml
-<!-- Marshmallow fingerprint permission-->
-<uses-permission android:name="android.permission.USE_FINGERPRINT"/>
-
-<!-- Samsung fingerprint permission, only reqiured if you include the spass module -->
-<uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>
-```
+* Eliminates the need to deal with the different available Fingerprint APIs, including Imprint and Samsung Pass.
+* Fixes undocumented bugs and idiosyncrasies in the underlying APIs.
+* Comes with help messages translated in over 80 locales that work with all APIs.
+* Provides optional ReactiveX interfaces.
 
 # Usage
 
@@ -61,11 +26,11 @@ normally.
 There are two ways to be notified of authentication results: traditional
 callback, and a ReactiveX Observable.
 
-### Callbacks
+### Traditional Callbacks
 
 Pass an `AuthenticationListener` to `authenticate`, and it's callbacks will be
 called with results. The `onFailure` callback will be called repeatedly until
-the sensor is disabled or a fingerprint is authenticated correcty, at which
+the sensor is disabled or a fingerprint is authenticated correctly, at which
 point `onSuccess` will be called.
 
 ```java
@@ -94,8 +59,7 @@ running, such as when a finger was moved over the sensor too quickly.
 The `errorMessage` is a string that will contain some help text provided by
 the underlying SDK about the failure. You should show this text to the user,
 or some other message of your own based on the failureReason. This string will
-never be null, and will be localized into the current locale. **There are
-currently help messages in 80 different locales.**
+never be null, and will be localized into the current locale.
 
 The `moduleTag` and `errorCode` can be used to find out the SDK-specific
 reason for the failure.
@@ -131,6 +95,42 @@ could, for example, use the
 [RxLifecycle](https://github.com/trello/RxLifecycle) library to bind the
 observable, and the authentication will be canceled when your activity
 pauses.
+
+# Installation
+
+Reprint is distributed with [jitpack](https://jitpack.io/) and split up into
+several libraries, so you can include only the parts that you use.
+
+First, add jitpack to your gradle repositories.
+
+```groovy
+repositories {
+    maven { url "https://jitpack.io" }
+}
+```
+
+Then add the core library and optionally the Samsung Pass interface and the
+ReactiveX interface.
+
+```groovy
+dependencies {
+   compile 'com.github.ajalt.reprint:core:2.5.2@aar' // required, supports marshmallow devices
+   compile 'com.github.ajalt.reprint:reprint_spass:2.5.2@aar' // optional: support for pre-marshmallow Samsung devices
+   compile 'com.github.ajalt.reprint:reactive:2.5.2@aar' // optional: the ReactiveX interface
+}
+```
+
+### Permissions
+
+Reprint requires the following permissions be declared in your `AndroidManifest.xml`
+
+```xml
+<!-- Marshmallow fingerprint permission-->
+<uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+
+<!-- Samsung fingerprint permission, only required if you include the Spass module -->
+<uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>
+```
 
 # License
 
