@@ -121,12 +121,22 @@ public class MarshmallowReprintModule implements ReprintModule {
 
     @Override
     public boolean isHardwarePresent() {
-        return fingerprintManager.isHardwareDetected();
+        // Normally, a security exception is only thrown if you don't have the USE_FINGERPRINT
+        // permission in your manifest. However, some OEMs have pushed updates to M for phones
+        // that don't have sensors at all, and for some reason decided not to implement the
+        // USE_FINGERPRINT permission. So on those devices, a SecurityException is raised no matter
+        // what. This has been confirmed on a number of devices, including the LG LS770, LS991,
+        // and the HTC One M8.
+        try {
+            return fingerprintManager.isHardwareDetected();
+        } catch (SecurityException ignored) {
+            return false;
+        }
     }
 
     @Override
     public boolean hasFingerprintRegistered() {
-        return fingerprintManager.hasEnrolledFingerprints();
+            return fingerprintManager.hasEnrolledFingerprints();
     }
 
     @Override
