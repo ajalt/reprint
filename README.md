@@ -77,15 +77,13 @@ RxReprint.authenticate().subscribe(::showSuccess, ::showError);
 ```
 
 You probably want to use the `retry` operator to restart the sensor when a
-non-fatal error occurs.
+non-fatal error occurs. The `RxReprint.retryNonFatal` method takes care of the
+most common use case.
 
 ```java
 RxReprint.authenticate()
          .doOnError(::showHelp)
-         .retry((count, t) -> {
-            AuthenticationFailure e = (AuthenticationFailure) t;
-            return !e.fatal || e.failureReason == AuthenticationFailureReason.TIMEOUT && count < 5;
-         })
+         .retry(RxReprint.retryNonFatal(5))
          .subscribe(::showSuccess, ::showError);
 ```
 

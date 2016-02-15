@@ -103,11 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 .doOnError(throwable -> {
                     AuthenticationFailure e = (AuthenticationFailure) throwable;
                     showError(e.failureReason, e.fatal, e.errorMessage, e.errorCode);
-                }).retry((count, throwable) -> {
-                    if (!(throwable instanceof AuthenticationFailure)) return false;
-                    AuthenticationFailure e = (AuthenticationFailure) throwable;
-                    return !e.fatal || e.failureReason == AuthenticationFailureReason.TIMEOUT && count < 5;
-                })
+                }).retry(RxReprint.retryNonFatal(5))
                 .subscribe(tag -> showSuccess(), e -> {});
     }
 
