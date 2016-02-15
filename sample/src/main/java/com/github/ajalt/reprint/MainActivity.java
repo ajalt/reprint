@@ -20,9 +20,6 @@ import com.github.ajalt.reprint.reactive.RxReprint;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func2;
 
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity {
@@ -77,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private void start() {
         running = true;
         result.setText("Listening");
-        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_24dp));
+        fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_close_white_24dp));
 
         if (rxSwitch.isChecked()) {
             startReactive();
@@ -103,29 +100,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void startReactive() {
         RxReprint.authenticate()
-                .doOnError(
-                        new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                AuthenticationFailure e = (AuthenticationFailure) throwable;
-                                showError(e.failureReason, e.fatal, e.errorMessage, e.errorCode);
-                            }
-                        }).retry(
-                new Func2<Integer, Throwable, Boolean>() {
-                    @Override
-                    public Boolean call(Integer count, Throwable throwable) {
-                        AuthenticationFailure e = (AuthenticationFailure) throwable;
-                        return !e.fatal || e.failureReason == AuthenticationFailureReason.TIMEOUT && count < 5;
-                    }
+                .doOnError(throwable -> {
+                    AuthenticationFailure e = (AuthenticationFailure) throwable;
+                    showError(e.failureReason, e.fatal, e.errorMessage, e.errorCode);
+                }).retry((count, throwable) -> {
+                    if (!(throwable instanceof AuthenticationFailure)) return false;
+                    AuthenticationFailure e = (AuthenticationFailure) throwable;
+                    return !e.fatal || e.failureReason == AuthenticationFailureReason.TIMEOUT && count < 5;
                 })
-                .onErrorResumeNext(Observable.<Integer>empty())
-                .subscribe(
-                        new Action1<Integer>() {
-                            @Override
-                            public void call(Integer tag) {
-                                showSuccess();
-                            }
-                        });
+                .subscribe(tag -> showSuccess(), e -> {});
     }
 
     private void cancel() {
