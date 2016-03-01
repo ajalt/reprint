@@ -1,0 +1,2 @@
+-dontwarn com.samsung.**
+-keep class com.samsung.** {*;}
