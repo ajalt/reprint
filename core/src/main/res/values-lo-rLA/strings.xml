@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"ຍົກ​ເລີກ​ການ​ດຳ​ເນີນ​ການ​ລາຍ​ນີ້ວ​ມື​ແລ້ວ."</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"ມີ​ຄວາມ​ພະ​ຍາ​ຍາມ​ຫຼາຍ​ຄັ້ງ​ເກີນ​ໄປ. ລອງ​ໃໝ່​ພາຍ​ຫຼັງ."</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"ລອງໃໝ່ອີກຄັ້ງ."</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"ໄອຄອນລາຍນິ້ວມື"</string>
     <string msgid="4516019619850763049" name="fingerprints">"ລາຍນິ້ວມື:"</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"ບໍ່​ຈົດ​ຈຳ​ໄດ້"</string>
 

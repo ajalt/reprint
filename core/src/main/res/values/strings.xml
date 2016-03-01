@@ -18,17 +18,17 @@
 */
 -->
 <resources>
-    <!-- Message shown during fingerprint acquisision when the fingerprint cannot be recognized -->
+    <!-- Message shown during fingerprint acquisition when the fingerprint cannot be recognized -->
     <string name="fingerprint_acquired_partial">Partial fingerprint detected. Please try again.</string>
-    <!-- Message shown during fingerprint acquisision when the fingerprint cannot be recognized -->
+    <!-- Message shown during fingerprint acquisition when the fingerprint cannot be recognized -->
     <string name="fingerprint_acquired_insufficient">Couldn\'t process fingerprint. Please try again.</string>
-    <!-- Message shown during fingerprint acquisision when the fingerprint sensor needs cleaning -->
+    <!-- Message shown during fingerprint acquisition when the fingerprint sensor needs cleaning -->
     <string name="fingerprint_acquired_imager_dirty">Fingerprint sensor is dirty. Please clean and try again.</string>
-    <!-- Message shown during fingerprint acquisision when the user removes their finger from the sensor too quickly -->
+    <!-- Message shown during fingerprint acquisition when the user removes their finger from the sensor too quickly -->
     <string name="fingerprint_acquired_too_fast">Finger moved too fast. Please try again.</string>
-    <!-- Message shown during fingerprint acquisision when the user moves their finger too slowly -->
+    <!-- Message shown during fingerprint acquisition when the user moves their finger too slowly -->
     <string name="fingerprint_acquired_too_slow">Finger moved too slow. Please try again.</string>
-    <!-- Error message shown when the fingerprint hardware canceled't be accessed -->
+    <!-- Error message shown when the fingerprint hardware can't be accessed -->
     <string name="fingerprint_error_hw_not_available">Fingerprint hardware not available.</string>
     <!-- Error message shown when the fingerprint hardware has run out of room for storing fingerprints -->
     <string name="fingerprint_error_no_space">Fingerprint can\'t be stored. Please remove an existing fingerprint.</string>
@@ -40,8 +40,6 @@
     <string name="fingerprint_error_lockout">Too many attempts. Try again later.</string>
     <!-- Generic error message shown when the fingerprint hardware can't recognize the fingerprint -->
     <string name="fingerprint_error_unable_to_process">Try again.</string>
-    <!-- Content description which should be used for the fingerprint icon. -->
-    <string name="fingerprint_icon_content_description">Fingerprint icon</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
     <string name="fingerprints">Fingerprints:</string>
     <!-- Fingerprint hint message when finger was not recognized.-->

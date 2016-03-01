@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"फ़िंगरप्रिंट क्रियान्वयन रोक दिया गया."</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"बहुत अधिक प्रयास कर लिए गए हैं. बाद में पुन: प्रयास करें."</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"पुन: प्रयास करें."</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"फ़िंगरप्रिंट आइकन"</string>
     <string msgid="4516019619850763049" name="fingerprints">"फ़िंगरप्रिंट:"</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"पहचाना नहीं गया"</string>
 

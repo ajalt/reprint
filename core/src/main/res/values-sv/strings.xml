@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"Fingeravtrycksåtgärden avbröts."</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"Du har gjort för många försök. Försök igen senare."</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"Försök igen."</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"Ikon för fingeravtryck"</string>
     <string msgid="4516019619850763049" name="fingerprints">"Fingeravtryck:"</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"Identifierades inte"</string>
 

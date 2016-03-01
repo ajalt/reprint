@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"Sõrmejälje toiming tühistati."</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"Liiga palju katseid. Proovige hiljem uuesti."</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"Proovige uuesti."</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"Sõrmejälje ikoon"</string>
     <string msgid="4516019619850763049" name="fingerprints">"Sõrmejäljed:"</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"Ei tuvastatud"</string>
 

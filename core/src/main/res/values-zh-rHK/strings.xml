@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"指紋操作已取消。"</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"嘗試次數過多，請稍後再試。"</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"再試一次。"</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"指紋圖示"</string>
     <string msgid="4516019619850763049" name="fingerprints">"指紋："</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"未能辨別"</string>
 

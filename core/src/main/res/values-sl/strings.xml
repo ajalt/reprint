@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"Dejanje s prstnim odtisom je bilo preklicano."</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"Preveč poskusov. Poskusite znova pozneje."</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"Poskusite znova."</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"Ikona prstnih odtisov"</string>
     <string msgid="4516019619850763049" name="fingerprints">"Prstni odtisi:"</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"Ni prepoznano"</string>
 

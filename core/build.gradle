@@ -17,6 +17,10 @@ android {
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        // The string resources are used by dependant modules
+        disable 'UnusedResources'
+    }
 }
 
 dependencies {

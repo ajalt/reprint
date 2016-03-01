@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"Pengendalian cap jari dibatalkan."</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"Terlalu banyak percubaan. Cuba sebentar lagi."</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"Cuba lagi."</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"Ikon cap jari"</string>
     <string msgid="4516019619850763049" name="fingerprints">"Cap jari:"</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"Tidak dicam"</string>
 

@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"S\'ha cancel·lat l\'operació d\'empremta digital."</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"S\'han produït massa intents. Torna-ho a provar més tard."</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"Torna-ho a provar."</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"Icona d\'empremta digital"</string>
     <string msgid="4516019619850763049" name="fingerprints">"Empremtes"</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"No s\'ha reconegut"</string>
 

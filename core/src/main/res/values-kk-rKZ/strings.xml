@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"Саусақ ізі операциясынан бас тартылған."</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"Талпыныстар тым көп. Кейінірек қайталап көріңіз."</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"Әрекетті қайталаңыз."</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"Саусақ ізі белгішесі"</string>
     <string msgid="4516019619850763049" name="fingerprints">"Саусақ таңбалары:"</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"Анықталмаған"</string>
 

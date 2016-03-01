@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"Operace otisku prstu byla zrušena."</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"Příliš mnoho pokusů. Zkuste to později."</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"Zkuste to znovu."</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"Ikona otisku prstů"</string>
     <string msgid="4516019619850763049" name="fingerprints">"Digitální otisky:"</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"Nerozpoznáno"</string>
 

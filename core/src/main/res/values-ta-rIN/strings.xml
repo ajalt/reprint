@@ -29,7 +29,6 @@
     <string msgid="4402024612660774395" name="fingerprint_error_canceled">"கைரேகை செயல்பாடு ரத்துசெய்யப்பட்டது."</string>
     <string msgid="5536934748136933450" name="fingerprint_error_lockout">"அதிகமான முயற்சிகள். பிறகு முயற்சிக்கவும்."</string>
     <string msgid="6107816084103552441" name="fingerprint_error_unable_to_process">"மீண்டும் முயற்சிக்கவும்."</string>
-  <string msgid="2340202869968465936" name="fingerprint_icon_content_description">"கைரேகை ஐகான்"</string>
     <string msgid="4516019619850763049" name="fingerprints">"கைரேகைகள்:"</string>
     <string name="fingerprint_not_recognized" msgid="2690661881608146617">"அறியப்படவில்லை"</string>
 
