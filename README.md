@@ -1,5 +1,5 @@
 <h1 align="center">
-![Reprint](resources/banner.png)
+    <img src="resources/banner.png">
 </h1>
 
 [![](https://img.shields.io/github/tag/ajalt/reprint.svg?label=maven)](https://jitpack.io/#ajalt/reprint) 
