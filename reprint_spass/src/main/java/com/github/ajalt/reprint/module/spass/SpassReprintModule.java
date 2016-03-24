@@ -13,7 +13,7 @@ import com.samsung.android.sdk.pass.SpassFingerprint;
 
 /**
  * A Reprint module that authenticates fingerprints using the Samsung Pass SDK.
- * <p/>
+ * <p>
  * This module supports all Samsung phones with fingerprint sensors.
  */
 public class SpassReprintModule implements ReprintModule {
@@ -144,15 +144,18 @@ public class SpassReprintModule implements ReprintModule {
             spassFingerprint.startIdentify(new SpassFingerprint.IdentifyListener() {
                 @Override
                 public void onFinished(int status) {
-                    if (BuildConfig.DEBUG) Log.d("SpassReprintModule",
-                            "Fingerprint event status: " + status);
                     switch (status) {
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS:
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS:
                             listener.onSuccess(TAG);
                             return;
                         case SpassFingerprint.STATUS_QUALITY_FAILED:
-                            fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_partial, status);
+                            try {
+                                String message = spassFingerprint.getGuideForPoorQuality();
+                                fail(AuthenticationFailureReason.SENSOR_FAILED, false, message,status);
+                            } catch (Exception ignored) {
+                                fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_partial, status);
+                            }
                             break;
                         case SpassFingerprint.STATUS_SENSOR_FAILED:
                             fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_insufficient, status);
@@ -173,8 +176,13 @@ public class SpassReprintModule implements ReprintModule {
                 }
 
                 private void fail(AuthenticationFailureReason reason, boolean fatal, @StringRes int message, int status) {
-                    listener.onFailure(reason, fatal, context.getString(message), TAG, status);
-                    if (!fatal && restartOnNonFatal) authenticate(cancellationSignal, listener, true);
+                    fail(reason, fatal, context.getString(message), status);
+                }
+
+                private void fail(AuthenticationFailureReason reason, boolean fatal, String message, int status) {
+                    listener.onFailure(reason, fatal, message, TAG, status);
+                    if (!fatal && restartOnNonFatal)
+                        authenticate(cancellationSignal, listener, true);
                 }
 
                 @Override
@@ -182,6 +190,9 @@ public class SpassReprintModule implements ReprintModule {
 
                 @Override
                 public void onStarted() {}
+
+                @Override
+                public void onCompleted() {}
             });
         } catch (Throwable t) {
             if (BuildConfig.DEBUG) Log.e("SpassReprintModule",

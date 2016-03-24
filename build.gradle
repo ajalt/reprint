@@ -28,9 +28,9 @@ ext {
     buildToolsVersion = '23.0.2'
 
     // dependencies
-    supportV7 = 'com.android.support:appcompat-v7:23.1.1'
-    supportDesign = 'com.android.support:design:23.1.1'
-    rxJava = 'io.reactivex:rxjava:1.1.0'
+    supportV7 = 'com.android.support:appcompat-v7:23.2.1'
+    supportDesign = 'com.android.support:design:23.2.1'
+    rxJava = 'io.reactivex:rxjava:1.1.2'
     butterknife = 'com.jakewharton:butterknife:7.0.1'
     retrolambda = 'me.tatarka:gradle-retrolambda:3.2.5'
 }
