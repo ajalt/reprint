@@ -99,7 +99,7 @@ public class SpassReprintModule implements ReprintModule {
             return spass != null && spass.isFeatureEnabled(Spass.DEVICE_FINGERPRINT);
         } catch (Exception e) {
             if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
-                    "hasFingerprintRegistered failed", e);
+                    "isHardwarePresent failed", e);
             return false;
         }
     }
