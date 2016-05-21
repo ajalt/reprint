@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath rootProject.ext.retrolambda
+        classpath rootProject.ext.gradle_retrolambda
     }
 }
 
@@ -43,4 +43,6 @@ dependencies {
     compile rootProject.ext.supportV7
     compile rootProject.ext.supportDesign
     compile rootProject.ext.butterknife
+
+    retrolambdaConfig rootProject.ext.retrolambda
 }
