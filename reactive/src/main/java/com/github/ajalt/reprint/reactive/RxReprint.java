@@ -60,7 +60,7 @@ public class RxReprint {
                     }
                 });
             }
-        }).doOnUnsubscribe(new Action0() {
+        }).onBackpressureLatest().doOnUnsubscribe(new Action0() {
             @Override
             public void call() {
                 Reprint.cancelAuthentication();
