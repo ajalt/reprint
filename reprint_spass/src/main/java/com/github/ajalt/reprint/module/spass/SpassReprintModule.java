@@ -150,12 +150,7 @@ public class SpassReprintModule implements ReprintModule {
                             listener.onSuccess(TAG);
                             return;
                         case SpassFingerprint.STATUS_QUALITY_FAILED:
-                            try {
-                                String message = spassFingerprint.getGuideForPoorQuality();
-                                fail(AuthenticationFailureReason.SENSOR_FAILED, false, message,status);
-                            } catch (Exception ignored) {
-                                fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_partial, status);
-                            }
+                            fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_partial, status);
                             break;
                         case SpassFingerprint.STATUS_SENSOR_FAILED:
                             fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_insufficient, status);
@@ -190,9 +185,6 @@ public class SpassReprintModule implements ReprintModule {
 
                 @Override
                 public void onStarted() {}
-
-                @Override
-                public void onCompleted() {}
             });
         } catch (Throwable t) {
             if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
