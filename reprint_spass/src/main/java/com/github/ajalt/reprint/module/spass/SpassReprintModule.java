@@ -104,7 +104,6 @@ public class SpassReprintModule implements ReprintModule {
         }
     }
 
-
     @Override
     public boolean hasFingerprintRegistered() {
         try {

@@ -1,6 +1,7 @@
 package com.github.ajalt.reprint.core;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.os.CancellationSignal;
 
 import com.github.ajalt.reprint.module.marshmallow.MarshmallowReprintModule;
@@ -20,7 +21,9 @@ enum ReprintInternal {
     private ReprintModule module;
 
     public ReprintInternal initialize(Context context) {
-        if (module != null) return this;
+        // The SPass module doesn't work below API 17, and the Imprint module obviously requires
+        // Marshmallow.
+        if (module != null || Build.VERSION.SDK_INT < 17) return this;
 
         // Load the spass module if it was included.
         try {
