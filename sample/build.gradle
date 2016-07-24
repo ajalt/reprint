@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath rootProject.ext.gradle_retrolambda
+        classpath rootProject.ext.gradleRetrolambda
     }
 }
 

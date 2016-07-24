@@ -29,9 +29,14 @@ ext {
 
     // dependencies
     supportV7 = 'com.android.support:appcompat-v7:23.4.0'
-    supportDesign = 'com.android.support:design:23.4.0'
     rxJava = 'io.reactivex:rxjava:1.1.8'
+
+    // sample dependencies
+    supportDesign = 'com.android.support:design:23.4.0'
     butterknife = 'com.jakewharton:butterknife:7.0.1'
-    gradle_retrolambda = 'me.tatarka:gradle-retrolambda:3.2.5'
+    gradleRetrolambda = 'me.tatarka:gradle-retrolambda:3.2.5'
     retrolambda = 'net.orfjackal.retrolambda:retrolambda:2.3.0'
+
+    // test dependencies
+    junit = 'junit:junit:4.12'
 }
