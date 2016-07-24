@@ -9,6 +9,7 @@ import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.core.ReprintModule;
 
+import rx.AsyncEmitter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action0;
@@ -31,9 +32,9 @@ public class RxReprint {
      * to resubscribe if the failure is non-fatal.
      */
     public static Observable<Integer> authenticate() {
-        return Observable.create(new Observable.OnSubscribe<Integer>() {
+        return Observable.fromAsync(new Action1<AsyncEmitter<Integer>>() {
             @Override
-            public void call(final Subscriber<? super Integer> subscriber) {
+            public void call(final AsyncEmitter<Integer> emitter) {
                 Reprint.authenticateWithoutRestart(new AuthenticationListener() {
                     private boolean listening = true;
 
@@ -41,26 +42,24 @@ public class RxReprint {
                     public void onSuccess(int moduleTag) {
                         if (!listening) return;
                         listening = false;
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(moduleTag);
-                            subscriber.onCompleted();
-                        }
+                        emitter.onNext(moduleTag);
+                        emitter.onCompleted();
                     }
 
                     @Override
-                    public void onFailure(@NonNull AuthenticationFailureReason failureReason, boolean fatal, @Nullable CharSequence errorMessage, int moduleTag, int errorCode) {
+                    public void onFailure(@NonNull AuthenticationFailureReason failureReason,
+                                          boolean fatal, @Nullable CharSequence errorMessage,
+                                          int moduleTag, int errorCode) {
                         if (!listening) return;
-                        final AuthenticationFailure result = new AuthenticationFailure(failureReason, fatal, errorMessage, moduleTag, errorCode);
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onError(result);
-                        }
+                        emitter.onError(new AuthenticationFailure(
+                                failureReason, fatal, errorMessage, moduleTag, errorCode));
                         if (fatal) {
                             listening = false;
                         }
                     }
                 });
             }
-        }).onBackpressureLatest().doOnUnsubscribe(new Action0() {
+        }, AsyncEmitter.BackpressureMode.LATEST).doOnUnsubscribe(new Action0() {
             @Override
             public void call() {
                 Reprint.cancelAuthentication();
