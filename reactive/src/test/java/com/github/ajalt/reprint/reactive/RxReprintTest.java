@@ -1,25 +1,19 @@
 package com.github.ajalt.reprint.reactive;
 
-import android.support.v4.os.CancellationSignal;
-
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
-import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
-import com.github.ajalt.reprint.core.ReprintModule;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Random;
-
 import rx.observers.TestSubscriber;
 public class RxReprintTest {
-    public TestModule module;
+    public TestReprintModule module;
     public TestSubscriber<Integer> ts;
 
     @Before
     public void setup() {
-        module = new TestModule();
+        module = new TestReprintModule();
         module.listener = null;
         module.cancellationSignal = null;
         Reprint.registerModule(module);
@@ -53,31 +47,4 @@ public class RxReprintTest {
         module.listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, "", module.TAG, 0);
         ts.assertError(AuthenticationFailure.class);
     }
-
-    public static class TestModule implements ReprintModule {
-        public final int TAG = new Random().nextInt(); // Register a new module each test
-        public CancellationSignal cancellationSignal;
-        public AuthenticationListener listener;
-        public boolean restartOnNonFatal;
-
-        @Override public boolean isHardwarePresent() {
-            return true;
-        }
-
-        @Override public boolean hasFingerprintRegistered() {
-            return true;
-        }
-
-        @Override
-        public void authenticate(CancellationSignal cancellationSignal, AuthenticationListener listener, boolean restartOnNonFatal) {
-            this.cancellationSignal = cancellationSignal;
-            this.listener = listener;
-            this.restartOnNonFatal = restartOnNonFatal;
-        }
-
-        @Override public int tag() {
-            return TAG;
-        }
-    }
-
 }

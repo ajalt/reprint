@@ -16,6 +16,9 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func2;
 
+import static com.github.ajalt.reprint.core.AuthenticationFailureReason.AUTHENTICATION_FAILED;
+import static com.github.ajalt.reprint.core.AuthenticationFailureReason.TIMEOUT;
+
 /**
  * ReactiveX interface to reprint authentication.
  */
@@ -76,17 +79,49 @@ public class RxReprint {
      * Observable#doOnError(Action1)} and call {@link Observable#retry()} to restart the
      * subscription when the error is non-fatal.
      * <p>
-     * This predicate will restart on non-fatal errors up to a specified number of failures.
+     * This predicate will restart on timeout up to `maxTimeout` times, or indefinitely for
+     * non-fatal errors.
+     * <p>
+     * You shouldn't restart indefinitely on timeout, since an active sensor consumes a lot of
+     * battery.
      *
-     * @param retryCount The maximum number of times to retry.
+     * @param maxTimeoutCount The maximum number of times to retry on timeout. All other non-fatal
+     *                        errors will be restarted indefinitely.
      */
-    public static Func2<Integer, Throwable, Boolean> retryNonFatal(final int retryCount) {
+    public static Func2<Integer, Throwable, Boolean> retryNonFatal(final int maxTimeoutCount) {
         return new Func2<Integer, Throwable, Boolean>() {
             @Override
             public Boolean call(Integer count, Throwable throwable) {
                 if (!(throwable instanceof AuthenticationFailure)) return false;
                 AuthenticationFailure e = (AuthenticationFailure) throwable;
-                return !e.fatal || e.failureReason == AuthenticationFailureReason.TIMEOUT && count < retryCount;
+                return !e.fatal || e.failureReason == TIMEOUT && count <= maxTimeoutCount;
+            }
+        };
+    }
+
+    /**
+     * Returns a predicate suitable for passing to {@link Observable#retry()} that behaves like
+     * {@link #retryNonFatal(int)}, but additionally limits the number of authentication failures.
+     * <p>
+     * Note that the system may lock the sensor after a smaller number of authentication failures
+     * than you ask for. In that case, there's no way to restart the authentication until the sensor
+     * becomes unlocked.
+     */
+    public static Func2<Integer, Throwable, Boolean> retryLimitedAuthFailures(
+            final int maxAuthFailures, final int maxTimeoutCount) {
+        return new Func2<Integer, Throwable, Boolean>() {
+            private int authFailureCount = 0;
+            private int timeoutFailureCount = 0;
+
+            @Override
+            public Boolean call(Integer count, Throwable throwable) {
+                if (!(throwable instanceof AuthenticationFailure)) return false;
+                AuthenticationFailure e = (AuthenticationFailure) throwable;
+                if (e.failureReason == TIMEOUT) return timeoutFailureCount++ < maxTimeoutCount;
+                if (e.fatal) return false;
+                if (e.failureReason == AUTHENTICATION_FAILED)
+                    return authFailureCount++ < maxAuthFailures;
+                return true;
             }
         };
     }
