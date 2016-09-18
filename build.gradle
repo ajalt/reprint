@@ -25,11 +25,11 @@ ext {
     minSdkVersion = 10
     targetSdkVersion = 24
     compileSdkVersion = 24
-    buildToolsVersion = '24.2.1'
+    buildToolsVersion = '24.0.2'
 
     // dependencies
     supportV7 = 'com.android.support:appcompat-v7:24.2.1'
-    rxJava = 'io.reactivex:rxjava:1.1.8'
+    rxJava = 'io.reactivex:rxjava:1.2.0'
 
     // sample dependencies
     supportDesign = 'com.android.support:design:24.2.1'

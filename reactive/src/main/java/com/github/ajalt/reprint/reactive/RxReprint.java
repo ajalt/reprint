@@ -35,7 +35,7 @@ public class RxReprint {
      * to resubscribe if the failure is non-fatal.
      */
     public static Observable<Integer> authenticate() {
-        return Observable.fromAsync(new Action1<AsyncEmitter<Integer>>() {
+        return Observable.fromEmitter(new Action1<AsyncEmitter<Integer>>() {
             @Override
             public void call(final AsyncEmitter<Integer> emitter) {
                 Reprint.authenticateWithoutRestart(new AuthenticationListener() {
