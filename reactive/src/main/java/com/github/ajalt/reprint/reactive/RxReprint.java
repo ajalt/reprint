@@ -9,7 +9,7 @@ import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.core.ReprintModule;
 
-import rx.AsyncEmitter;
+import rx.Emitter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action0;
@@ -35,9 +35,9 @@ public class RxReprint {
      * to resubscribe if the failure is non-fatal.
      */
     public static Observable<Integer> authenticate() {
-        return Observable.fromEmitter(new Action1<AsyncEmitter<Integer>>() {
+        return Observable.fromEmitter(new Action1<Emitter<Integer>>() {
             @Override
-            public void call(final AsyncEmitter<Integer> emitter) {
+            public void call(final Emitter<Integer> emitter) {
                 Reprint.authenticateWithoutRestart(new AuthenticationListener() {
                     private boolean listening = true;
 
@@ -62,7 +62,7 @@ public class RxReprint {
                     }
                 });
             }
-        }, AsyncEmitter.BackpressureMode.LATEST).doOnUnsubscribe(new Action0() {
+        }, Emitter.BackpressureMode.LATEST).doOnUnsubscribe(new Action0() {
             @Override
             public void call() {
                 Reprint.cancelAuthentication();
