@@ -4,7 +4,7 @@
 
 [![](https://img.shields.io/github/tag/ajalt/reprint.svg?label=maven)](https://jitpack.io/#ajalt/reprint) 
 [![](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
-![](https://img.shields.io/badge/API-14%2B-blue.svg)
+![](https://img.shields.io/badge/API-10%2B-blue.svg)
 [![](https://img.shields.io/badge/javadoc-core-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/core/2.8.2/javadoc/)
 [![](https://img.shields.io/badge/javadoc-reactive-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/reactive/2.8.2/javadoc/)
 
