@@ -127,9 +127,11 @@ public class MarshmallowReprintModule implements ReprintModule {
         // USE_FINGERPRINT permission. So on those devices, a SecurityException is raised no matter
         // what. This has been confirmed on a number of devices, including the LG LS770, LS991,
         // and the HTC One M8.
+        //
+        // On Robolectric, FingerprintManagerCompat.isHardwareDetected raises an NPE.
         try {
             return fingerprintManager.isHardwareDetected();
-        } catch (SecurityException ignored) {
+        } catch (SecurityException | NullPointerException ignored) {
             return false;
         }
     }

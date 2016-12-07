@@ -23,4 +23,7 @@ dependencies {
     compile project(':reactive')
 
     testCompile rootProject.ext.junit
+    testCompile rootProject.ext.assertj
+    testCompile rootProject.ext.robolectric
+    testCompile rootProject.ext.mockito
 }
