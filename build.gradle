@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
@@ -29,13 +29,13 @@ ext {
     buildToolsVersion = '25.0.0'
 
     // dependencies
-    supportV7 = 'com.android.support:appcompat-v7:25.0.0'
-    rxJava = 'io.reactivex:rxjava:1.2.2'
+    supportV7 = 'com.android.support:appcompat-v7:25.0.1'
+    rxJava = 'io.reactivex:rxjava:1.2.3'
 
     // sample dependencies
-    supportDesign = 'com.android.support:design:25.0.0'
+    supportDesign = 'com.android.support:design:25.0.1'
     butterknife = 'com.jakewharton:butterknife:7.0.1'
-    gradleRetrolambda = 'me.tatarka:gradle-retrolambda:3.3.0'
+    gradleRetrolambda = 'me.tatarka:gradle-retrolambda:3.4.0'
     retrolambda = 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 
     // test dependencies
