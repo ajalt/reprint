@@ -143,7 +143,7 @@ public class MarshmallowReprintModule implements ReprintModule {
 
     @Override
     public void authenticate(final CancellationSignal cancellationSignal, final AuthenticationListener listener, final boolean restartOnNonFatal) {
-        fingerprintManager.authenticate(null, 0, cancellationSignal, new FingerprintManagerCompat.AuthenticationCallback() {
+        final FingerprintManagerCompat.AuthenticationCallback callback = new FingerprintManagerCompat.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errMsgId, CharSequence errString) {
                 AuthenticationFailureReason failureReason = AuthenticationFailureReason.UNKNOWN;
@@ -187,6 +187,14 @@ public class MarshmallowReprintModule implements ReprintModule {
                 listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false,
                         context.getString(R.string.fingerprint_not_recognized), TAG, FINGERPRINT_AUTHENTICATION_FAILED);
             }
-        }, null);
+        };
+
+        // Occasionally, an NPE will bubble up out of FingerprintManagerCompat.authenticate
+        try {
+            fingerprintManager.authenticate(null, 0, cancellationSignal, callback, null);
+        } catch (NullPointerException e) {
+            listener.onFailure(AuthenticationFailureReason.UNKNOWN, true,
+                    context.getString(R.string.fingerprint_error_unable_to_process), TAG, FINGERPRINT_ERROR_CANCELED);
+        }
     }
 }
