@@ -17,8 +17,6 @@ dependencies {
     compile project(':core')
     compile rootProject.ext.supportV7
     compile rootProject.ext.rxJava
-
-    testCompile rootProject.ext.junit
 }
 
 // build a jar with source files

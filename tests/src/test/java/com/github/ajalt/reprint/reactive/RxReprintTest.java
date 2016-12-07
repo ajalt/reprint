@@ -2,11 +2,13 @@ package com.github.ajalt.reprint.reactive;
 
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.Reprint;
+import com.github.ajalt.reprint.testing.TestReprintModule;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import rx.observers.TestSubscriber;
+
 public class RxReprintTest {
     public TestReprintModule module;
     public TestSubscriber<Integer> ts;

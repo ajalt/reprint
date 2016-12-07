@@ -1,4 +1,4 @@
-package com.github.ajalt.reprint.reactive;
+package com.github.ajalt.reprint.testing;
 
 import android.support.v4.os.CancellationSignal;
 

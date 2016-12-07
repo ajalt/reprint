@@ -1,6 +1,7 @@
 package com.github.ajalt.reprint.reactive;
 
 import com.github.ajalt.reprint.core.Reprint;
+import com.github.ajalt.reprint.testing.TestReprintModule;
 
 import org.junit.Before;
 import org.junit.Test;
