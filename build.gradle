@@ -26,21 +26,21 @@ ext {
     minSdkVersion = 10
     targetSdkVersion = 25
     compileSdkVersion = 25
-    buildToolsVersion = '25.0.0'
+    buildToolsVersion = '25.0.1'
 
     // dependencies
-    supportV7 = 'com.android.support:appcompat-v7:25.0.1'
+    supportV7 = 'com.android.support:appcompat-v7:25.1.0'
     rxJava = 'io.reactivex:rxjava:1.2.3'
 
     // sample dependencies
-    supportDesign = 'com.android.support:design:25.0.1'
+    supportDesign = 'com.android.support:design:25.1.0'
     butterknife = 'com.jakewharton:butterknife:7.0.1'
-    gradleRetrolambda = 'me.tatarka:gradle-retrolambda:3.4.0'
-    retrolambda = 'net.orfjackal.retrolambda:retrolambda:2.3.0'
+    gradleRetrolambda = 'me.tatarka:gradle-retrolambda:3.5.0'
+    retrolambda = 'net.orfjackal.retrolambda:retrolambda:2.4.0'
 
     // test dependencies
     junit = 'junit:junit:4.12'
     assertj = 'org.assertj:assertj-core:2.4.1'
-    robolectric = 'org.robolectric:robolectric:3.1.4'
-    mockito = 'org.mockito:mockito-core:2.1.0-RC.1'
+    robolectric = 'org.robolectric:robolectric:3.2.2'
+    mockito = 'org.mockito:mockito-core:2.6.1'
 }
