@@ -5,10 +5,16 @@ import android.content.Context;
 /**
  * Static methods for performing fingerprint authentication.
  * <p/>
- * Call {@link #initialize(Context)} in your application's {@code onCreate}, then call {@link
+ * Call {@link #initialize(Context, Logger)} in your application's {@code onCreate}, then call {@link
  * #authenticate(AuthenticationListener)} to perform authentication.
  */
 public class Reprint {
+    public interface Logger {
+        void log(String message);
+
+        void logException(Throwable throwable, String message);
+    }
+
     public static final int DEFAULT_RESTART_COUNT = 5;
 
     /**
@@ -18,14 +24,26 @@ public class Reprint {
      * if included, followed by the marshmallow module.
      */
     public static void initialize(Context context) {
-        ReprintInternal.INSTANCE.initialize(context);
+        ReprintInternal.INSTANCE.initialize(context, null);
+    }
+
+    /**
+     * Load all available reprint modules.
+     * <p/>
+     * This is equivalent to calling {@link #registerModule(ReprintModule)} with the spass module,
+     * if included, followed by the marshmallow module.
+     *
+     * @param logger An optional logger instance that will receive log messages from Reprint.
+     */
+    public static void initialize(Context context, Logger logger) {
+        ReprintInternal.INSTANCE.initialize(context, logger);
     }
 
     /**
      * Register an individual spass module.
      * <p/>
      * This is only necessary if you want to customize which modules are loaded, or the order in
-     * which they're registered. Most use cases should just call {@link #initialize(Context)}
+     * which they're registered. Most use cases should just call {@link #initialize(Context, Logger)}
      * instead.
      * <p/>
      * Registering the same module twice will have no effect. The original module instance will

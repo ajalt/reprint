@@ -3,10 +3,10 @@ package com.github.ajalt.reprint.module.spass;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.support.v4.os.CancellationSignal;
-import android.util.Log;
 
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
+import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.core.ReprintModule;
 import com.samsung.android.sdk.pass.Spass;
 import com.samsung.android.sdk.pass.SpassFingerprint;
@@ -67,11 +67,13 @@ public class SpassReprintModule implements ReprintModule {
 
     private final Context context;
     private final Spass spass;
+    private final Reprint.Logger logger;
     private SpassFingerprint spassFingerprint;
 
     @SuppressWarnings("unused") // Call via reflection
-    public SpassReprintModule(Context context) {
+    public SpassReprintModule(Context context, Reprint.Logger logger) {
         this.context = context.getApplicationContext();
+        this.logger = logger;
 
         Spass s;
         try {
@@ -80,9 +82,8 @@ public class SpassReprintModule implements ReprintModule {
         } catch (SecurityException e) {
             // Rethrow security exceptions, which happen when the manifest permission is missing.
             throw e;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             // The awful spass sdk throws an exception on non-samsung devices, so swallow it here.
-            if (BuildConfig.DEBUG) Log.e("SpassReprintModule", "cannot initialize spass", e);
             s = null;
         }
         spass = s;
@@ -97,9 +98,7 @@ public class SpassReprintModule implements ReprintModule {
     public boolean isHardwarePresent() {
         try {
             return spass != null && spass.isFeatureEnabled(Spass.DEVICE_FINGERPRINT);
-        } catch (Exception e) {
-            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
-                    "isHardwarePresent failed", e);
+        } catch (Exception ignored) {
             return false;
         }
     }
@@ -113,9 +112,7 @@ public class SpassReprintModule implements ReprintModule {
                 }
                 return spassFingerprint.hasRegisteredFinger();
             }
-        } catch (Exception e) {
-            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
-                    "hasFingerprintRegistered failed", e);
+        } catch (Exception ignored) {
         }
         return false;
     }
@@ -186,8 +183,7 @@ public class SpassReprintModule implements ReprintModule {
                 public void onStarted() {}
             });
         } catch (Throwable t) {
-            if (BuildConfig.DEBUG) Log.e("SpassReprintModule",
-                    "fingerprint identification would not start", t);
+            logger.logException(t, "SpassReprintModule: fingerprint identification would not start");
             listener.onFailure(AuthenticationFailureReason.LOCKED_OUT, true, null, TAG, STATUS_LOCKED_OUT);
             return;
         }

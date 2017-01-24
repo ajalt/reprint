@@ -16,25 +16,33 @@ import java.lang.reflect.Constructor;
 enum ReprintInternal {
     INSTANCE;
 
+    public static final Reprint.Logger NULL_LOGGER = new Reprint.Logger() {
+        public void log(String message) {}
+
+        public void logException(Throwable throwable, String message) {}
+    };
+
     private static final String REPRINT_SPASS_MODULE = "com.github.ajalt.reprint.module.spass.SpassReprintModule";
     private CancellationSignal cancellationSignal;
     private ReprintModule module;
 
-    public ReprintInternal initialize(Context context) {
+    public ReprintInternal initialize(Context context, Reprint.Logger logger) {
         // The SPass module doesn't work below API 17, and the Imprint module obviously requires
         // Marshmallow.
         if (module != null || Build.VERSION.SDK_INT < 17) return this;
+
+        if (logger == null) logger = ReprintInternal.NULL_LOGGER;
 
         // Load the spass module if it was included.
         try {
             final Class<?> spassModuleClass = Class.forName(REPRINT_SPASS_MODULE);
             final Constructor<?> constructor = spassModuleClass.getConstructor(Context.class);
-            ReprintModule module = (ReprintModule) constructor.newInstance(context);
+            ReprintModule module = (ReprintModule) constructor.newInstance(context, logger);
             INSTANCE.registerModule(module);
         } catch (Exception ignored) {
         }
 
-        registerModule(new MarshmallowReprintModule(context));
+        registerModule(new MarshmallowReprintModule(context, logger));
 
         return this;
     }

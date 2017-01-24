@@ -7,6 +7,7 @@ import android.support.v4.os.CancellationSignal;
 import com.github.ajalt.library.R;
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
+import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.core.ReprintModule;
 
 /**
@@ -108,9 +109,11 @@ public class MarshmallowReprintModule implements ReprintModule {
 
     private final FingerprintManagerCompat fingerprintManager;
     private final Context context;
+    private final Reprint.Logger logger;
 
-    public MarshmallowReprintModule(Context context) {
+    public MarshmallowReprintModule(Context context, Reprint.Logger logger) {
         this.context = context.getApplicationContext();
+        this.logger = logger;
         fingerprintManager = FingerprintManagerCompat.from(this.context);
     }
 
@@ -131,7 +134,8 @@ public class MarshmallowReprintModule implements ReprintModule {
         // On Robolectric, FingerprintManagerCompat.isHardwareDetected raises an NPE.
         try {
             return fingerprintManager.isHardwareDetected();
-        } catch (SecurityException | NullPointerException ignored) {
+        } catch (SecurityException | NullPointerException e) {
+            logger.logException(e, "MarshmallowReprintModule: isHardwareDetected failed unexpectedly");
             return false;
         }
     }
@@ -193,6 +197,7 @@ public class MarshmallowReprintModule implements ReprintModule {
         try {
             fingerprintManager.authenticate(null, 0, cancellationSignal, callback, null);
         } catch (NullPointerException e) {
+            logger.logException(e, "MarshmallowReprintModule: authenticate failed unexpectedly");
             listener.onFailure(AuthenticationFailureReason.UNKNOWN, true,
                     context.getString(R.string.fingerprint_error_unable_to_process), TAG, FINGERPRINT_ERROR_CANCELED);
         }
