@@ -40,10 +40,9 @@ enum ReprintInternal {
         // Load the spass module if it was included.
         try {
             final Class<?> spassModuleClass = Class.forName(REPRINT_SPASS_MODULE);
-            final Constructor<?> constructor = spassModuleClass.getConstructor(Context.class);
+            final Constructor<?> constructor = spassModuleClass.getConstructor(Context.class, Reprint.Logger.class);
             ReprintModule module = (ReprintModule) constructor.newInstance(context, logger);
             registerModule(module);
-            return this;
         } catch (Exception ignored) {
         }
 
