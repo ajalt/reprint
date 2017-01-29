@@ -126,7 +126,8 @@ dependencies {
 
 ### Permissions
 
-Reprint requires the following permissions be declared in your `AndroidManifest.xml`
+Reprint requires the following permissions be declared in your `AndroidManifest.xml`. As long as you
+use the `aar` artifacts, these permissions will be included automatically.
 
 ```xml
 <!-- Marshmallow fingerprint permission-->
