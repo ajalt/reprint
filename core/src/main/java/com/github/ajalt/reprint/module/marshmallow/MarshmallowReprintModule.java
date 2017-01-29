@@ -1,7 +1,10 @@
 package com.github.ajalt.reprint.module.marshmallow;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.os.CancellationSignal;
 
 import com.github.ajalt.library.R;
@@ -19,6 +22,7 @@ import com.github.ajalt.reprint.core.ReprintModule;
  * failures. Fatal error code constants start with FINGERPRINT_ERROR, and non-fatal error codes
  * start with FINGERPRINT_ACQUIRED.
  */
+@TargetApi(Build.VERSION_CODES.M)
 public class MarshmallowReprintModule implements ReprintModule {
     public static final int TAG = 1;
 
@@ -107,14 +111,24 @@ public class MarshmallowReprintModule implements ReprintModule {
      */
     public static final int FINGERPRINT_AUTHENTICATION_FAILED = 1001;
 
-    private final FingerprintManagerCompat fingerprintManager;
     private final Context context;
     private final Reprint.Logger logger;
 
     public MarshmallowReprintModule(Context context, Reprint.Logger logger) {
         this.context = context.getApplicationContext();
         this.logger = logger;
-        fingerprintManager = FingerprintManagerCompat.from(this.context);
+    }
+
+    // We used to use the appcompat library to load the fingerprint manager, but v25.1.0 was broken
+    // on many phones. Instead, we handle the manager ourselves. FingerprintManagerCompat just
+    // forwards calls anyway, so it doesn't add any value for us.
+    private FingerprintManager fingerprintManager() {
+        try {
+            return context.getSystemService(FingerprintManager.class);
+        } catch (Exception e) {
+            logger.logException(e, "Could not get fingerprint system service on API that should support it.");
+        }
+        return null;
     }
 
     @Override
@@ -124,6 +138,8 @@ public class MarshmallowReprintModule implements ReprintModule {
 
     @Override
     public boolean isHardwarePresent() {
+        final FingerprintManager fingerprintManager = fingerprintManager();
+        if (fingerprintManager == null) return false;
         // Normally, a security exception is only thrown if you don't have the USE_FINGERPRINT
         // permission in your manifest. However, some OEMs have pushed updates to M for phones
         // that don't have sensors at all, and for some reason decided not to implement the
@@ -131,7 +147,7 @@ public class MarshmallowReprintModule implements ReprintModule {
         // what. This has been confirmed on a number of devices, including the LG LS770, LS991,
         // and the HTC One M8.
         //
-        // On Robolectric, FingerprintManagerCompat.isHardwareDetected raises an NPE.
+        // On Robolectric, FingerprintManager.isHardwareDetected raises an NPE.
         try {
             return fingerprintManager.isHardwareDetected();
         } catch (SecurityException | NullPointerException e) {
@@ -141,13 +157,43 @@ public class MarshmallowReprintModule implements ReprintModule {
     }
 
     @Override
-    public boolean hasFingerprintRegistered() {
-            return fingerprintManager.hasEnrolledFingerprints();
+    public boolean hasFingerprintRegistered() throws SecurityException {
+        final FingerprintManager fingerprintManager = fingerprintManager();
+        return fingerprintManager != null && fingerprintManager.hasEnrolledFingerprints();
     }
 
     @Override
-    public void authenticate(final CancellationSignal cancellationSignal, final AuthenticationListener listener, final boolean restartOnNonFatal) {
-        final FingerprintManagerCompat.AuthenticationCallback callback = new FingerprintManagerCompat.AuthenticationCallback() {
+    public void authenticate(final CancellationSignal cancellationSignal, final AuthenticationListener listener, final boolean restartOnNonFatal) throws SecurityException {
+        final FingerprintManager fingerprintManager = fingerprintManager();
+
+        if (fingerprintManager == null) {
+            listener.onFailure(AuthenticationFailureReason.UNKNOWN, true,
+                    context.getString(R.string.fingerprint_error_unable_to_process), TAG, FINGERPRINT_ERROR_CANCELED);
+            return;
+        }
+
+        final FingerprintManager.AuthenticationCallback callback = getAuthenticationCallback(cancellationSignal, listener, restartOnNonFatal);
+
+        // Why getCancellationSignalObject returns an Object is unexplained
+        final android.os.CancellationSignal signalObject = cancellationSignal == null ? null :
+                (android.os.CancellationSignal) cancellationSignal.getCancellationSignalObject();
+
+        // Occasionally, an NPE will bubble up out of FingerprintManager.authenticate
+        try {
+            fingerprintManager.authenticate(null, signalObject, 0, callback, null);
+        } catch (NullPointerException e) {
+            logger.logException(e, "MarshmallowReprintModule: authenticate failed unexpectedly");
+            listener.onFailure(AuthenticationFailureReason.UNKNOWN, true,
+                    context.getString(R.string.fingerprint_error_unable_to_process), TAG, FINGERPRINT_ERROR_CANCELED);
+        }
+    }
+
+    @NonNull
+    private FingerprintManager.AuthenticationCallback getAuthenticationCallback(
+            final CancellationSignal cancellationSignal,
+            final AuthenticationListener listener,
+            final boolean restartOnNonFatal) {
+        return new FingerprintManager.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errMsgId, CharSequence errString) {
                 AuthenticationFailureReason failureReason = AuthenticationFailureReason.UNKNOWN;
@@ -182,7 +228,7 @@ public class MarshmallowReprintModule implements ReprintModule {
             }
 
             @Override
-            public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
+            public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
                 listener.onSuccess(TAG);
             }
 
@@ -192,14 +238,5 @@ public class MarshmallowReprintModule implements ReprintModule {
                         context.getString(R.string.fingerprint_not_recognized), TAG, FINGERPRINT_AUTHENTICATION_FAILED);
             }
         };
-
-        // Occasionally, an NPE will bubble up out of FingerprintManagerCompat.authenticate
-        try {
-            fingerprintManager.authenticate(null, 0, cancellationSignal, callback, null);
-        } catch (NullPointerException e) {
-            logger.logException(e, "MarshmallowReprintModule: authenticate failed unexpectedly");
-            listener.onFailure(AuthenticationFailureReason.UNKNOWN, true,
-                    context.getString(R.string.fingerprint_error_unable_to_process), TAG, FINGERPRINT_ERROR_CANCELED);
-        }
     }
 }

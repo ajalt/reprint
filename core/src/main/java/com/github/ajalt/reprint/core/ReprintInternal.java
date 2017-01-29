@@ -38,7 +38,7 @@ enum ReprintInternal {
             final Class<?> spassModuleClass = Class.forName(REPRINT_SPASS_MODULE);
             final Constructor<?> constructor = spassModuleClass.getConstructor(Context.class);
             ReprintModule module = (ReprintModule) constructor.newInstance(context, logger);
-            INSTANCE.registerModule(module);
+            registerModule(module);
         } catch (Exception ignored) {
         }
 
@@ -48,7 +48,7 @@ enum ReprintInternal {
     }
 
     public ReprintInternal registerModule(ReprintModule module) {
-        if (this.module != null && module.tag() == this.module.tag()) {
+        if (module == null || this.module != null && module.tag() == this.module.tag()) {
             return this;
         }
 
