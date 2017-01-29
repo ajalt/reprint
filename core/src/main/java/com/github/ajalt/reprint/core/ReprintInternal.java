@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v4.os.CancellationSignal;
 
+import com.github.ajalt.library.R;
 import com.github.ajalt.reprint.module.marshmallow.MarshmallowReprintModule;
 
 import java.lang.reflect.Constructor;
@@ -25,8 +26,11 @@ enum ReprintInternal {
     private static final String REPRINT_SPASS_MODULE = "com.github.ajalt.reprint.module.spass.SpassReprintModule";
     private CancellationSignal cancellationSignal;
     private ReprintModule module;
+    private Context context;
 
     public ReprintInternal initialize(Context context, Reprint.Logger logger) {
+        this.context = context.getApplicationContext();
+
         // The SPass module doesn't work below API 17, and the Imprint module obviously requires
         // Marshmallow.
         if (module != null || Build.VERSION.SDK_INT < 17) return this;
@@ -39,6 +43,7 @@ enum ReprintInternal {
             final Constructor<?> constructor = spassModuleClass.getConstructor(Context.class);
             ReprintModule module = (ReprintModule) constructor.newInstance(context, logger);
             registerModule(module);
+            return this;
         } catch (Exception ignored) {
         }
 
@@ -79,12 +84,14 @@ enum ReprintInternal {
      */
     public void authenticate(final AuthenticationListener listener, boolean restartOnNonFatal, int restartCount) {
         if (module == null || !module.isHardwarePresent()) {
-            listener.onFailure(AuthenticationFailureReason.NO_HARDWARE, true, null, 0, 0);
+            listener.onFailure(AuthenticationFailureReason.NO_HARDWARE, true,
+                    getString(R.string.fingerprint_error_hw_not_available), 0, 0);
             return;
         }
 
         if (!module.hasFingerprintRegistered()) {
-            listener.onFailure(AuthenticationFailureReason.NO_FINGERPRINTS_REGISTERED, true, null, 0, 0);
+            listener.onFailure(AuthenticationFailureReason.NO_FINGERPRINTS_REGISTERED, true,
+                    getString(R.string.fingerprint_not_recognized), 0, 0);
             return;
         }
 
@@ -101,6 +108,10 @@ enum ReprintInternal {
             cancellationSignal.cancel();
             cancellationSignal = null;
         }
+    }
+
+    private String getString(int resid) {
+        return context == null ? null : context.getString(resid);
     }
 
     private AuthenticationListener restartingListener(final AuthenticationListener originalListener, final int restartCount) {
