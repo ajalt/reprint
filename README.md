@@ -5,8 +5,8 @@
 [![](https://img.shields.io/github/tag/ajalt/reprint.svg?label=maven)](https://jitpack.io/#ajalt/reprint) 
 [![](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 ![](https://img.shields.io/badge/API-10%2B-blue.svg)
-[![](https://img.shields.io/badge/javadoc-core-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/core/2.9.1/javadoc/)
-[![](https://img.shields.io/badge/javadoc-reactive-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/reactive/2.9.1/javadoc/)
+[![](https://img.shields.io/badge/javadoc-core-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/core/2.9.2/javadoc/)
+[![](https://img.shields.io/badge/javadoc-reactive-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/reactive/2.9.2/javadoc/)
 
 A simple, unified fingerprint authentication library for Android with
 ReactiveX extensions.
@@ -118,9 +118,9 @@ ReactiveX interface.
 
 ```groovy
 dependencies {
-   compile 'com.github.ajalt.reprint:core:2.9.1@aar' // required, supports marshmallow devices
-   compile 'com.github.ajalt.reprint:reprint_spass:2.9.1@aar' // optional: support for pre-marshmallow Samsung devices
-   compile 'com.github.ajalt.reprint:reactive:2.9.1@aar' // optional: the ReactiveX interface
+   compile 'com.github.ajalt.reprint:core:2.9.2@aar' // required, supports marshmallow devices
+   compile 'com.github.ajalt.reprint:reprint_spass:2.9.2@aar' // optional: support for pre-marshmallow Samsung devices
+   compile 'com.github.ajalt.reprint:reactive:2.9.2@aar' // optional: the ReactiveX interface
 }
 ```
 
@@ -139,7 +139,7 @@ use the `aar` artifacts, these permissions will be included automatically.
 
 # License
 
-    Copyright 2015 AJ Alt
+    Copyright 2015-2017 AJ Alt
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
