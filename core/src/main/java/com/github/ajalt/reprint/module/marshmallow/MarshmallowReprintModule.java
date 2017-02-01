@@ -5,6 +5,7 @@ import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.os.CancellationSignal;
 
 import com.github.ajalt.library.R;
@@ -23,6 +24,7 @@ import com.github.ajalt.reprint.core.ReprintModule;
  * start with FINGERPRINT_ACQUIRED.
  */
 @TargetApi(Build.VERSION_CODES.M)
+@RequiresApi(Build.VERSION_CODES.M)
 public class MarshmallowReprintModule implements ReprintModule {
     public static final int TAG = 1;
 
@@ -127,6 +129,8 @@ public class MarshmallowReprintModule implements ReprintModule {
             return context.getSystemService(FingerprintManager.class);
         } catch (Exception e) {
             logger.logException(e, "Could not get fingerprint system service on API that should support it.");
+        } catch (NoClassDefFoundError e) {
+            logger.log("FingerprintManager not available on this device");
         }
         return null;
     }

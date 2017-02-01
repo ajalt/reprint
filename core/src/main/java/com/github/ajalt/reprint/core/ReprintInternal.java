@@ -46,7 +46,9 @@ enum ReprintInternal {
         } catch (Exception ignored) {
         }
 
-        registerModule(new MarshmallowReprintModule(context, logger));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerModule(new MarshmallowReprintModule(context, logger));
+        }
 
         return this;
     }
