@@ -115,6 +115,11 @@ enum ReprintInternal {
         return context == null ? null : context.getString(resid);
     }
 
+    /**
+     * Create a listener that will restart authentication when a timeout occurs.
+     * <p>
+     * All other failures will be passed to the original listener.
+     */
     private AuthenticationListener restartingListener(final AuthenticationListener originalListener, final int restartCount) {
         return new AuthenticationListener() {
             @Override
