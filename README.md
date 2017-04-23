@@ -32,21 +32,48 @@ normally.
 There are two ways to be notified of authentication results: traditional
 callback, and a ReactiveX Observable.
 
+### RxJava interface
+
+If you include the `reactive` reprint library, you can be notified of
+authentication results through an Observable by calling
+`RxReprint.authenticate`. In this case, the subscriber's `onNext` will be called
+after each failure and after success.
+
+```java
+RxReprint.authenticate()
+    .subscribe(result -> {
+        switch (result.status) {
+            case SUCCESS:
+                showSuccess();
+                break;
+            case RECOVERABLE_FAILURE:
+                showHelp(result.failureReason, result.errorMessage);
+                break;
+            case UNRECOVERABLE_FAILURE:
+                showError(result.failureReason, result.errorMessage);
+                break;
+        }
+    });
+```
+
+One advantage that this interface has is that when the subscriber unsubscribes,
+the authentication request is automatically canceled. So you could, for example,
+use the [RxLifecycle](https://github.com/trello/RxLifecycle) library to bind the
+observable, and the authentication will be canceled when your activity pauses.
+
 ### Traditional Callbacks
 
-Pass an `AuthenticationListener` to `authenticate`, and it's callbacks will be
-called with results. The `onFailure` callback will be called repeatedly until
-the sensor is disabled or a fingerprint is authenticated correctly, at which
-point `onSuccess` will be called.
+If you want to use Reprint without RxJava, you can pass an
+`AuthenticationListener` to `authenticate`. The `onFailure` callback will be
+called repeatedly until the sensor is disabled or a fingerprint is authenticated
+correctly, at which point `onSuccess` will be called.
 
 ```java
 Reprint.authenticate(new AuthenticationListener() {
-    @Override
     public void onSuccess(int moduleTag) {
         showSuccess();
     }
 
-    @Override
     public void onFailure(AuthenticationFailureReason failureReason, boolean fatal,
                           CharSequence errorMessage, int moduleTag, int errorCode) {
         showError(failureReason, fatal, errorMessage, errorCode);
@@ -64,41 +91,11 @@ running, such as when a finger was moved over the sensor too quickly.
 
 The `errorMessage` is a string that will contain some help text provided by
 the underlying SDK about the failure. You should show this text to the user,
-or some other message of your own based on the failureReason. This string will
+or some other message of your own based on the `failureReason`. This string will
 never be null, and will be localized into the current locale.
 
 The `moduleTag` and `errorCode` can be used to find out the SDK-specific
 reason for the failure.
-
-### ReactiveX interface
-
-If you include the `reactive` reprint library, you can be notified of
-authentication results through an Observable by calling
-`RxReprint.authenticate`. In this case, the subscriber's `onNext` will be
-called at most once, after a successful authentication. When the `onError`
-method is called, the sensor will already be stopped.
-
-```java
-RxReprint.authenticate().subscribe(::showSuccess, ::showError);
-```
-
-You probably want to use the `retry` operator to restart the sensor when a
-non-fatal error occurs. The `RxReprint.retryNonFatal` method takes care of the
-most common use case.
-
-```java
-RxReprint.authenticate()
-         .doOnError(::showHelp)
-         .retry(RxReprint.retryNonFatal(5))
-         .subscribe(::showSuccess, ::showError);
-```
-
-One advantage that this interface has is that when the subscriber
-unsubscribes, the authentication request is automatically canceled. So you
-could, for example, use the
-[RxLifecycle](https://github.com/trello/RxLifecycle) library to bind the
-observable, and the authentication will be canceled when your activity
-pauses.
 
 # Installation
 
@@ -126,8 +123,9 @@ dependencies {
 
 ### Permissions
 
-Reprint requires the following permissions be declared in your `AndroidManifest.xml`. As long as you
-use the `aar` artifacts, these permissions will be included automatically.
+Reprint requires the following permissions be declared in your
+`AndroidManifest.xml`. As long as you use the `aar` artifacts, these permissions
+will be included automatically.
 
 ```xml
 <!-- Marshmallow fingerprint permission-->
