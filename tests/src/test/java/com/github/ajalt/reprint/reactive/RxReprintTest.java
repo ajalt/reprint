@@ -11,9 +11,9 @@ import java.util.List;
 
 import rx.observers.TestSubscriber;
 
-import static com.github.ajalt.reprint.reactive.AuthenticationResult.Status.RECOVERABLE_FAILURE;
+import static com.github.ajalt.reprint.reactive.AuthenticationResult.Status.NONFATAL_FAILURE;
 import static com.github.ajalt.reprint.reactive.AuthenticationResult.Status.SUCCESS;
-import static com.github.ajalt.reprint.reactive.AuthenticationResult.Status.UNRECOVERABLE_FAILURE;
+import static com.github.ajalt.reprint.reactive.AuthenticationResult.Status.FATAL_FAILURE;
 import static org.junit.Assert.assertEquals;
 
 
@@ -59,7 +59,7 @@ public class RxReprintTest {
         module.listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, "", module.TAG, 0);
         final List<AuthenticationResult> events = ts.getOnNextEvents();
         assertEquals(events.size(), 1);
-        assertEquals(events.get(0).status, RECOVERABLE_FAILURE);
+        assertEquals(events.get(0).status, NONFATAL_FAILURE);
         ts.assertNoTerminalEvent();
     }
 
@@ -69,7 +69,7 @@ public class RxReprintTest {
         module.listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, true, "", module.TAG, 0);
         final List<AuthenticationResult> events = ts.getOnNextEvents();
         assertEquals(events.size(), 1);
-        assertEquals(events.get(0).status, UNRECOVERABLE_FAILURE);
+        assertEquals(events.get(0).status, FATAL_FAILURE);
         ts.assertCompleted();
     }
 }

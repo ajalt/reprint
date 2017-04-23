@@ -14,9 +14,9 @@ import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
-import static com.github.ajalt.reprint.reactive.AuthenticationResult.Status.RECOVERABLE_FAILURE;
+import static com.github.ajalt.reprint.reactive.AuthenticationResult.Status.NONFATAL_FAILURE;
 import static com.github.ajalt.reprint.reactive.AuthenticationResult.Status.SUCCESS;
-import static com.github.ajalt.reprint.reactive.AuthenticationResult.Status.UNRECOVERABLE_FAILURE;
+import static com.github.ajalt.reprint.reactive.AuthenticationResult.Status.FATAL_FAILURE;
 
 /** RxJava interface to Reprint authentication. */
 public class RxReprint {
@@ -51,7 +51,7 @@ public class RxReprint {
                         if (!listening) return;
 
                         emitter.onNext(new AuthenticationResult(
-                                fatal ? UNRECOVERABLE_FAILURE : RECOVERABLE_FAILURE,
+                                fatal ? FATAL_FAILURE : NONFATAL_FAILURE,
                                 failureReason, errorMessage, moduleTag, errorCode));
                         if (fatal) {
                             emitter.onCompleted();

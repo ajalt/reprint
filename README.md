@@ -46,10 +46,10 @@ RxReprint.authenticate()
             case SUCCESS:
                 showSuccess();
                 break;
-            case RECOVERABLE_FAILURE:
+            case NONFATAL_FAILURE:
                 showHelp(result.failureReason, result.errorMessage);
                 break;
-            case UNRECOVERABLE_FAILURE:
+            case FATAL_FAILURE:
                 showError(result.failureReason, result.errorMessage);
                 break;
         }

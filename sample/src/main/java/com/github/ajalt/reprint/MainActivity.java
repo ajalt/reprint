@@ -102,10 +102,10 @@ public class MainActivity extends AppCompatActivity {
                         case SUCCESS:
                             showSuccess();
                             break;
-                        case RECOVERABLE_FAILURE:
+                        case NONFATAL_FAILURE:
                             showError(res.failureReason, false, res.errorMessage, res.errorCode);
                             break;
-                        case UNRECOVERABLE_FAILURE:
+                        case FATAL_FAILURE:
                             showError(res.failureReason, true, res.errorMessage, res.errorCode);
                             break;
                     }

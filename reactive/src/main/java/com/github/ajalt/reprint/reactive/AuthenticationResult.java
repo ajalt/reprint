@@ -8,7 +8,7 @@ import com.github.ajalt.reprint.core.ReprintModule;
 
 /** A data class exception that holds the results of an authentication request failure. */
 public class AuthenticationResult {
-    public enum Status {SUCCESS, RECOVERABLE_FAILURE, UNRECOVERABLE_FAILURE}
+    public enum Status {SUCCESS, NONFATAL_FAILURE, FATAL_FAILURE}
 
     /**
      * The result of the authenticate call.
