@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
@@ -15,6 +15,7 @@ subprojects  {
 
     repositories {
         mavenCentral()
+        jcenter()
     }
 }
 
@@ -26,21 +27,21 @@ ext {
     minSdkVersion = 10
     targetSdkVersion = 25
     compileSdkVersion = 25
-    buildToolsVersion = '25.0.1'
+    buildToolsVersion = '25.0.2'
 
     // dependencies
-    supportV7 = 'com.android.support:appcompat-v7:25.1.0'
-    rxJava = 'io.reactivex:rxjava:1.2.3'
+    supportV7 = 'com.android.support:appcompat-v7:25.3.1'
+    rxJava = 'io.reactivex:rxjava:1.2.9'
 
     // sample dependencies
-    supportDesign = 'com.android.support:design:25.1.0'
+    supportDesign = 'com.android.support:design:25.3.1'
     butterknife = 'com.jakewharton:butterknife:7.0.1'
-    gradleRetrolambda = 'me.tatarka:gradle-retrolambda:3.5.0'
-    retrolambda = 'net.orfjackal.retrolambda:retrolambda:2.4.0'
+    gradleRetrolambda = 'me.tatarka:gradle-retrolambda:3.6.1'
+    retrolambda = 'net.orfjackal.retrolambda:retrolambda:2.5.1'
 
     // test dependencies
     junit = 'junit:junit:4.12'
     assertj = 'org.assertj:assertj-core:2.4.1'
-    robolectric = 'org.robolectric:robolectric:3.2.2'
-    mockito = 'org.mockito:mockito-core:2.6.1'
+    robolectric = 'org.robolectric:robolectric:3.3.2'
+    mockito = 'org.mockito:mockito-core:2.8.8'
 }
