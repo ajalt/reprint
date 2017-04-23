@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
-import com.github.ajalt.reprint.rxjava.RxReprint;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,8 +31,14 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.fingerprints_registered)
     TextView fingerprintsRegistered;
 
-    @Bind(R.id.rx_switch)
-    CompoundButton rxSwitch;
+    @Bind(R.id.radio_callbacks)
+    CompoundButton radioCallbacks;
+
+    @Bind(R.id.radio_rxjava1)
+    CompoundButton radioRxJava1;
+
+    @Bind(R.id.radio_rxjava2)
+    CompoundButton radioRxJava2;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -73,10 +78,14 @@ public class MainActivity extends AppCompatActivity {
         result.setText("Listening");
         fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_close_white_24dp));
 
-        if (rxSwitch.isChecked()) {
-            startReactive();
-        } else {
+        if (radioCallbacks.isChecked()) {
             startTraditional();
+        } else if (radioRxJava1.isChecked()) {
+            startRxJava1();
+        } else if (radioRxJava2.isChecked()) {
+            startRxJava2();
+        } else {
+            throw new IllegalStateException();
         }
     }
 
@@ -95,8 +104,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void startReactive() {
-        RxReprint.authenticate()
+    private void startRxJava1() {
+        com.github.ajalt.reprint.rxjava.RxReprint.authenticate()
+                .subscribe(res -> {
+                    switch (res.status) {
+                        case SUCCESS:
+                            showSuccess();
+                            break;
+                        case NONFATAL_FAILURE:
+                            showError(res.failureReason, false, res.errorMessage, res.errorCode);
+                            break;
+                        case FATAL_FAILURE:
+                            showError(res.failureReason, true, res.errorMessage, res.errorCode);
+                            break;
+                    }
+                });
+    }
+
+    private void startRxJava2() {
+        com.github.ajalt.reprint.rxjava2.RxReprint.authenticate()
                 .subscribe(res -> {
                     switch (res.status) {
                         case SUCCESS:

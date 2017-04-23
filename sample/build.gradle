@@ -33,12 +33,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        // Necessary in order to include both RxJava 1 and 2
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 dependencies {
     compile project(':core')
     compile project(':reprint_spass')
     compile project(':rxjava')
+    compile project(':rxjava2')
 
     compile rootProject.ext.supportV7
     compile rootProject.ext.supportDesign

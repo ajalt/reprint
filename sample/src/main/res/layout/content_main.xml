@@ -76,13 +76,33 @@
             <TextView
                 style="@style/TextAppearance.AppCompat.Body2"
                 android:padding="4dp"
-                android:text="Use ReactiveX:"/>
+                android:text="Callback style:"/>
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/rx_switch"
+            <RadioGroup
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"/>
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/radio_callbacks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Callbacks"/>
+
+                <RadioButton
+                    android:id="@+id/radio_rxjava1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RxJava 1"/>
+
+                <RadioButton
+                    android:id="@+id/radio_rxjava2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RxJava 2"/>
+            </RadioGroup>
+
         </TableRow>
 
     </TableLayout>
