@@ -1,1 +1,1 @@
-include ':sample', ':core', ':reprint_spass', ':reactive', ':tests'
+include ':sample', ':core', ':reprint_spass', ':reactive', ':rxjava2', ':tests'

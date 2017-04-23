@@ -1,4 +1,4 @@
-package com.github.ajalt.reprint.reactive;
+package com.github.ajalt.reprint.rxjava2;
 
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationResult;
@@ -10,17 +10,17 @@ import org.junit.Test;
 
 import java.util.List;
 
-import rx.observers.TestSubscriber;
+import io.reactivex.subscribers.TestSubscriber;
 
+import static com.github.ajalt.reprint.core.AuthenticationResult.Status.FATAL_FAILURE;
 import static com.github.ajalt.reprint.core.AuthenticationResult.Status.NONFATAL_FAILURE;
 import static com.github.ajalt.reprint.core.AuthenticationResult.Status.SUCCESS;
-import static com.github.ajalt.reprint.core.AuthenticationResult.Status.FATAL_FAILURE;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 
-public class RxReprintTest {
+public class RxReprint2Test {
     public TestReprintModule module;
     public TestSubscriber<AuthenticationResult> ts;
 
@@ -41,10 +41,10 @@ public class RxReprintTest {
     public void successfulRequest() throws Exception {
         ts.requestMore(1);
         module.listener.onSuccess(module.TAG);
-        final List<AuthenticationResult> events = ts.getOnNextEvents();
+        List<AuthenticationResult> events = ts.values();
         assertEquals(events.size(), 1);
         assertEquals(events.get(0).status, SUCCESS);
-        ts.assertCompleted();
+        ts.assertComplete();
     }
 
     @Test
@@ -53,33 +53,33 @@ public class RxReprintTest {
         ts.assertNoValues();
         ts.requestMore(1);
         ts.assertValueCount(1);
-        ts.assertCompleted();
+        ts.assertComplete();
     }
 
     @Test
     public void nonFatalFailure() throws Exception {
         ts.requestMore(1);
         module.listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, "", module.TAG, 0);
-        final List<AuthenticationResult> events = ts.getOnNextEvents();
+        List<AuthenticationResult> events = ts.values();
         assertEquals(events.size(), 1);
         assertEquals(events.get(0).status, NONFATAL_FAILURE);
-        ts.assertNoTerminalEvent();
+        ts.assertNotTerminated();
     }
 
     @Test
     public void fatalFailure() throws Exception {
         ts.requestMore(1);
         module.listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, true, "", module.TAG, 0);
-        final List<AuthenticationResult> events = ts.getOnNextEvents();
+        List<AuthenticationResult> events = ts.values();
         assertEquals(events.size(), 1);
         assertEquals(events.get(0).status, FATAL_FAILURE);
-        ts.assertCompleted();
+        ts.assertComplete();
     }
 
     @Test
     public void unsubscribe_cancels() throws Exception {
         assertFalse(module.cancellationSignal.isCanceled());
-        ts.unsubscribe();
+        ts.dispose();
         assertTrue(module.cancellationSignal.isCanceled());
     }
 }

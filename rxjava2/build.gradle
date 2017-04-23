@@ -16,7 +16,7 @@ android {
 dependencies {
     compile project(':core')
     compile rootProject.ext.supportV7
-    compile rootProject.ext.rxjava1
+    compile rootProject.ext.rxjava2
 }
 
 // build a jar with source files

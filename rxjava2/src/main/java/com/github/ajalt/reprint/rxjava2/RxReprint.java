@@ -1,8 +1,5 @@
-package com.github.ajalt.reprint.reactive;
+package com.github.ajalt.reprint.rxjava2;
 
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
@@ -10,30 +7,31 @@ import com.github.ajalt.reprint.core.AuthenticationResult;
 import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.core.RestartPredicates;
 
-import rx.Emitter;
-import rx.Observable;
-import rx.functions.Action0;
-import rx.functions.Action1;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.functions.Action;
 
+import static com.github.ajalt.reprint.core.AuthenticationResult.Status.FATAL_FAILURE;
 import static com.github.ajalt.reprint.core.AuthenticationResult.Status.NONFATAL_FAILURE;
 import static com.github.ajalt.reprint.core.AuthenticationResult.Status.SUCCESS;
-import static com.github.ajalt.reprint.core.AuthenticationResult.Status.FATAL_FAILURE;
 
 /** RxJava interface to Reprint authentication. */
 public class RxReprint {
     /**
-     * Return an {@link Observable} that will continue to emit events as long as the fingerprint
+     * Return an {@link Flowable} that will continue to emit events as long as the fingerprint
      * sensor is active.
      */
-    public static Observable<AuthenticationResult> authenticate() {
+    public static Flowable<AuthenticationResult> authenticate() {
         return authenticate(RestartPredicates.defaultPredicate());
     }
 
     /** @see #authenticate() */
-    public static Observable<AuthenticationResult> authenticate(final Reprint.RestartPredicate restartPredicate) {
-        return Observable.create(new Action1<Emitter<AuthenticationResult>>() {
+    public static Flowable<AuthenticationResult> authenticate(final Reprint.RestartPredicate restartPredicate) {
+        return Flowable.create(new FlowableOnSubscribe<AuthenticationResult>() {
             @Override
-            public void call(final Emitter<AuthenticationResult> emitter) {
+            public void subscribe(final FlowableEmitter<AuthenticationResult> emitter) {
                 Reprint.authenticate(new AuthenticationListener() {
                     private boolean listening = true;
 
@@ -42,12 +40,12 @@ public class RxReprint {
                         if (!listening) return;
                         listening = false;
                         emitter.onNext(new AuthenticationResult(SUCCESS, null, "", moduleTag, 0));
-                        emitter.onCompleted();
+                        emitter.onComplete();
                     }
 
                     @Override
-                    public void onFailure(@NonNull AuthenticationFailureReason failureReason,
-                                          boolean fatal, @Nullable CharSequence errorMessage,
+                    public void onFailure(AuthenticationFailureReason failureReason,
+                                          boolean fatal, CharSequence errorMessage,
                                           int moduleTag, int errorCode) {
                         if (!listening) return;
 
@@ -55,14 +53,14 @@ public class RxReprint {
                                 fatal ? FATAL_FAILURE : NONFATAL_FAILURE,
                                 failureReason, errorMessage, moduleTag, errorCode));
                         if (fatal) {
-                            emitter.onCompleted();
+                            emitter.onComplete();
                         }
                     }
                 }, restartPredicate);
             }
-        }, Emitter.BackpressureMode.LATEST).doOnUnsubscribe(new Action0() {
+        }, BackpressureStrategy.LATEST).doOnCancel(new Action() {
             @Override
-            public void call() {
+            public void run() throws Exception {
                 Reprint.cancelAuthentication();
             }
         });

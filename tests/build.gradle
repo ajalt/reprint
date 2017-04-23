@@ -21,6 +21,7 @@ android {
 dependencies {
     compile project(':core')
     compile project(':reactive')
+    compile project(':rxjava2')
 
     testCompile rootProject.ext.junit
     testCompile rootProject.ext.assertj

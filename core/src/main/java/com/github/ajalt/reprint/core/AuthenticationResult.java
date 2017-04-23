@@ -1,10 +1,7 @@
-package com.github.ajalt.reprint.reactive;
+package com.github.ajalt.reprint.core;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.github.ajalt.reprint.core.AuthenticationFailureReason;
-import com.github.ajalt.reprint.core.ReprintModule;
 
 /** A data class exception that holds the results of an authentication request failure. */
 public class AuthenticationResult {
