@@ -6,12 +6,15 @@ public class RestartPredicates {
     /**
      * A predicate that will retry all non-fatal failures indefinitely, and timeouts a given number
      * of times.
+     *
+     * @param timeoutRestartCount The maximum number of times to restart after a timeout.
      */
     public static Reprint.RestartPredicate restartTimeouts(final int timeoutRestartCount) {
         return new Reprint.RestartPredicate() {
+            private int timeoutRestarts = 0;
             @Override
             public boolean invoke(AuthenticationFailureReason reason, int restartCount) {
-                return reason != TIMEOUT || restartCount <= timeoutRestartCount;
+                return reason != TIMEOUT || timeoutRestarts++ < timeoutRestartCount;
             }
         };
     }
