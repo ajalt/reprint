@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
-import com.github.ajalt.reprint.reactive.RxReprint;
+import com.github.ajalt.reprint.rxjava.RxReprint;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

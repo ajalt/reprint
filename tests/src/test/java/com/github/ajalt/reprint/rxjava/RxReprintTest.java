@@ -1,4 +1,4 @@
-package com.github.ajalt.reprint.reactive;
+package com.github.ajalt.reprint.rxjava;
 
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationResult;

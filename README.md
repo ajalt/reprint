@@ -35,9 +35,9 @@ callback, and a ReactiveX Observable.
 ### RxJava interface
 
 If you include the `reactive` reprint library, you can be notified of
-authentication results through an Observable by calling
-`RxReprint.authenticate`. In this case, the subscriber's `onNext` will be called
-after each failure and after success.
+authentication results through an `Observable` (or `Flowable` with RxJava 2) by
+calling `RxReprint.authenticate`. In this case, the subscriber's `onNext` will
+be called after each failure and after success.
 
 ```java
 RxReprint.authenticate()
@@ -111,13 +111,14 @@ repositories {
 ```
 
 Then add the core library and optionally the Samsung Pass interface and the
-ReactiveX interface.
+ReactiveX interface. Reprint provides support for both RxJava 1 and 2.
 
 ```groovy
 dependencies {
-   compile 'com.github.ajalt.reprint:core:2.9.2@aar' // required, supports marshmallow devices
+   compile 'com.github.ajalt.reprint:core:2.9.2@aar' // required: supports marshmallow devices
    compile 'com.github.ajalt.reprint:reprint_spass:2.9.2@aar' // optional: support for pre-marshmallow Samsung devices
-   compile 'com.github.ajalt.reprint:reactive:2.9.2@aar' // optional: the ReactiveX interface
+   compile 'com.github.ajalt.reprint:rxjava:2.9.2@aar' // optional: the RxJava 1 interface
+   compile 'com.github.ajalt.reprint:rxjava2:2.9.2@aar' // optional: the RxJava 2 interface
 }
 ```
 

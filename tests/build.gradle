@@ -20,7 +20,7 @@ android {
 
 dependencies {
     compile project(':core')
-    compile project(':reactive')
+    compile project(':rxjava')
     compile project(':rxjava2')
 
     testCompile rootProject.ext.junit

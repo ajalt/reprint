@@ -38,7 +38,7 @@ android {
 dependencies {
     compile project(':core')
     compile project(':reprint_spass')
-    compile project(':reactive')
+    compile project(':rxjava')
 
     compile rootProject.ext.supportV7
     compile rootProject.ext.supportDesign

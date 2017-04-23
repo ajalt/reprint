@@ -1,4 +1,4 @@
-package com.github.ajalt.reprint.reactive;
+package com.github.ajalt.reprint.rxjava;
 
 
 import android.support.annotation.NonNull;
