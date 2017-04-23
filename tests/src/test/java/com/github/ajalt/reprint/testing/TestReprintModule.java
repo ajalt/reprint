@@ -3,6 +3,7 @@ package com.github.ajalt.reprint.testing;
 import android.support.v4.os.CancellationSignal;
 
 import com.github.ajalt.reprint.core.AuthenticationListener;
+import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.core.ReprintModule;
 
 import java.util.Random;
@@ -11,7 +12,7 @@ public class TestReprintModule implements ReprintModule {
     public final int TAG = new Random().nextInt(); // Register a new module each test
     public CancellationSignal cancellationSignal;
     public AuthenticationListener listener;
-    public boolean restartOnNonFatal;
+    public Reprint.RestartPredicate restartPredicate;
 
     @Override public boolean isHardwarePresent() {
         return true;
@@ -22,10 +23,10 @@ public class TestReprintModule implements ReprintModule {
     }
 
     @Override
-    public void authenticate(CancellationSignal cancellationSignal, AuthenticationListener listener, boolean restartOnNonFatal) {
+    public void authenticate(CancellationSignal cancellationSignal, AuthenticationListener listener, Reprint.RestartPredicate restartPredicate) {
         this.cancellationSignal = cancellationSignal;
         this.listener = listener;
-        this.restartOnNonFatal = restartOnNonFatal;
+        this.restartPredicate = restartPredicate;
     }
 
     @Override public int tag() {

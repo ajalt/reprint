@@ -167,7 +167,16 @@ public class MarshmallowReprintModule implements ReprintModule {
     }
 
     @Override
-    public void authenticate(final CancellationSignal cancellationSignal, final AuthenticationListener listener, final boolean restartOnNonFatal) throws SecurityException {
+    public void authenticate(final CancellationSignal cancellationSignal,
+                             final AuthenticationListener listener,
+                             final Reprint.RestartPredicate restartPredicate) {
+        authenticate(cancellationSignal, listener, restartPredicate, 0);
+    }
+
+    private void authenticate(final CancellationSignal cancellationSignal,
+                              final AuthenticationListener listener,
+                              final Reprint.RestartPredicate restartPredicate,
+                              final int restartCount) throws SecurityException {
         final FingerprintManager fingerprintManager = fingerprintManager();
 
         if (fingerprintManager == null) {
@@ -176,7 +185,8 @@ public class MarshmallowReprintModule implements ReprintModule {
             return;
         }
 
-        final FingerprintManager.AuthenticationCallback callback = getAuthenticationCallback(cancellationSignal, listener, restartOnNonFatal);
+        final FingerprintManager.AuthenticationCallback callback = getAuthenticationCallback(
+                cancellationSignal, listener, restartPredicate, restartCount);
 
         // Why getCancellationSignalObject returns an Object is unexplained
         final android.os.CancellationSignal signalObject = cancellationSignal == null ? null :
@@ -196,8 +206,11 @@ public class MarshmallowReprintModule implements ReprintModule {
     private FingerprintManager.AuthenticationCallback getAuthenticationCallback(
             final CancellationSignal cancellationSignal,
             final AuthenticationListener listener,
-            final boolean restartOnNonFatal) {
+            final Reprint.RestartPredicate restartPredicate,
+            final int initialRestartCount) {
         return new FingerprintManager.AuthenticationCallback() {
+            private int restartCount = initialRestartCount;
+
             @Override
             public void onAuthenticationError(int errMsgId, CharSequence errString) {
                 AuthenticationFailureReason failureReason = AuthenticationFailureReason.UNKNOWN;
@@ -220,12 +233,16 @@ public class MarshmallowReprintModule implements ReprintModule {
                         return;
                 }
 
-                listener.onFailure(failureReason, true, errString, TAG, errMsgId);
+                if (errMsgId == FINGERPRINT_ERROR_TIMEOUT && restartPredicate.invoke(failureReason, restartCount)) {
+                    authenticate(cancellationSignal, listener, restartPredicate, restartCount);
+                } else {
+                    listener.onFailure(failureReason, true, errString, TAG, errMsgId);
+                }
             }
 
             @Override
             public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
-                if (!restartOnNonFatal) {
+                if (!restartPredicate.invoke(AuthenticationFailureReason.SENSOR_FAILED, restartCount++)) {
                     cancellationSignal.cancel();
                 }
                 listener.onFailure(AuthenticationFailureReason.SENSOR_FAILED, false, helpString, TAG, helpMsgId);

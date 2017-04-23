@@ -5,8 +5,8 @@ import android.content.Context;
 /**
  * Static methods for performing fingerprint authentication.
  * <p/>
- * Call {@link #initialize(Context, Logger)} in your application's {@code onCreate}, then call {@link
- * #authenticate(AuthenticationListener)} to perform authentication.
+ * Call {@link #initialize(Context, Logger)} in your application's {@code onCreate}, then call
+ * {@link #authenticate(AuthenticationListener)} to perform authentication.
  */
 public class Reprint {
     public interface Logger {
@@ -15,7 +15,16 @@ public class Reprint {
         void logException(Throwable throwable, String message);
     }
 
-    public static final int DEFAULT_RESTART_COUNT = 5;
+    public interface RestartPredicate {
+        /**
+         * Return true if the authentication should be restarted after the given non-fatal failure.
+         *
+         * @param reason       The reason for this failure.
+         * @param restartCount The number of times this authentication call has already been
+         *                     restarted.
+         */
+        boolean invoke(AuthenticationFailureReason reason, int restartCount);
+    }
 
     /**
      * Load all available reprint modules.
@@ -43,8 +52,8 @@ public class Reprint {
      * Register an individual spass module.
      * <p/>
      * This is only necessary if you want to customize which modules are loaded, or the order in
-     * which they're registered. Most use cases should just call {@link #initialize(Context, Logger)}
-     * instead.
+     * which they're registered. Most use cases should just call {@link #initialize(Context,
+     * Logger)} instead.
      * <p/>
      * Registering the same module twice will have no effect. The original module instance will
      * remain registered.
@@ -72,13 +81,13 @@ public class Reprint {
     /**
      * Start a fingerprint authentication request.
      * <p/>
-     * Equivalent to calling {@link #authenticate(AuthenticationListener, int)} with a {@code
-     * restartCount} of {@link #DEFAULT_RESTART_COUNT}
+     * Equivalent to calling {@link #authenticate(AuthenticationListener, RestartPredicate)} with
+     * {@link RestartPredicates#defaultPredicate()}
      *
      * @param listener The listener that will be notified of authentication events.
      */
     public static void authenticate(AuthenticationListener listener) {
-        authenticate(listener, DEFAULT_RESTART_COUNT);
+        authenticate(listener, RestartPredicates.defaultPredicate());
     }
 
     /**
@@ -87,17 +96,17 @@ public class Reprint {
      * If {@link #isHardwarePresent()} or {@link #hasFingerprintRegistered()} return false, no
      * authentication will take place, and the listener's {@link AuthenticationListener#onFailure(AuthenticationFailureReason,
      * boolean, CharSequence, int, int)} will immediately be called with the corresponding failure
-     * reason. In this case, the error message will be null, fatal will be true, and the other
-     * values are unspecified.
+     * reason. In this case, errorMessage will be non-null, fatal will be true, and the other values
+     * are unspecified.
      *
-     * @param listener     The listener that will be notified of authentication events.
-     * @param restartCount If the authentication times out due to inactivity, the request will be
-     *                     automatically restarted up to this many times. The listener will not be
-     *                     notified about restarts, but will receive a normal timeout failure once
-     *                     the number of retries has been exceeded.
+     * @param listener         The listener that will be notified of authentication events.
+     * @param restartPredicate A predicate that will be called after each failure. If it returns
+     *                         true, the fingerprint sensor will remain active and the listener will
+     *                         not be called. If it returns false, the sensor will be turned off and
+     *                         onFailure will be called.
      */
-    public static void authenticate(AuthenticationListener listener, int restartCount) {
-        ReprintInternal.INSTANCE.authenticate(listener, true, restartCount);
+    public static void authenticate(AuthenticationListener listener, RestartPredicate restartPredicate) {
+        ReprintInternal.INSTANCE.authenticate(listener, restartPredicate);
     }
 
     /**
@@ -109,7 +118,7 @@ public class Reprint {
      * @param listener The listener that will be notified of authentication events.
      */
     public static void authenticateWithoutRestart(AuthenticationListener listener) {
-        ReprintInternal.INSTANCE.authenticate(listener, false, 0);
+        ReprintInternal.INSTANCE.authenticate(listener, RestartPredicates.neverRestart());
     }
 
     /**

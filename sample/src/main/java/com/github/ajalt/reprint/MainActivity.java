@@ -2,8 +2,6 @@ package com.github.ajalt.reprint;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
-import com.github.ajalt.reprint.reactive.AuthenticationFailure;
 import com.github.ajalt.reprint.reactive.RxReprint;
 
 import butterknife.Bind;
@@ -91,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull AuthenticationFailureReason failureReason, boolean fatal,
-                                  @Nullable CharSequence errorMessage, int moduleTag, int errorCode) {
+            public void onFailure(AuthenticationFailureReason failureReason, boolean fatal,
+                                  CharSequence errorMessage, int moduleTag, int errorCode) {
                 showError(failureReason, fatal, errorMessage, errorCode);
             }
         });
@@ -100,11 +97,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void startReactive() {
         RxReprint.authenticate()
-                .doOnError(throwable -> {
-                    AuthenticationFailure e = (AuthenticationFailure) throwable;
-                    showError(e.failureReason, e.fatal, e.errorMessage, e.errorCode);
-                }).retry(RxReprint.retryNonFatal(5))
-                .subscribe(tag -> showSuccess(), e -> {});
+                .subscribe(res -> {
+                    switch (res.status) {
+                        case SUCCESS:
+                            showSuccess();
+                            break;
+                        case RECOVERABLE_FAILURE:
+                            showError(res.failureReason, false, res.errorMessage, res.errorCode);
+                            break;
+                        case UNRECOVERABLE_FAILURE:
+                            showError(res.failureReason, true, res.errorMessage, res.errorCode);
+                            break;
+                    }
+                });
     }
 
     private void cancel() {
@@ -120,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
         running = false;
     }
 
-    private void showError(AuthenticationFailureReason failureReason, boolean fatal, CharSequence errorMessage, int errorCode) {
+    private void showError(AuthenticationFailureReason failureReason, boolean fatal,
+                           CharSequence errorMessage, int errorCode) {
         result.setText(errorMessage);
 
         if (fatal) {

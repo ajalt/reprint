@@ -76,14 +76,10 @@ enum ReprintInternal {
     /**
      * Start an authentication request.
      *
-     * @param listener          The listener to be notified.
-     * @param restartOnNonFatal If true, restartCount is ignored and only one listener callback will
-     *                          ever be called.
-     * @param restartCount      If restartOnNonFatal is false, this is the number of times to
-     *                          restart on a timeout. Other nonfatal errors will be restarted
-     *                          indefinitely.
+     * @param listener         The listener to be notified.
+     * @param restartPredicate The predicate that determines whether to restart or not.
      */
-    public void authenticate(final AuthenticationListener listener, boolean restartOnNonFatal, int restartCount) {
+    public void authenticate(final AuthenticationListener listener, Reprint.RestartPredicate restartPredicate) {
         if (module == null || !module.isHardwarePresent()) {
             listener.onFailure(AuthenticationFailureReason.NO_HARDWARE, true,
                     getString(R.string.fingerprint_error_hw_not_available), 0, 0);
@@ -97,11 +93,7 @@ enum ReprintInternal {
         }
 
         cancellationSignal = new CancellationSignal();
-        if (restartOnNonFatal) {
-            module.authenticate(cancellationSignal, restartingListener(listener, restartCount), true);
-        } else {
-            module.authenticate(cancellationSignal, listener, false);
-        }
+        module.authenticate(cancellationSignal, listener, restartPredicate);
     }
 
     public void cancelAuthentication() {
@@ -113,29 +105,5 @@ enum ReprintInternal {
 
     private String getString(int resid) {
         return context == null ? null : context.getString(resid);
-    }
-
-    /**
-     * Create a listener that will restart authentication when a timeout occurs.
-     * <p>
-     * All other failures will be passed to the original listener.
-     */
-    private AuthenticationListener restartingListener(final AuthenticationListener originalListener, final int restartCount) {
-        return new AuthenticationListener() {
-            @Override
-            public void onSuccess(int moduleTag) {
-                originalListener.onSuccess(moduleTag);
-            }
-
-            @Override
-            public void onFailure(AuthenticationFailureReason failureReason, boolean fatal, CharSequence errorMessage, int moduleTag, int errorCode) {
-                if (module != null && cancellationSignal != null &&
-                        failureReason == AuthenticationFailureReason.TIMEOUT && restartCount > 0) {
-                    module.authenticate(cancellationSignal, restartingListener(originalListener, restartCount - 1), true);
-                } else {
-                    originalListener.onFailure(failureReason, fatal, errorMessage, moduleTag, errorCode);
-                }
-            }
-        };
     }
 }

@@ -11,6 +11,8 @@ import com.github.ajalt.reprint.core.ReprintModule;
 import com.samsung.android.sdk.pass.Spass;
 import com.samsung.android.sdk.pass.SpassFingerprint;
 
+import static com.github.ajalt.reprint.core.AuthenticationFailureReason.TIMEOUT;
+
 /**
  * A Reprint module that authenticates fingerprints using the Samsung Pass SDK.
  * <p>
@@ -118,7 +120,16 @@ public class SpassReprintModule implements ReprintModule {
     }
 
     @Override
-    public void authenticate(final CancellationSignal cancellationSignal, final AuthenticationListener listener, final boolean restartOnNonFatal) {
+    public void authenticate(final CancellationSignal cancellationSignal,
+                             final AuthenticationListener listener,
+                             final Reprint.RestartPredicate restartPredicate) {
+        authenticate(cancellationSignal, listener, restartPredicate, 0);
+    }
+
+    private void authenticate(final CancellationSignal cancellationSignal,
+                             final AuthenticationListener listener,
+                             final Reprint.RestartPredicate restartPredicate,
+                             final int restartCount) {
         if (spassFingerprint == null) {
             spassFingerprint = new SpassFingerprint(context);
         }
@@ -155,10 +166,10 @@ public class SpassReprintModule implements ReprintModule {
                             fail(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, R.string.fingerprint_not_recognized, status);
                             break;
                         case SpassFingerprint.STATUS_TIMEOUT_FAILED:
-                            fail(AuthenticationFailureReason.TIMEOUT, true, R.string.fingerprint_error_timeout, status);
+                            fail(TIMEOUT, true, R.string.fingerprint_error_timeout, status);
                             break;
                         default:
-                            fail(AuthenticationFailureReason.UNKNOWN, true, R.string.fingerprint_error_unable_to_process, status);
+                            fail(AuthenticationFailureReason.UNKNOWN, true, R.string.fingerprint_error_hw_not_available, status);
                             break;
                         case SpassFingerprint.STATUS_USER_CANCELLED:
                             // Don't send a cancelled message.
@@ -172,8 +183,9 @@ public class SpassReprintModule implements ReprintModule {
 
                 private void fail(AuthenticationFailureReason reason, boolean fatal, String message, int status) {
                     listener.onFailure(reason, fatal, message, TAG, status);
-                    if (!fatal && restartOnNonFatal)
-                        authenticate(cancellationSignal, listener, true);
+                    if ((!fatal || reason == TIMEOUT) && restartPredicate.invoke(reason, restartCount)) {
+                        authenticate(cancellationSignal, listener, restartPredicate, restartCount + 1);
+                    }
                 }
 
                 @Override
