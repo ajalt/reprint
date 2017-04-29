@@ -5,7 +5,7 @@ package com.github.ajalt.reprint.core;
  */
 public enum AuthenticationFailureReason {
     /**
-     * No reprint modules have hardware or registered fingerprints.
+     * The device does not have a fingerprint sensor that is recognized by any of the Reprint modules.
      */
     NO_HARDWARE,
     /**
@@ -14,7 +14,7 @@ public enum AuthenticationFailureReason {
      */
     HARDWARE_UNAVAILABLE,
     /**
-     * An authentication request was started
+     * The user has not registered any fingerprints with the system.
      */
     NO_FINGERPRINTS_REGISTERED,
     /**
@@ -30,8 +30,8 @@ public enum AuthenticationFailureReason {
     /**
      * The sensor has been running for too long without reading anything.
      * <p/>
-     * The timeout period is system and sensor specific, but is usually around 30 seconds. It is
-     * safe to immediately start another authentication attempt.
+     * The amount of time that the sensor can be running before a timeout is system and sensor specific, but
+     * is usually around 30 seconds. It is safe to immediately start another authentication attempt.
      */
     TIMEOUT,
     /**

@@ -12,9 +12,9 @@ import java.util.List;
 
 import rx.observers.TestSubscriber;
 
+import static com.github.ajalt.reprint.core.AuthenticationResult.Status.FATAL_FAILURE;
 import static com.github.ajalt.reprint.core.AuthenticationResult.Status.NONFATAL_FAILURE;
 import static com.github.ajalt.reprint.core.AuthenticationResult.Status.SUCCESS;
-import static com.github.ajalt.reprint.core.AuthenticationResult.Status.FATAL_FAILURE;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

@@ -17,17 +17,26 @@ import static com.github.ajalt.reprint.core.AuthenticationResult.Status.FATAL_FA
 import static com.github.ajalt.reprint.core.AuthenticationResult.Status.NONFATAL_FAILURE;
 import static com.github.ajalt.reprint.core.AuthenticationResult.Status.SUCCESS;
 
-/** RxJava interface to Reprint authentication. */
+/**
+ * RxJava 2 interface to Reprint authentication.
+ */
 public class RxReprint {
     /**
      * Return an {@link Flowable} that will continue to emit events as long as the fingerprint
      * sensor is active.
+     *
+     * @see Reprint#authenticate(AuthenticationListener)
      */
     public static Flowable<AuthenticationResult> authenticate() {
         return authenticate(RestartPredicates.defaultPredicate());
     }
 
-    /** @see #authenticate() */
+    /**
+     * Authenticate with a restart predicate.
+     *
+     * @see #authenticate()
+     * @see Reprint#authenticate(AuthenticationListener, Reprint.RestartPredicate)
+     */
     public static Flowable<AuthenticationResult> authenticate(final Reprint.RestartPredicate restartPredicate) {
         return Flowable.create(new FlowableOnSubscribe<AuthenticationResult>() {
             @Override

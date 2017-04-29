@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * Static methods for performing fingerprint authentication.
  * <p/>
- * Call {@link #initialize(Context, Logger)} in your application's {@code onCreate}, then call
+ * Call {@link #initialize(Context)} in your application's {@code onCreate}, then call
  * {@link #authenticate(AuthenticationListener)} to perform authentication.
  */
 public class Reprint {

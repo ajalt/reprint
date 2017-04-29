@@ -1,9 +1,6 @@
 package com.github.ajalt.reprint.rxjava;
 
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.AuthenticationResult;
@@ -15,21 +12,30 @@ import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
+import static com.github.ajalt.reprint.core.AuthenticationResult.Status.FATAL_FAILURE;
 import static com.github.ajalt.reprint.core.AuthenticationResult.Status.NONFATAL_FAILURE;
 import static com.github.ajalt.reprint.core.AuthenticationResult.Status.SUCCESS;
-import static com.github.ajalt.reprint.core.AuthenticationResult.Status.FATAL_FAILURE;
 
-/** RxJava interface to Reprint authentication. */
+/**
+ * RxJava 1 interface to Reprint authentication.
+ */
 public class RxReprint {
     /**
      * Return an {@link Observable} that will continue to emit events as long as the fingerprint
      * sensor is active.
+     *
+     * @see Reprint#authenticate(AuthenticationListener)
      */
     public static Observable<AuthenticationResult> authenticate() {
         return authenticate(RestartPredicates.defaultPredicate());
     }
 
-    /** @see #authenticate() */
+    /**
+     * Authenticate with a restart predicate.
+     *
+     * @see #authenticate()
+     * @see Reprint#authenticate(AuthenticationListener, Reprint.RestartPredicate)
+     */
     public static Observable<AuthenticationResult> authenticate(final Reprint.RestartPredicate restartPredicate) {
         return Observable.create(new Action1<Emitter<AuthenticationResult>>() {
             @Override
@@ -46,8 +52,8 @@ public class RxReprint {
                     }
 
                     @Override
-                    public void onFailure(@NonNull AuthenticationFailureReason failureReason,
-                                          boolean fatal, @Nullable CharSequence errorMessage,
+                    public void onFailure(AuthenticationFailureReason failureReason,
+                                          boolean fatal, CharSequence errorMessage,
                                           int moduleTag, int errorCode) {
                         if (!listening) return;
 
