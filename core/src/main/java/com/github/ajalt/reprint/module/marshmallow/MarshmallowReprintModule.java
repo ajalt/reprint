@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.os.CancellationSignal;
 
@@ -173,7 +172,7 @@ public class MarshmallowReprintModule implements ReprintModule {
         authenticate(cancellationSignal, listener, restartPredicate, 0);
     }
 
-    private void authenticate(final CancellationSignal cancellationSignal,
+    void authenticate(final CancellationSignal cancellationSignal,
                               final AuthenticationListener listener,
                               final Reprint.RestartPredicate restartPredicate,
                               final int restartCount) throws SecurityException {
@@ -185,8 +184,8 @@ public class MarshmallowReprintModule implements ReprintModule {
             return;
         }
 
-        final FingerprintManager.AuthenticationCallback callback = getAuthenticationCallback(
-                cancellationSignal, listener, restartPredicate, restartCount);
+        final FingerprintManager.AuthenticationCallback callback =
+                new AuthCallback(restartCount, restartPredicate, cancellationSignal, listener);
 
         // Why getCancellationSignalObject returns an Object is unexplained
         final android.os.CancellationSignal signalObject = cancellationSignal == null ? null :
@@ -202,62 +201,66 @@ public class MarshmallowReprintModule implements ReprintModule {
         }
     }
 
-    @NonNull
-    private FingerprintManager.AuthenticationCallback getAuthenticationCallback(
-            final CancellationSignal cancellationSignal,
-            final AuthenticationListener listener,
-            final Reprint.RestartPredicate restartPredicate,
-            final int initialRestartCount) {
-        return new FingerprintManager.AuthenticationCallback() {
-            private int restartCount = initialRestartCount;
+    class AuthCallback extends FingerprintManager.AuthenticationCallback {
+        private final Reprint.RestartPredicate restartPredicate;
+        private final CancellationSignal cancellationSignal;
+        private final AuthenticationListener listener;
+        private int restartCount;
 
-            @Override
-            public void onAuthenticationError(int errMsgId, CharSequence errString) {
-                AuthenticationFailureReason failureReason = AuthenticationFailureReason.UNKNOWN;
-                switch (errMsgId) {
-                    case FINGERPRINT_ERROR_HW_UNAVAILABLE:
-                        failureReason = AuthenticationFailureReason.HARDWARE_UNAVAILABLE;
-                        break;
-                    case FINGERPRINT_ERROR_UNABLE_TO_PROCESS:
-                    case FINGERPRINT_ERROR_NO_SPACE:
-                        failureReason = AuthenticationFailureReason.SENSOR_FAILED;
-                        break;
-                    case FINGERPRINT_ERROR_TIMEOUT:
-                        failureReason = AuthenticationFailureReason.TIMEOUT;
-                        break;
-                    case FINGERPRINT_ERROR_LOCKOUT:
-                        failureReason = AuthenticationFailureReason.LOCKED_OUT;
-                        break;
-                    case FINGERPRINT_ERROR_CANCELED:
-                        // Don't send a cancelled message.
-                        return;
-                }
+        public AuthCallback(int restartCount, Reprint.RestartPredicate restartPredicate,
+                            CancellationSignal cancellationSignal, AuthenticationListener listener) {
+            this.restartCount = restartCount;
+            this.restartPredicate = restartPredicate;
+            this.cancellationSignal = cancellationSignal;
+            this.listener = listener;
+        }
 
-                if (errMsgId == FINGERPRINT_ERROR_TIMEOUT && restartPredicate.invoke(failureReason, restartCount)) {
-                    authenticate(cancellationSignal, listener, restartPredicate, restartCount);
-                } else {
-                    listener.onFailure(failureReason, true, errString, TAG, errMsgId);
-                }
+        @Override
+        public void onAuthenticationError(int errMsgId, CharSequence errString) {
+            AuthenticationFailureReason failureReason = AuthenticationFailureReason.UNKNOWN;
+            switch (errMsgId) {
+                case FINGERPRINT_ERROR_HW_UNAVAILABLE:
+                    failureReason = AuthenticationFailureReason.HARDWARE_UNAVAILABLE;
+                    break;
+                case FINGERPRINT_ERROR_UNABLE_TO_PROCESS:
+                case FINGERPRINT_ERROR_NO_SPACE:
+                    failureReason = AuthenticationFailureReason.SENSOR_FAILED;
+                    break;
+                case FINGERPRINT_ERROR_TIMEOUT:
+                    failureReason = AuthenticationFailureReason.TIMEOUT;
+                    break;
+                case FINGERPRINT_ERROR_LOCKOUT:
+                    failureReason = AuthenticationFailureReason.LOCKED_OUT;
+                    break;
+                case FINGERPRINT_ERROR_CANCELED:
+                    // Don't send a cancelled message.
+                    return;
             }
 
-            @Override
-            public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
-                if (!restartPredicate.invoke(AuthenticationFailureReason.SENSOR_FAILED, restartCount++)) {
-                    cancellationSignal.cancel();
-                }
-                listener.onFailure(AuthenticationFailureReason.SENSOR_FAILED, false, helpString, TAG, helpMsgId);
+            if (errMsgId == FINGERPRINT_ERROR_TIMEOUT && restartPredicate.invoke(failureReason, restartCount)) {
+                authenticate(cancellationSignal, listener, restartPredicate, restartCount);
+            } else {
+                listener.onFailure(failureReason, true, errString, TAG, errMsgId);
             }
+        }
 
-            @Override
-            public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
-                listener.onSuccess(TAG);
+        @Override
+        public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
+            if (!restartPredicate.invoke(AuthenticationFailureReason.SENSOR_FAILED, restartCount++)) {
+                cancellationSignal.cancel();
             }
+            listener.onFailure(AuthenticationFailureReason.SENSOR_FAILED, false, helpString, TAG, helpMsgId);
+        }
 
-            @Override
-            public void onAuthenticationFailed() {
-                listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false,
-                        context.getString(R.string.fingerprint_not_recognized), TAG, FINGERPRINT_AUTHENTICATION_FAILED);
-            }
-        };
+        @Override
+        public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
+            listener.onSuccess(TAG);
+        }
+
+        @Override
+        public void onAuthenticationFailed() {
+            listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false,
+                    context.getString(R.string.fingerprint_not_recognized), TAG, FINGERPRINT_AUTHENTICATION_FAILED);
+        }
     }
 }
