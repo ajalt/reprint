@@ -6,15 +6,17 @@
 [![](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 ![](https://img.shields.io/badge/API-10%2B-blue.svg)
 [![](https://img.shields.io/badge/javadoc-core-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/core/2.9.2/javadoc/)
-[![](https://img.shields.io/badge/javadoc-reactive-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/reactive/2.9.2/javadoc/)
+[![](https://img.shields.io/badge/javadoc-rxjava1-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/rxjava/2.9.2/javadoc/)
+[![](https://img.shields.io/badge/javadoc-rxjava2-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/rxjava2/2.9.2/javadoc/)
 
 A simple, unified fingerprint authentication library for Android with
 ReactiveX extensions.
 
 * Eliminates the need to deal with the different available Fingerprint APIs, including Imprint and Samsung Pass.
 * Fixes undocumented bugs and idiosyncrasies in the underlying APIs.
+* Supports more Imprint devices than FingerprintManagerCompat from the support library.
 * Comes with help messages translated in over 80 locales that work with all APIs.
-* Provides optional ReactiveX interfaces.
+* Provides optional RxJava interfaces.
 
 # Usage
 
@@ -56,6 +58,18 @@ RxReprint.authenticate()
     });
 ```
 
+The `failureReason` is an enum value with general categories of reason that
+the authentication failed. This is useful for displaying custom help messages in your
+UI.
+
+The `errorMessage` is a string that will contain some help text provided by
+the underlying SDK about the failure. You should show this text to the user,
+or some other message of your own based on the `failureReason`. This string will
+never be null from a failure, and will be localized into the current locale.
+
+For detail on the other parameters, 
+[see the Javadocs](https://jitpack.io/com/github/ajalt/reprint/rxjava/2.9.2/javadoc/).
+
 One advantage that this interface has is that when the subscriber unsubscribes,
 the authentication request is automatically canceled. So you could, for example,
 use the [RxLifecycle](https://github.com/trello/RxLifecycle) library to bind the
@@ -80,22 +94,6 @@ Reprint.authenticate(new AuthenticationListener() {
     }
 });
 ```
-
-The `failureReason` is an enum value with general categories of reason that
-the authentication failed. This is useful for displaying help messages in your
-UI.
-
-The `fatal` parameter is true if the sensor has stopped and cannot be
-restarted, such as when it's locked out. It's false if the sensor is still
-running, such as when a finger was moved over the sensor too quickly.
-
-The `errorMessage` is a string that will contain some help text provided by
-the underlying SDK about the failure. You should show this text to the user,
-or some other message of your own based on the `failureReason`. This string will
-never be null, and will be localized into the current locale.
-
-The `moduleTag` and `errorCode` can be used to find out the SDK-specific
-reason for the failure.
 
 # Installation
 
