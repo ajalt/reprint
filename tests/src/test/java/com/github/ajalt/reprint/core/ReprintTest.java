@@ -4,8 +4,10 @@ import com.github.ajalt.reprint.testing.TestReprintModule;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -13,7 +15,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-
+@RunWith(MockitoJUnitRunner.class)
 public class ReprintTest {
     public TestReprintModule module;
 
@@ -22,8 +24,6 @@ public class ReprintTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-
         module = new TestReprintModule();
         module.listener = null;
         module.cancellationSignal = null;
