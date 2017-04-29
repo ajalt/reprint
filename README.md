@@ -2,15 +2,8 @@
     <img src="resources/banner.png">
 </h1>
 
-[![](https://img.shields.io/github/tag/ajalt/reprint.svg?label=maven)](https://jitpack.io/#ajalt/reprint) 
-[![](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
-![](https://img.shields.io/badge/API-10%2B-blue.svg)
-[![](https://img.shields.io/badge/javadoc-core-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/core/2.9.2/javadoc/)
-[![](https://img.shields.io/badge/javadoc-rxjava1-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/rxjava/2.9.2/javadoc/)
-[![](https://img.shields.io/badge/javadoc-rxjava2-blue.svg)](https://jitpack.io/com/github/ajalt/reprint/rxjava2/2.9.2/javadoc/)
-
 A simple, unified fingerprint authentication library for Android with
-ReactiveX extensions.
+RxJava extensions.
 
 * Eliminates the need to deal with the different available Fingerprint APIs, including Imprint and Samsung Pass.
 * Fixes undocumented bugs and idiosyncrasies in the underlying APIs.
@@ -68,7 +61,7 @@ or some other message of your own based on the `failureReason`. This string will
 never be null from a failure, and will be localized into the current locale.
 
 For detail on the other parameters, 
-[see the Javadocs](https://jitpack.io/com/github/ajalt/reprint/rxjava/2.9.2/javadoc/).
+[see the Javadocs](https://jitpack.io/com/github/ajalt/reprint/rxjava/3.1.0/javadoc/).
 
 One advantage that this interface has is that when the subscriber unsubscribes,
 the authentication request is automatically canceled. So you could, for example,
@@ -95,9 +88,17 @@ Reprint.authenticate(new AuthenticationListener() {
 });
 ```
 
+# Documentation
+
+The javadocs for the Reprint modules are available online:
+
+ * [Reprint core](https://jitpack.io/com/github/ajalt/reprint/core/3.1.0/javadoc/)
+ * [RxJava 1 interface](https://jitpack.io/com/github/ajalt/reprint/rxjava/3.1.0/javadoc/)
+ * [RxJava 2 interface](https://jitpack.io/com/github/ajalt/reprint/rxjava2/3.1.0/javadoc/)
+
 # Installation
 
-Reprint is distributed with [jitpack](https://jitpack.io/) and split up into
+Reprint is distributed with [jitpack](https://jitpack.io/#ajalt/reprint) and split up into
 several libraries, so you can include only the parts that you use.
 
 First, add Jitpack to your gradle repositories.
@@ -109,14 +110,15 @@ repositories {
 ```
 
 Then add the core library and optionally the Samsung Pass interface and the
-ReactiveX interface. Reprint provides support for both RxJava 1 and 2.
+ReactiveX interface. Reprint provides support for both RxJava 1 and 2; you should 
+include the module that matches the version of RxJava that you use in your project.
 
 ```groovy
 dependencies {
-   compile 'com.github.ajalt.reprint:core:2.9.2@aar' // required: supports marshmallow devices
-   compile 'com.github.ajalt.reprint:reprint_spass:2.9.2@aar' // optional: support for pre-marshmallow Samsung devices
-   compile 'com.github.ajalt.reprint:rxjava:2.9.2@aar' // optional: the RxJava 1 interface
-   compile 'com.github.ajalt.reprint:rxjava2:2.9.2@aar' // optional: the RxJava 2 interface
+   compile 'com.github.ajalt.reprint:core:3.1.0@aar' // required: supports marshmallow devices
+   compile 'com.github.ajalt.reprint:reprint_spass:3.1.0@aar' // optional: support for pre-marshmallow Samsung devices
+   compile 'com.github.ajalt.reprint:rxjava:3.1.0@aar' // optional: the RxJava 1 interface
+   compile 'com.github.ajalt.reprint:rxjava2:3.1.0@aar' // optional: the RxJava 2 interface
 }
 ```
 
