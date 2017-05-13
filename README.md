@@ -92,9 +92,9 @@ Reprint.authenticate(new AuthenticationListener() {
 
 The javadocs for the Reprint modules are available online:
 
- * [Reprint core](https://jitpack.io/com/github/ajalt/reprint/core/3.1.0/javadoc/)
- * [RxJava 1 interface](https://jitpack.io/com/github/ajalt/reprint/rxjava/3.1.0/javadoc/)
- * [RxJava 2 interface](https://jitpack.io/com/github/ajalt/reprint/rxjava2/3.1.0/javadoc/)
+ * [Reprint core](https://jitpack.io/com/github/ajalt/reprint/core/3.1.0/javadoc/index.html?com/github/ajalt/reprint/core/Reprint.html)
+ * [RxJava 1 interface](https://jitpack.io/com/github/ajalt/reprint/rxjava/3.1.0/javadoc/com/github/ajalt/reprint/rxjava/RxReprint.html)
+ * [RxJava 2 interface](https://jitpack.io/com/github/ajalt/reprint/rxjava2/3.1.0/javadoc/com/github/ajalt/reprint/rxjava2/RxReprint.html)
 
 # Installation
 
