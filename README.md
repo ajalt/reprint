@@ -122,6 +122,16 @@ dependencies {
 }
 ```
 
+If you use other libraries requiring appcompat-v7 make sure to exclude them :
+```groovy
+compile ('com.github.ajalt.reprint:core:2.5.6@aar'){
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+}
+compile ('com.github.ajalt.reprint:reprint_spass:2.5.6@aar'){
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+}
+```
+
 ### Permissions
 
 Reprint requires the following permissions be declared in your
