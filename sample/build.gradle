@@ -1,15 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath rootProject.ext.gradleRetrolambda
-    }
-}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -18,7 +7,7 @@ android {
     defaultConfig {
         applicationId project.GROUP
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion rootProject.ext.compileSdkVersion
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
     }
@@ -40,14 +29,13 @@ android {
 }
 
 dependencies {
-    compile project(':core')
-    compile project(':reprint_spass')
-    compile project(':rxjava')
-    compile project(':rxjava2')
+    implementation project(':core')
+    implementation project(':reprint_spass')
+    implementation project(':rxjava')
+    implementation project(':rxjava2')
 
-    compile rootProject.ext.supportV7
-    compile rootProject.ext.supportDesign
-    compile rootProject.ext.butterknife
-
-    retrolambdaConfig rootProject.ext.retrolambda
+    implementation rootProject.ext.supportV7
+    implementation rootProject.ext.supportDesign
+    implementation rootProject.ext.butterknife
+    annotationProcessor rootProject.ext.butterknifeProcessor
 }

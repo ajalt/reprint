@@ -13,34 +13,34 @@ import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity {
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton fab;
 
-    @Bind(R.id.result)
+    @BindView(R.id.result)
     TextView result;
 
-    @Bind(R.id.hardware_present)
+    @BindView(R.id.hardware_present)
     TextView hardwarePresent;
 
-    @Bind(R.id.fingerprints_registered)
+    @BindView(R.id.fingerprints_registered)
     TextView fingerprintsRegistered;
 
-    @Bind(R.id.radio_callbacks)
+    @BindView(R.id.radio_callbacks)
     CompoundButton radioCallbacks;
 
-    @Bind(R.id.radio_rxjava1)
+    @BindView(R.id.radio_rxjava1)
     CompoundButton radioRxJava1;
 
-    @Bind(R.id.radio_rxjava2)
+    @BindView(R.id.radio_rxjava2)
     CompoundButton radioRxJava2;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     private boolean running;

@@ -7,7 +7,6 @@ android {
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
     }
@@ -20,7 +19,7 @@ android {
 }
 
 dependencies {
-    compile project(':core')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile rootProject.ext.supportV7
+    api project(':core')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api rootProject.ext.supportV7
 }

@@ -6,7 +6,6 @@ android {
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
     }
@@ -19,12 +18,12 @@ android {
 }
 
 dependencies {
-    compile project(':core')
-    compile project(':rxjava')
-    compile project(':rxjava2')
+    implementation project(':core')
+    implementation project(':rxjava')
+    implementation project(':rxjava2')
 
-    testCompile rootProject.ext.junit
-    testCompile rootProject.ext.assertj
-    testCompile rootProject.ext.robolectric
-    testCompile rootProject.ext.mockito
+    testImplementation rootProject.ext.junit
+    testImplementation rootProject.ext.assertj
+    testImplementation rootProject.ext.robolectric
+    testImplementation rootProject.ext.mockito
 }

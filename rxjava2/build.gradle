@@ -7,16 +7,15 @@ android {
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode Integer.parseInt(project.VERSION_CODE)
         versionName project.VERSION_NAME
     }
 }
 
 dependencies {
-    compile project(':core')
-    compile rootProject.ext.supportV7
-    compile rootProject.ext.rxjava2
+    api project(':core')
+    api rootProject.ext.supportV7
+    api rootProject.ext.rxjava2
 }
 
 apply from: rootProject.file('javadoc.gradle')
