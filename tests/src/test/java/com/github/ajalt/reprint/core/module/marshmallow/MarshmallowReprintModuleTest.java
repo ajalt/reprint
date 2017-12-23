@@ -5,17 +5,13 @@ import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.os.CancellationSignal;
 
-import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.module.marshmallow.MarshmallowReprintModule;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -79,6 +75,19 @@ public class MarshmallowReprintModuleTest {
         setupManager(fingerprintManager);
         when(fingerprintManager.isHardwareDetected()).thenReturn(true);
         when(fingerprintManager.hasEnrolledFingerprints()).thenReturn(false);
+        assertThat(module.isHardwarePresent()).isTrue();
+        assertThat(module.hasFingerprintRegistered()).isFalse();
+    }
+
+    /** Issue #29 */
+    @Test
+    public void fingerprintManager_enrolledFingerprintError() throws Exception {
+        setupManager(fingerprintManager);
+        when(fingerprintManager.isHardwareDetected()).thenReturn(true);
+        when(fingerprintManager.hasEnrolledFingerprints()).thenThrow(
+                new IllegalStateException(
+                        "Failed parsing settings file: /data/system/users/0/settings_fingerprint.xml")
+        );
         assertThat(module.isHardwarePresent()).isTrue();
         assertThat(module.hasFingerprintRegistered()).isFalse();
     }

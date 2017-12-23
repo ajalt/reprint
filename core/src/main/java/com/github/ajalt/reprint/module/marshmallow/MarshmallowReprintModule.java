@@ -162,7 +162,15 @@ public class MarshmallowReprintModule implements ReprintModule {
     @Override
     public boolean hasFingerprintRegistered() throws SecurityException {
         final FingerprintManager fingerprintManager = fingerprintManager();
-        return fingerprintManager != null && fingerprintManager.hasEnrolledFingerprints();
+        if (fingerprintManager == null) return false;
+        // Some devices with fingerprint sensors throw an IllegalStateException when trying to parse an
+        // internal settings file during this call. See #29.
+        try {
+            return fingerprintManager.hasEnrolledFingerprints();
+        } catch (IllegalStateException e) {
+            logger.logException(e, "MarshmallowReprintModule: hasEnrolledFingerprints failed unexpectedly");
+            return false;
+        }
     }
 
     @Override
@@ -207,7 +215,7 @@ public class MarshmallowReprintModule implements ReprintModule {
         private final AuthenticationListener listener;
         private int restartCount;
 
-        public AuthCallback(int restartCount, Reprint.RestartPredicate restartPredicate,
+        private AuthCallback(int restartCount, Reprint.RestartPredicate restartPredicate,
                             CancellationSignal cancellationSignal, AuthenticationListener listener) {
             this.restartCount = restartCount;
             this.restartPredicate = restartPredicate;
