@@ -8,6 +8,7 @@ import com.github.ajalt.library.R;
 import com.github.ajalt.reprint.module.marshmallow.MarshmallowReprintModule;
 
 import java.lang.reflect.Constructor;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Methods for performing fingerprint authentication.
@@ -24,16 +25,16 @@ enum ReprintInternal {
     };
 
     private static final String REPRINT_SPASS_MODULE = "com.github.ajalt.reprint.module.spass.SpassReprintModule";
-    private CancellationSignal cancellationSignal;
+    private AtomicReference<CancellationSignal> cancellationSignal = new AtomicReference<>();
     private ReprintModule module;
     private Context context;
 
-    public ReprintInternal initialize(Context context, Reprint.Logger logger) {
+    public void initialize(Context context, Reprint.Logger logger) {
         this.context = context.getApplicationContext();
 
         // The SPass module doesn't work below API 17, and the Imprint module obviously requires
         // Marshmallow.
-        if (module != null || Build.VERSION.SDK_INT < 17) return this;
+        if (module != null || Build.VERSION.SDK_INT < 17) return;
 
         if (logger == null) logger = ReprintInternal.NULL_LOGGER;
 
@@ -49,20 +50,16 @@ enum ReprintInternal {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             registerModule(new MarshmallowReprintModule(context, logger));
         }
-
-        return this;
     }
 
-    public ReprintInternal registerModule(ReprintModule module) {
+    public void registerModule(ReprintModule module) {
         if (module == null || this.module != null && module.tag() == this.module.tag()) {
-            return this;
+            return;
         }
 
         if (module.isHardwarePresent()) {
             this.module = module;
         }
-
-        return this;
     }
 
     public boolean isHardwarePresent() {
@@ -92,14 +89,18 @@ enum ReprintInternal {
             return;
         }
 
-        cancellationSignal = new CancellationSignal();
-        module.authenticate(cancellationSignal, listener, restartPredicate);
+        cancellationSignal.set(new CancellationSignal());
+        module.authenticate(cancellationSignal.get(), listener, restartPredicate);
     }
 
     public void cancelAuthentication() {
-        if (cancellationSignal != null) {
-            cancellationSignal.cancel();
-            cancellationSignal = null;
+        final CancellationSignal signal = cancellationSignal.getAndSet(null);
+        if (signal != null) {
+            try {
+                signal.cancel();
+            } catch (NullPointerException e) {
+                // Occasionally the cancel call throws an NPE when trying to unparcelize something.
+            }
         }
     }
 
