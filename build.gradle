@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
     }
 }
@@ -27,16 +27,16 @@ task clean(type: Delete) {
 
 ext {
     minSdkVersion = 14
-    compileSdkVersion = 26
-    buildToolsVersion = '26.0.2'
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.2'
 
     // dependencies
-    supportV7 = 'com.android.support:appcompat-v7:26.1.0'
+    supportV7 = 'com.android.support:appcompat-v7:27.0.2'
     rxjava1 = 'io.reactivex:rxjava:1.3.3'
-    rxjava2 = 'io.reactivex.rxjava2:rxjava:2.1.6'
+    rxjava2 = 'io.reactivex.rxjava2:rxjava:2.1.7'
 
     // sample dependencies
-    supportDesign = 'com.android.support:design:26.1.0'
+    supportDesign = 'com.android.support:design:27.0.2'
     butterknife = 'com.jakewharton:butterknife:8.8.1'
     butterknifeProcessor = 'com.jakewharton:butterknife-compiler:8.8.1'
 
@@ -44,5 +44,5 @@ ext {
     junit = 'junit:junit:4.12'
     assertj = 'org.assertj:assertj-core:3.8.0'
     robolectric = 'org.robolectric:robolectric:3.5.1'
-    mockito = 'org.mockito:mockito-core:2.11.0'
+    mockito = 'org.mockito:mockito-core:2.13.0'
 }
