@@ -34,6 +34,7 @@ public class RxReprint {
     /**
      * Authenticate with a restart predicate.
      *
+     * @param restartPredicate A predicate that controls the restart behavior.
      * @see #authenticate()
      * @see Reprint#authenticate(AuthenticationListener, Reprint.RestartPredicate)
      */
