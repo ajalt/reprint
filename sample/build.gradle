@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId project.GROUP
@@ -34,8 +33,8 @@ dependencies {
     implementation project(':rxjava')
     implementation project(':rxjava2')
 
-    implementation rootProject.ext.supportV7
-    implementation rootProject.ext.supportDesign
+    implementation rootProject.ext.appCompat
+    implementation rootProject.ext.materialDesign
     implementation rootProject.ext.butterknife
     annotationProcessor rootProject.ext.butterknifeProcessor
 }

@@ -1,12 +1,12 @@
 package com.github.ajalt.reprint.testing;
 
-import android.support.v4.os.CancellationSignal;
-
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.core.ReprintModule;
 
 import java.util.Random;
+
+import androidx.core.os.CancellationSignal;
 
 public class TestReprintModule implements ReprintModule {
     public final int TAG = new Random().nextInt(); // Register a new module each test

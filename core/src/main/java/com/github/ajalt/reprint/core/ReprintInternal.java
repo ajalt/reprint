@@ -2,13 +2,14 @@ package com.github.ajalt.reprint.core;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.os.CancellationSignal;
 
 import com.github.ajalt.library.R;
 import com.github.ajalt.reprint.module.marshmallow.MarshmallowReprintModule;
 
 import java.lang.reflect.Constructor;
 import java.util.concurrent.atomic.AtomicReference;
+
+import androidx.core.os.CancellationSignal;
 
 /**
  * Methods for performing fingerprint authentication.

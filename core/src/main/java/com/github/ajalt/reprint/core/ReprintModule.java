@@ -1,6 +1,6 @@
 package com.github.ajalt.reprint.core;
 
-import android.support.v4.os.CancellationSignal;
+import androidx.core.os.CancellationSignal;
 
 /**
  * A reprint module handles communication with a specific fingerprint api.
