@@ -61,7 +61,7 @@ or some other message of your own based on the `failureReason`. This string will
 never be null from a failure, and will be localized into the current locale.
 
 For detail on the other parameters,
-[see the Javadocs](https://jitpack.io/com/github/ajalt/reprint/rxjava/3.2.1/javadoc/).
+[see the Javadocs](https://jitpack.io/com/github/ajalt/reprint/rxjava/3.3.0/javadoc/).
 
 One advantage that this interface has is that when the subscriber unsubscribes,
 the authentication request is automatically canceled. So you could, for example,
@@ -92,9 +92,9 @@ Reprint.authenticate(new AuthenticationListener() {
 
 The javadocs for the Reprint modules are available online:
 
- * [Reprint core](https://jitpack.io/com/github/ajalt/reprint/core/3.2.1/javadoc/index.html?com/github/ajalt/reprint/core/Reprint.html)
- * [RxJava 1 interface](https://jitpack.io/com/github/ajalt/reprint/rxjava/3.2.1/javadoc/com/github/ajalt/reprint/rxjava/RxReprint.html)
- * [RxJava 2 interface](https://jitpack.io/com/github/ajalt/reprint/rxjava2/3.2.1/javadoc/com/github/ajalt/reprint/rxjava2/RxReprint.html)
+ * [Reprint core](https://jitpack.io/com/github/ajalt/reprint/core/3.3.0/javadoc/index.html?com/github/ajalt/reprint/core/Reprint.html)
+ * [RxJava 1 interface](https://jitpack.io/com/github/ajalt/reprint/rxjava/3.3.0/javadoc/com/github/ajalt/reprint/rxjava/RxReprint.html)
+ * [RxJava 2 interface](https://jitpack.io/com/github/ajalt/reprint/rxjava2/3.3.0/javadoc/com/github/ajalt/reprint/rxjava2/RxReprint.html)
 
 # Installation
 
@@ -115,10 +115,10 @@ include the module that matches the version of RxJava that you use in your proje
 
 ```groovy
 dependencies {
-   compile 'com.github.ajalt.reprint:core:3.2.1@aar' // required: supports marshmallow devices
-   compile 'com.github.ajalt.reprint:reprint_spass:3.2.1@aar' // optional: support for pre-marshmallow Samsung devices
-   compile 'com.github.ajalt.reprint:rxjava:3.2.1@aar' // optional: the RxJava 1 interface
-   compile 'com.github.ajalt.reprint:rxjava2:3.2.1@aar' // optional: the RxJava 2 interface
+   compile 'com.github.ajalt.reprint:core:3.3.0@aar' // required: supports marshmallow devices
+   compile 'com.github.ajalt.reprint:reprint_spass:3.3.0@aar' // optional: deprecated support for pre-marshmallow Samsung devices
+   compile 'com.github.ajalt.reprint:rxjava:3.3.0@aar' // optional: the RxJava 1 interface
+   compile 'com.github.ajalt.reprint:rxjava2:3.3.0@aar' // optional: the RxJava 2 interface
 }
 ```
 
@@ -136,9 +136,16 @@ will be included automatically.
 <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>
 ```
 
+### Spass SDK deprecation
+
+Samsung has deprecated the Spass SDK in favor of the standard Android APIs. Although Reprint still provides
+a module that uses the the Spass SDK if the standard APIs aren't available, you should be aware that the Spass
+SDK has a [known bug](https://github.com/ajalt/reprint/issues/6). If you don't need fingerprint support on
+devices running KitKat, you should not include the `reprint_spass` module.
+
 # License
 
-    Copyright 2015-2017 AJ Alt
+    Copyright 2015-2018 AJ Alt
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
