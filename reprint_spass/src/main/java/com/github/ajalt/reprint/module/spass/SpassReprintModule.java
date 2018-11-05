@@ -1,8 +1,6 @@
 package com.github.ajalt.reprint.module.spass;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
-import android.support.v4.os.CancellationSignal;
 
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
@@ -10,6 +8,9 @@ import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.core.ReprintModule;
 import com.samsung.android.sdk.pass.Spass;
 import com.samsung.android.sdk.pass.SpassFingerprint;
+
+import androidx.annotation.StringRes;
+import androidx.core.os.CancellationSignal;
 
 import static com.github.ajalt.reprint.core.AuthenticationFailureReason.TIMEOUT;
 
@@ -149,27 +150,32 @@ public class SpassReprintModule implements ReprintModule {
 
         try {
             spassFingerprint.startIdentify(new SpassFingerprint.IdentifyListener() {
+
                 @Override
-                public void onFinished(int status) {
-                    switch (status) {
+                public void onCompleted() {
+                }
+
+                @Override
+                public void onFinished(int eventStatus) {
+                    switch (eventStatus) {
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_SUCCESS:
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_PASSWORD_SUCCESS:
                             listener.onSuccess(TAG);
                             return;
                         case SpassFingerprint.STATUS_QUALITY_FAILED:
-                            fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_partial, status);
+                            fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_partial, eventStatus);
                             break;
                         case SpassFingerprint.STATUS_SENSOR_FAILED:
-                            fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_insufficient, status);
+                            fail(AuthenticationFailureReason.SENSOR_FAILED, false, R.string.fingerprint_acquired_insufficient, eventStatus);
                             break;
                         case SpassFingerprint.STATUS_AUTHENTIFICATION_FAILED:
-                            fail(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, R.string.fingerprint_not_recognized, status);
+                            fail(AuthenticationFailureReason.AUTHENTICATION_FAILED, false, R.string.fingerprint_not_recognized, eventStatus);
                             break;
                         case SpassFingerprint.STATUS_TIMEOUT_FAILED:
-                            fail(TIMEOUT, true, R.string.fingerprint_error_timeout, status);
+                            fail(TIMEOUT, true, R.string.fingerprint_error_timeout, eventStatus);
                             break;
                         default:
-                            fail(AuthenticationFailureReason.UNKNOWN, true, R.string.fingerprint_error_hw_not_available, status);
+                            fail(AuthenticationFailureReason.UNKNOWN, true, R.string.fingerprint_error_hw_not_available, eventStatus);
                             break;
                         case SpassFingerprint.STATUS_USER_CANCELLED:
                             // Don't send a cancelled message.

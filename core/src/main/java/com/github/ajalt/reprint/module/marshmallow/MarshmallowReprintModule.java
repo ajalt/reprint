@@ -4,14 +4,15 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v4.os.CancellationSignal;
 
 import com.github.ajalt.library.R;
 import com.github.ajalt.reprint.core.AuthenticationFailureReason;
 import com.github.ajalt.reprint.core.AuthenticationListener;
 import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.core.ReprintModule;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.os.CancellationSignal;
 
 /**
  * A reprint module that authenticates fingerprint using the marshmallow Imprint API.

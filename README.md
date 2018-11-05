@@ -7,7 +7,7 @@ RxJava extensions.
 
 * Eliminates the need to deal with the different available Fingerprint APIs, including Imprint and Samsung Pass.
 * Fixes undocumented bugs and idiosyncrasies in the underlying APIs.
-* Supports more Imprint devices than FingerprintManagerCompat from the support library.
+* Supports more Imprint devices than FingerprintManagerCompat from the androidx library.
 * Comes with help messages translated in over 80 locales that work with all APIs.
 * Provides optional RxJava interfaces.
 

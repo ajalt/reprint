@@ -3,8 +3,6 @@ package com.github.ajalt.reprint.core.module.marshmallow;
 import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 
 import com.github.ajalt.reprint.core.Reprint;
 import com.github.ajalt.reprint.module.marshmallow.MarshmallowReprintModule;
@@ -14,6 +12,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
