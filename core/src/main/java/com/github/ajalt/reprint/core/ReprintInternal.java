@@ -39,13 +39,15 @@ enum ReprintInternal {
 
         if (logger == null) logger = ReprintInternal.NULL_LOGGER;
 
-        // Load the spass module if it was included.
-        try {
-            final Class<?> spassModuleClass = Class.forName(REPRINT_SPASS_MODULE);
-            final Constructor<?> constructor = spassModuleClass.getConstructor(Context.class, Reprint.Logger.class);
-            ReprintModule module = (ReprintModule) constructor.newInstance(context, logger);
-            registerModule(module);
-        } catch (Exception ignored) {
+        // Only use the Spass module on APIs that don't support Imprint.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            try {
+                final Class<?> spassModuleClass = Class.forName(REPRINT_SPASS_MODULE);
+                final Constructor<?> constructor = spassModuleClass.getConstructor(Context.class, Reprint.Logger.class);
+                ReprintModule module = (ReprintModule) constructor.newInstance(context, logger);
+                registerModule(module);
+            } catch (Exception ignored) {
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
