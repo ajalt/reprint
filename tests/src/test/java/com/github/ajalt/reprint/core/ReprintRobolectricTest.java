@@ -9,7 +9,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(application = TestApp.class)
+@Config(application = TestApp.class, manifest = Config.NONE)
 public class ReprintRobolectricTest {
     @Test
     public void reprint_initialize() {

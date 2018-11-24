@@ -41,17 +41,28 @@ enum ReprintInternal {
 
         // Only use the Spass module on APIs that don't support Imprint.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            try {
-                final Class<?> spassModuleClass = Class.forName(REPRINT_SPASS_MODULE);
-                final Constructor<?> constructor = spassModuleClass.getConstructor(Context.class, Reprint.Logger.class);
-                ReprintModule module = (ReprintModule) constructor.newInstance(context, logger);
-                registerModule(module);
-            } catch (Exception ignored) {
-            }
+            registerSpassModule(context, logger);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            registerModule(new MarshmallowReprintModule(context, logger));
+            MarshmallowReprintModule marshmallowModule = new MarshmallowReprintModule(context, logger);
+
+            // Some phones like the Galaxy S5 run marshmallow, but only work with spass
+            if (marshmallowModule.fingerprintManager() == null) {
+                registerSpassModule(context, logger);
+            } else {
+                registerModule(marshmallowModule);
+            }
+        }
+    }
+
+    private void registerSpassModule(Context context, Reprint.Logger logger) {
+        try {
+            final Class<?> spassModuleClass = Class.forName(REPRINT_SPASS_MODULE);
+            final Constructor<?> constructor = spassModuleClass.getConstructor(Context.class, Reprint.Logger.class);
+            ReprintModule module = (ReprintModule) constructor.newInstance(context, logger);
+            registerModule(module);
+        } catch (Exception ignored) {
         }
     }
 
