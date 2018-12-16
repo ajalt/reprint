@@ -124,7 +124,7 @@ public class MarshmallowReprintModule implements ReprintModule {
     // We used to use the appcompat library to load the fingerprint manager, but v25.1.0 was broken
     // on many phones. Instead, we handle the manager ourselves. FingerprintManagerCompat just
     // forwards calls anyway, so it doesn't add any value for us.
-    public FingerprintManager fingerprintManager() {
+    private FingerprintManager fingerprintManager() {
         try {
             return context.getSystemService(FingerprintManager.class);
         } catch (Exception e) {

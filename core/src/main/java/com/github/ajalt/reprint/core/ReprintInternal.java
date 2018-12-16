@@ -47,8 +47,8 @@ enum ReprintInternal {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             MarshmallowReprintModule marshmallowModule = new MarshmallowReprintModule(context, logger);
 
-            // Some phones like the Galaxy S5 run marshmallow, but only work with spass
-            if (marshmallowModule.fingerprintManager() == null) {
+            // Some phones like the Galaxy S5 run marshmallow, but only work with Spass
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && !marshmallowModule.isHardwarePresent()) {
                 registerSpassModule(context, logger);
             } else {
                 registerModule(marshmallowModule);
