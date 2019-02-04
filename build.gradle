@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.0'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
@@ -36,8 +36,8 @@ ext {
 
     // sample dependencies
     materialDesign = 'com.google.android.material:material:1.0.0'
-    butterknife = 'com.jakewharton:butterknife:9.0.0-rc1'
-    butterknifeProcessor = 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
+    butterknife = 'com.jakewharton:butterknife:9.0.0'
+    butterknifeProcessor = 'com.jakewharton:butterknife-compiler:10.0.0'
 
     // test dependencies
     junit = 'junit:junit:4.12'

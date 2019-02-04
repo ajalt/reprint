@@ -5,6 +5,7 @@ import android.os.Build;
 
 import com.github.ajalt.library.R;
 import com.github.ajalt.reprint.module.marshmallow.MarshmallowReprintModule;
+import com.github.ajalt.reprint.module.pie.PieReprintModule;
 
 import java.lang.reflect.Constructor;
 import java.util.concurrent.atomic.AtomicReference;
@@ -42,9 +43,7 @@ enum ReprintInternal {
         // Only use the Spass module on APIs that don't support Imprint.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             registerSpassModule(context, logger);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             MarshmallowReprintModule marshmallowModule = new MarshmallowReprintModule(context, logger);
 
             // Some phones like the Galaxy S5 run marshmallow, but only work with Spass
@@ -53,6 +52,8 @@ enum ReprintInternal {
             } else {
                 registerModule(marshmallowModule);
             }
+        } else {
+            registerModule(new PieReprintModule(context, logger));
         }
     }
 

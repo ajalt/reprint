@@ -132,6 +132,9 @@ will be included automatically.
 <!-- Marshmallow fingerprint permission-->
 <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
 
+<!-- Pie biometric permission-->
+<uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+
 <!-- Samsung fingerprint permission, only required if you include the Spass module -->
 <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>
 ```
