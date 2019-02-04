@@ -23,13 +23,14 @@ import java.security.cert.CertificateException;
 
 import javax.crypto.KeyGenerator;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.os.CancellationSignal;
 
 @TargetApi(Build.VERSION_CODES.P)
 @RequiresApi(Build.VERSION_CODES.P)
 public final class PieReprintModule implements ReprintModule {
-    public static final int TAG = 1;
+    private static final int TAG = 2;
 
     // The following FINGERPRINT constants are copied from FingerprintManager, since that class
     // isn't available pre-marshmallow, and they aren't defined in FingerprintManagerCompat for some
@@ -38,83 +39,44 @@ public final class PieReprintModule implements ReprintModule {
     /**
      * The hardware is unavailable. Try again later.
      */
-    public static final int FINGERPRINT_ERROR_HW_UNAVAILABLE = 1;
+    private static final int FINGERPRINT_ERROR_HW_UNAVAILABLE = 1;
 
     /**
      * Error state returned when the sensor was unable to process the current image.
      */
-    public static final int FINGERPRINT_ERROR_UNABLE_TO_PROCESS = 2;
+    private static final int FINGERPRINT_ERROR_UNABLE_TO_PROCESS = 2;
 
     /**
      * Error state returned when the current request has been running too long. This is intended to
      * prevent programs from waiting for the fingerprint sensor indefinitely. The timeout is
      * platform and sensor-specific, but is generally on the order of 30 seconds.
      */
-    public static final int FINGERPRINT_ERROR_TIMEOUT = 3;
+    private static final int FINGERPRINT_ERROR_TIMEOUT = 3;
 
     /**
      * Error state returned for operations like enrollment; the operation cannot be completed
      * because there's not enough storage remaining to complete the operation.
      */
-    public static final int FINGERPRINT_ERROR_NO_SPACE = 4;
+    private static final int FINGERPRINT_ERROR_NO_SPACE = 4;
 
     /**
      * The operation was canceled because the fingerprint sensor is unavailable. For example, this
      * may happen when the user is switched, the device is locked or another pending operation
      * prevents or disables it.
      */
-    public static final int FINGERPRINT_ERROR_CANCELED = 5;
+    private static final int FINGERPRINT_ERROR_CANCELED = 5;
 
     /**
      * The operation was canceled because the API is locked out due to too many attempts.
      */
-    public static final int FINGERPRINT_ERROR_LOCKOUT = 7;
-
-    // The following ACQUIRED constants are used with help messages
-    /**
-     * The image acquired was good.
-     */
-    public static final int FINGERPRINT_ACQUIRED_GOOD = 0;
-
-    /**
-     * Only a partial fingerprint image was detected. During enrollment, the user should be informed
-     * on what needs to happen to resolve this problem, e.g. "press firmly on sensor."
-     */
-    public static final int FINGERPRINT_ACQUIRED_PARTIAL = 1;
-
-    /**
-     * The fingerprint image was too noisy to process due to a detected condition (i.e. dry skin) or
-     * a possibly dirty sensor (See {@link #FINGERPRINT_ACQUIRED_IMAGER_DIRTY}).
-     */
-    public static final int FINGERPRINT_ACQUIRED_INSUFFICIENT = 2;
-
-    /**
-     * The fingerprint image was too noisy due to suspected or detected dirt on the sensor. For
-     * example, it's reasonable return this after multiple {@link #FINGERPRINT_ACQUIRED_INSUFFICIENT}
-     * or actual detection of dirt on the sensor (stuck pixels, swaths, etc.). The user is expected
-     * to take action to clean the sensor when this is returned.
-     */
-    public static final int FINGERPRINT_ACQUIRED_IMAGER_DIRTY = 3;
-
-    /**
-     * The fingerprint image was unreadable due to lack of motion. This is most appropriate for
-     * linear array sensors that require a swipe motion.
-     */
-    public static final int FINGERPRINT_ACQUIRED_TOO_SLOW = 4;
-
-    /**
-     * The fingerprint image was incomplete due to quick motion. While mostly appropriate for linear
-     * array sensors,  this could also happen if the finger was moved during acquisition. The user
-     * should be asked to move the finger slower (linear) or leave the finger on the sensor longer.
-     */
-    public static final int FINGERPRINT_ACQUIRED_TOO_FAST = 5;
+    private static final int FINGERPRINT_ERROR_LOCKOUT = 7;
 
     /**
      * A fingerprint was read that is not registered.
      * <p/>
      * This constant is defined by reprint, and is not in the FingerprintManager.
      */
-    public static final int FINGERPRINT_AUTHENTICATION_FAILED = 1001;
+    private static final int FINGERPRINT_AUTHENTICATION_FAILED = 1001;
 
     private final Context context;
     private final Reprint.Logger logger;
@@ -124,16 +86,14 @@ public final class PieReprintModule implements ReprintModule {
         this.logger = logger;
     }
 
-    // We used to use the appcompat library to load the fingerprint manager, but v25.1.0 was broken
-    // on many phones. Instead, we handle the manager ourselves. FingerprintManagerCompat just
-    // forwards calls anyway, so it doesn't add any value for us.
-    private BiometricPrompt fingerprintManager() {
+    @Nullable
+    private BiometricPrompt getBiometricPromptService() {
         try {
             return context.getSystemService(BiometricPrompt.class);
         } catch (Exception e) {
-            logger.logException(e, "Could not get fingerprint system service on API that should support it.");
+            logger.logException(e, "Could not get biometric prompt system service on API that should support it.");
         } catch (NoClassDefFoundError e) {
-            logger.log("FingerprintManager not available on this device");
+            logger.log("BiometricPrompt not available on this device");
         }
         return null;
     }
@@ -145,31 +105,23 @@ public final class PieReprintModule implements ReprintModule {
 
     @Override
     public boolean isHardwarePresent() {
-        final BiometricPrompt fingerprintManager = fingerprintManager();
-        if (fingerprintManager == null) return false;
-        // Normally, a security exception is only thrown if you don't have the USE_FINGERPRINT
-        // permission in your manifest. However, some OEMs have pushed updates to M for phones
-        // that don't have sensors at all, and for some reason decided not to implement the
-        // USE_FINGERPRINT permission. So on those devices, a SecurityException is raised no matter
-        // what. This has been confirmed on a number of devices, including the LG LS770, LS991,
-        // and the HTC One M8.
-        //
-        // On Robolectric, FingerprintManager.isHardwareDetected raises an NPE.
+        final BiometricPrompt biometricPromptService = getBiometricPromptService();
+        if (biometricPromptService == null) return false;
         try {
             return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_FINGERPRINT);
         } catch (SecurityException | NullPointerException e) {
-            logger.logException(e, "PieReprintModule: isHardwareDetected failed unexpectedly");
+            logger.logException(e, "PieReprintModule: isHardwarePresent failed unexpectedly");
             return false;
         }
     }
 
     /**
-     * See https://stackoverflow.com/questions/50968732/determine-if-biometric-hardware-is-present-and-the-user-has-enrolled-biometrics
+     * See https://stackoverflow.com/a/53973970/3667225
      */
     @Override
     public boolean hasFingerprintRegistered() throws SecurityException {
-        final BiometricPrompt fingerprintManager = fingerprintManager();
-        if (fingerprintManager == null) return false;
+        final BiometricPrompt biometricPromptService = getBiometricPromptService();
+        if (biometricPromptService == null) return false;
         // Some devices with fingerprint sensors throw an IllegalStateException when trying to parse an
         // internal settings file during this call. See #29.
         try {
@@ -209,7 +161,7 @@ public final class PieReprintModule implements ReprintModule {
             }
             return true;
         } catch (IllegalStateException e) {
-            logger.logException(e, "PieReprintModule: hasEnrolledFingerprints failed unexpectedly");
+            logger.logException(e, "PieReprintModule: hasFingerprintRegistered failed unexpectedly");
             return false;
         }
     }
@@ -221,13 +173,13 @@ public final class PieReprintModule implements ReprintModule {
         authenticate(cancellationSignal, listener, restartPredicate, 0);
     }
 
-    void authenticate(final CancellationSignal cancellationSignal,
-                      final AuthenticationListener listener,
-                      final Reprint.RestartPredicate restartPredicate,
-                      final int restartCount) throws SecurityException {
-        final BiometricPrompt fingerprintManager = fingerprintManager();
+    private void authenticate(final CancellationSignal cancellationSignal,
+                              final AuthenticationListener listener,
+                              final Reprint.RestartPredicate restartPredicate,
+                              final int restartCount) throws SecurityException {
+        final BiometricPrompt biometricPromptService = getBiometricPromptService();
 
-        if (fingerprintManager == null) {
+        if (biometricPromptService == null) {
             listener.onFailure(AuthenticationFailureReason.UNKNOWN, true,
                 context.getString(R.string.fingerprint_error_hw_not_available), TAG, FINGERPRINT_ERROR_CANCELED);
             return;
@@ -240,9 +192,9 @@ public final class PieReprintModule implements ReprintModule {
         final android.os.CancellationSignal signalObject = cancellationSignal == null ? null :
             (android.os.CancellationSignal) cancellationSignal.getCancellationSignalObject();
 
-        // Occasionally, an NPE will bubble up out of FingerprintManager.authenticate
+        // Occasionally, an NPE will bubble up out of BiometricPrompt#authenticate
         try {
-            fingerprintManager.authenticate(signalObject, context.getMainExecutor(), callback);
+            biometricPromptService.authenticate(signalObject, context.getMainExecutor(), callback);
         } catch (NullPointerException e) {
             logger.logException(e, "PieReprintModule: authenticate failed unexpectedly");
             listener.onFailure(AuthenticationFailureReason.UNKNOWN, true,
@@ -250,7 +202,7 @@ public final class PieReprintModule implements ReprintModule {
         }
     }
 
-    class AuthCallback extends BiometricPrompt.AuthenticationCallback {
+    final class AuthCallback extends BiometricPrompt.AuthenticationCallback {
         private final Reprint.RestartPredicate restartPredicate;
         private final CancellationSignal cancellationSignal;
         private final AuthenticationListener listener;
