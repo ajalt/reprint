@@ -36,7 +36,7 @@ ext {
 
     // sample dependencies
     materialDesign = 'com.google.android.material:material:1.0.0'
-    butterknife = 'com.jakewharton:butterknife:9.0.0'
+    butterknife = 'com.jakewharton:butterknife:10.0.0'
     butterknifeProcessor = 'com.jakewharton:butterknife-compiler:10.0.0'
 
     // test dependencies
