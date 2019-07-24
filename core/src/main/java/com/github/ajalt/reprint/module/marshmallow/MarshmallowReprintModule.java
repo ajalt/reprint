@@ -213,7 +213,7 @@ public class MarshmallowReprintModule implements ReprintModule {
     class AuthCallback extends FingerprintManager.AuthenticationCallback {
         private final Reprint.RestartPredicate restartPredicate;
         private final CancellationSignal cancellationSignal;
-        private final AuthenticationListener listener;
+        private AuthenticationListener listener;
         private int restartCount;
 
         private AuthCallback(int restartCount, Reprint.RestartPredicate restartPredicate,
@@ -226,6 +226,7 @@ public class MarshmallowReprintModule implements ReprintModule {
 
         @Override
         public void onAuthenticationError(int errMsgId, CharSequence errString) {
+            if (listener == null) return;
             AuthenticationFailureReason failureReason = AuthenticationFailureReason.UNKNOWN;
             switch (errMsgId) {
                 case FINGERPRINT_ERROR_HW_UNAVAILABLE:
@@ -250,11 +251,13 @@ public class MarshmallowReprintModule implements ReprintModule {
                 authenticate(cancellationSignal, listener, restartPredicate, restartCount);
             } else {
                 listener.onFailure(failureReason, true, errString, TAG, errMsgId);
+                listener = null;
             }
         }
 
         @Override
         public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
+            if (listener == null) return;
             if (!restartPredicate.invoke(AuthenticationFailureReason.SENSOR_FAILED, restartCount++)) {
                 cancellationSignal.cancel();
             }
@@ -263,11 +266,14 @@ public class MarshmallowReprintModule implements ReprintModule {
 
         @Override
         public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
+            if (listener == null) return;
             listener.onSuccess(TAG);
+            listener = null;
         }
 
         @Override
         public void onAuthenticationFailed() {
+            if (listener == null) return;
             listener.onFailure(AuthenticationFailureReason.AUTHENTICATION_FAILED, false,
                     context.getString(R.string.fingerprint_not_recognized), TAG, FINGERPRINT_AUTHENTICATION_FAILED);
         }
