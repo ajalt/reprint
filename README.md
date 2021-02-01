@@ -1,3 +1,7 @@
+# Deprecated
+
+Use [androidx.biometric](https://developer.android.com/jetpack/androidx/releases/biometric) instead, which supports other forms of biometric authentication such as iris scanning an facial recognition, and provides a UI that is consistent across applications.
+
 <h1 align="center">
     <img src="resources/banner.png">
 </h1>
